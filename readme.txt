@@ -17,7 +17,17 @@ RELEASE NOTES:
  - There are some parts of the conversion that are not implemented, or implemented crudely.  A search for the string "Java to C# Conversion" should point them out.
  
  - I would classify the current state of the code as pre-beta.  Assume it will not work perfectly.
- 
+
+
+   15-Jun-2009
+
+ - Bug fixes and modifications from executing core unit tests
+
+
+
+
+
+
  - For any comments, questions, complaints, bug fixes, or offers of help contact:
 
    Mark Sebald  Email: mdsebald@hotmail.com
