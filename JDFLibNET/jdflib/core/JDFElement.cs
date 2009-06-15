@@ -3213,7 +3213,7 @@ namespace org.cip4.jdflib.core
       ///	 * <param name="String"> nameSpaceURI attribute namespace uri </param>
       ///	 * <exception cref="JDFException"> wrong data type in vector </exception>
       ///	 
-      protected internal virtual void setEnumerationsAttribute(string key, List<ValuedEnum> @value, string nameSpaceURI)
+      public virtual void setEnumerationsAttribute(string key, List<ValuedEnum> @value, string nameSpaceURI)
       {
          string s = null;
          if (@value != null)
@@ -3566,7 +3566,7 @@ namespace org.cip4.jdflib.core
          }
          int iFirstPos = vDoneRefsLocal.Count; // get the previous size
          VString v2 = new VString();
-         v2.addAll((string[])h.ToArray());
+         v2.addAll((string[])h.ToArray(typeof(string)));
 
          vDoneRefsLocal.appendUnique(v2); // get the new size
          if (bRecurse)

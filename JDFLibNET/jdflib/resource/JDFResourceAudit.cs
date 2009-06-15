@@ -291,7 +291,7 @@ namespace org.cip4.jdflib.resource
 
          if (v.Count > 0)
          {
-            resLink = (JDFResourceLink)insertBefore(resLink, v[0]);
+            resLink = (JDFResourceLink)InsertBefore(resLink, v[0]);
          }
          return resLink;
       }

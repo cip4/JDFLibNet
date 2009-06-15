@@ -188,26 +188,6 @@ namespace org.cip4.jdflib.core
 
       //}
 
-      /// <summary>
-      /// Override the CreateElement() method used by the XmlDocument Load() method
-      /// Use the KElement factoryCreate() method to create an element of the right type
-      /// </summary>
-      /// <param name="prefix"></param>
-      /// <param name="localName"></param>
-      /// <param name="namespaceURI"></param>
-      /// <returns></returns>
-
-      public override XmlElement CreateElement(string prefix, string localName, string namespaceURI)
-      {
-         string qualifiedName = localName;
-         if ((prefix != null) && (prefix.Length > 0))
-            qualifiedName = prefix + ":" + localName;
-
-         XmlElement e = factoryCreate(null, namespaceURI, qualifiedName);
-         return e;
-      }
-
-
       ///   
       ///	 <summary> * parseFile - parse a file specified by strFile
       ///	 *  </summary>

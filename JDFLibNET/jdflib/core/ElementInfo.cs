@@ -208,6 +208,12 @@ namespace org.cip4.jdflib.core
       {
          if (elemInfo_update != null)
          {
+            // if the table already contains this element, remove it first
+            if (elementInfoTable.ContainsKey(elemInfo_update.getElementName()))
+            {
+               elementInfoTable.Remove(elemInfo_update.getElementName());
+            }
+
             elementInfoTable.Add(elemInfo_update.getElementName(), new ElemInfo(elemInfo_update.getValidityStatus()));
          }
          return this;
@@ -219,6 +225,12 @@ namespace org.cip4.jdflib.core
          {
             for (int i = 0; i < elemInfo_update.Length; i++)
             {
+               // if the table already contains this element, remove it first
+               if (elementInfoTable.ContainsKey(elemInfo_update[i].getElementName()))
+               {
+                  elementInfoTable.Remove(elemInfo_update[i].getElementName());
+               }
+
                elementInfoTable.Add(elemInfo_update[i].getElementName(), new ElemInfo(elemInfo_update[i].getValidityStatus()));
             }
          }

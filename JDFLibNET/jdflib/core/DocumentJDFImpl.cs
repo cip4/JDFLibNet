@@ -144,10 +144,12 @@ namespace org.cip4.jdflib.core
          System.Diagnostics.Process rt = System.Diagnostics.Process.GetCurrentProcess();
          //long mem = rt.totalMemory() - rt.freeMemory();
          // TODO: Don't know if this makes any sense
+
          long mem = rt.WorkingSet64;
          if (mem < initialMem)
-            initialMem = mem;
-         return mem - initialMem;
+            return 0;
+         else
+            return mem - initialMem;
       }
 
       ///   
@@ -155,23 +157,19 @@ namespace org.cip4.jdflib.core
       ///	 
       public object clone()
       {
-         DocumentJDFImpl clon;
-         try
-         {
-            clon = (DocumentJDFImpl)base.Clone();
-         }
-         catch (System.Exception)
-         {
-            clon = new DocumentJDFImpl();
-         }
+         DocumentJDFImpl clon = new DocumentJDFImpl();
+
+         XmlNode newRoot = clon.ImportNode(DocumentElement, true);
+         clon.AppendChild(newRoot);
+
          clon.m_Bodypart = m_Bodypart;
          clon.m_OriginalFileName = m_OriginalFileName;
-         // Java to C# Conversion - QUESTION: Do we need to be able to assign value?
-         //clon.DocumentElement = ((KElement)DocumentElement).cloneRoot(new XMLDoc(clon));
-         //clon.OwnerDocument = clon;
-         //clon.FirstChild = clon.DocumentElement;
+
          getUserData().clear(); // otherwise, clon is indefinitely retained in userdata of the original document and we have a memory leak problem....
-         clon.getUserData().clear();
+
+         if (clon.getUserData() != null)
+            clon.getUserData().clear();
+
          return clon;
       }
 
@@ -236,6 +234,27 @@ namespace org.cip4.jdflib.core
          //initialMem = rt.totalMemory() - rt.freeMemory();
          initialMem = rt.WorkingSet64;
       }
+
+      /// <summary>
+      /// Override the CreateElement() method used by the XmlDocument Load() and CloneNode() methods
+      /// Use the KElement factoryCreate() method to create an element of the right type
+      /// </summary>
+      /// <param name="prefix"></param>
+      /// <param name="localName"></param>
+      /// <param name="namespaceURI"></param>
+      /// <returns></returns>
+
+      public override XmlElement CreateElement(string prefix, string localName, string namespaceURI)
+      {
+         string qualifiedName = localName;
+         if ((prefix != null) && (prefix.Length > 0))
+            qualifiedName = prefix + ":" + localName;
+
+         XmlElement e = factoryCreate(null, namespaceURI, qualifiedName);
+         return e;
+      }
+
+
 
       ///   
       ///	 <summary> * Factory method; creates an <code>Element</code> having this <code>Document</code> as its OwnerDoc.
@@ -476,7 +495,11 @@ namespace org.cip4.jdflib.core
                // assert strClassPath != null
                try
                {
-                  packageNameClass = System.Type.GetType(strClassPath);
+                   packageNameClass = System.Type.GetType(strClassPath);
+                   // Java to C# Conversion - Add this to support Unit Tests.  
+                  //                          The JDFTestType element in defined in the JDFLibNet.Test assembly
+                   if (packageNameClass == null)
+                      packageNameClass = System.Type.GetType(strClassPath + ", JDFLibNet.Test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null", true);
                }
                catch (System.Exception e)
                {
@@ -518,11 +541,15 @@ namespace org.cip4.jdflib.core
          }
          else
          {
-            strClassPath = sm_PackageNames[qualifiedName];
+            if (sm_PackageNames.ContainsKey(qualifiedName))
+               strClassPath = sm_PackageNames[qualifiedName];
+
             if (strClassPath == null && (null == strNameSpaceURI || jdfNSURI.Equals(strNameSpaceURI) || JDFConstants.EMPTYSTRING.Equals(strNameSpaceURI)))
             { // the maps only contain local names for jdf - recheck in case of
                // prefix
-               strClassPath = sm_PackageNames[localPart];
+
+               if (sm_PackageNames.ContainsKey(localPart))
+                  strClassPath = sm_PackageNames[localPart];
             }
          }
          return strClassPath;
@@ -645,16 +672,16 @@ namespace org.cip4.jdflib.core
          return false;
       }
 
-      ///   
-      ///	 <summary> * Attention! this only sets the initial parent for deep=true
-      ///	 * 
-      ///	 * (non-Javadoc)
-      ///	 *  </summary>
-      ///	 * <seealso cref= org.apache.xerces.dom.CoreDocumentImpl#importNode(org.w3c.dom.Node, boolean) </seealso>
-      ///	 
+      
       // TODO revisit setting parent nodes when importing
+      /// <summary>
+      /// Attention! this only sets the initial parent for deep=true
+      /// </summary>
+      /// <param name="importedNode"></param>
+      /// <param name="deep"></param>
+      /// <returns></returns>
       [MethodImpl(MethodImplOptions.Synchronized)]
-      public XmlNode importNode(XmlNode importedNode, bool deep)
+      public  override XmlNode ImportNode(XmlNode importedNode, bool deep)
       {
          if (importedNode == null)
             return null;

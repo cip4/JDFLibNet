@@ -77,7 +77,8 @@
  * equation holds: mDate.dateTimeISO() == "1999-09-26T11:43:10+03:00"
  * independent of the default timezone
  * ==========================================================================
- * COPYRIGHT Heidelberger Druckmaschinen AG, 1999-2003. ALL RIGHTS RESERVED  */
+ * COPYRIGHT Heidelberger Druckmaschinen AG, 1999-2003. ALL RIGHTS RESERVED  
+ */
 
 namespace org.cip4.jdflib.util
 {
@@ -246,13 +247,14 @@ namespace org.cip4.jdflib.util
             int length = strDateTimeLocal.Length;
             string lastChar = strDateTimeLocal.Substring(length - 1);
 
+
             // not necessarily valid but let's not be too picky
             if ((lastChar.CompareTo("a") >= 0) && (lastChar.CompareTo("z") <= 0))
             {
                lastChar = lastChar.ToUpper();
             }
 
-            int iCmp = lastChar.CompareTo("A");
+            int iCmp = lastChar[0].CompareTo('A');
             bool bZulu = (iCmp >= 0) && (iCmp <= 25);
             // The last character is a ZULU style timezone
             if (bZulu)
@@ -318,7 +320,7 @@ namespace org.cip4.jdflib.util
             {
                // handle sign explicitly, because "+02" is no valid Integer,
                // while "-02" and "02" are valid Integer
-               setTimeZoneOffsetInMillis(3600 * 1000 * Convert.ToInt32(strDateTimeLocal.Substring(20 + decimalLength, 22 + decimalLength)));
+               setTimeZoneOffsetInMillis(3600 * 1000 * Convert.ToInt32(strDateTimeLocal.Substring(20 + decimalLength, 2)));
                if (strDateTimeLocal[19 + decimalLength] == '-')
                {
                   setTimeZoneOffsetInMillis(-getTimeZoneOffsetInMillis());
@@ -335,7 +337,7 @@ namespace org.cip4.jdflib.util
             }
 
             int iYear = getIntFromPos(b, 0, 4);
-            int iMonth = getIntFromPos(b, 5, 7) - 1; // months are zero based in Java
+            int iMonth = getIntFromPos(b, 5, 7);
             int iDay = getIntFromPos(b, 8, 10);
             int iHour = getIntFromPos(b, 11, 13);
             int iMinute = getIntFromPos(b, 14, 16);
@@ -372,6 +374,10 @@ namespace org.cip4.jdflib.util
          {
             // now that we no longer check the string for validation we have no
             // catch this
+            throw new FormatException("JDFDate.init: invalid date String " + strDateTimeLocal);
+         }
+         catch (ArgumentOutOfRangeException)
+         {
             throw new FormatException("JDFDate.init: invalid date String " + strDateTimeLocal);
          }
          catch (FormatException)

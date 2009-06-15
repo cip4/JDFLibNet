@@ -731,7 +731,7 @@ namespace org.cip4.jdflib.core
       ///	 
       public virtual XmlNode importNode(XmlNode importedNode, bool deep)
       {
-         return (m_doc == null) ? null : m_doc.importNode(importedNode, deep);
+         return (m_doc == null) ? null : m_doc.ImportNode(importedNode, deep);
       }
 
       ///   
@@ -1281,7 +1281,7 @@ namespace org.cip4.jdflib.core
       ///	 *  </summary>
       ///	 * <returns> XMLDocUserData of this object </returns>
       ///	 
-      protected internal virtual XMLDocUserData getXMLDocUserData()
+      public virtual XMLDocUserData getXMLDocUserData()
       {
          XMLDocUserData userData = (XMLDocUserData)m_doc.getUserData();
 

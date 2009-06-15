@@ -243,6 +243,10 @@ namespace org.cip4.jdflib.core
       {
          if (attrInfo_update != null)
          {
+            // if the table already contains this key, remove it first
+            if (attribInfoTable.ContainsKey(attrInfo_update.getAttributeName()))
+               attribInfoTable.Remove(attrInfo_update.getAttributeName());
+
             attribInfoTable.Add(attrInfo_update.getAttributeName(), attrInfo_update.getAtrInfo());
          }
          return this;
@@ -254,8 +258,13 @@ namespace org.cip4.jdflib.core
          {
             for (int i = 0; i < attrInfo_update.Length; i++)
             {
-               AtrInfoTable atrInfoTable = attrInfo_update[i];
-               attribInfoTable.Add(atrInfoTable.getAttributeName(), atrInfoTable.getAtrInfo());
+               AtrInfoTable attrInfoTable = attrInfo_update[i];
+
+               // if the table already contains this key, remove it first
+               if (attribInfoTable.ContainsKey(attrInfoTable.getAttributeName()))
+                  attribInfoTable.Remove(attrInfoTable.getAttributeName());
+
+               attribInfoTable.Add(attrInfoTable.getAttributeName(), attrInfoTable.getAtrInfo());
             }
          }
          return this;
@@ -1035,8 +1044,13 @@ namespace org.cip4.jdflib.core
 
       public override string ToString()
       {
-         string s = "AttributeInfoTable verion=" + version;
-         s += attribInfoTable.ToString();
+         string s = "AttributeInfoTable version=" + version + " {";
+         foreach (object key in attribInfoTable.Keys)
+         {
+            s += " {" + key.ToString() + "," + attribInfoTable[key].ToString() + "}";
+         }
+         s += "}";
+ 
          return s;
       }
 

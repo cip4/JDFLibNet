@@ -723,8 +723,10 @@ namespace org.cip4.jdflib.core
                else if (!@value.Equals(getInheritedAttribute(key, null, null)))
                {
                   bDirty = true;
-                  XmlAttribute at = base.SetAttributeNode(key, AttributeName.XMLNSURI);
-                  at.Value = @value;
+                  base.SetAttribute(key, @value);
+                  // Java to C# Conversion - Question - What is the point of this constant Namspace value, 
+                  //    when setting this namespace attribute value?
+                  // super.setAttributeNS(AttributeName.XMLNSURI, key, value);
                   ((DocumentJDFImpl)OwnerDocument).setIgnoreNSDefault(false);
                }
             }
@@ -853,7 +855,6 @@ namespace org.cip4.jdflib.core
                            nameSpaceURILocal = null; // avoid spurios NS1 prefix
                         }
                      }
-
                      base.SetAttribute(xmlnsLocalName(key), nameSpaceURILocal, @value);
                   }
                }
@@ -874,7 +875,7 @@ namespace org.cip4.jdflib.core
       ///	 
       public void setAttribute(string key, string @value)
       {
-         SetAttribute(key, @value, null);
+         SetAttribute(key, @value);
       }
 
       ///   
@@ -2868,7 +2869,7 @@ namespace org.cip4.jdflib.core
       ///	 *  </param>
       ///	 * <returns> KElement the element specified by id and name </returns>
       ///	 
-      protected internal virtual KElement getDeepElementByID(string attName, string id, KElement childToExclude, XMLDocUserData ud)
+      public virtual KElement getDeepElementByID(string attName, string id, KElement childToExclude, XMLDocUserData ud)
       {
          string attVal = getAttribute_KElement(attName, null, null);
          if (attVal != null)
@@ -3712,6 +3713,13 @@ namespace org.cip4.jdflib.core
       public virtual KElement renameElement(string newName, string nameSpaceURI)
       {
          // Java to C# Conversion - TODO: How are we going to assign values?
+         // May have to:
+         //   Create element with new name, 
+         //   Copy this attributes and child node to new element, 
+         //   Insert new element before this element
+         //   Remove this element.
+         //   Make new element this element?
+         //   Seems like an awful lot of work.  Any better way?
 
          //this.Name = newName;
          //this.LocalName = xmlnsLocalName(newName);
@@ -3831,7 +3839,7 @@ namespace org.cip4.jdflib.core
             }
             else
             {
-               kRet = (KElement)insertBefore(srcElement, beforeChild);
+               kRet = (KElement)InsertBefore(srcElement, beforeChild);
             }
          }
 
@@ -3904,32 +3912,34 @@ namespace org.cip4.jdflib.core
          return (KElement)copyNode(this, src, beforeChild);
       }
 
+
       private static XmlNode copyNode(XmlNode parent, XmlNode src, XmlNode beforeChild)
       {
-
          if (src == null)
             return null;
 
          lock (parent)
          {
 
-            XmlNode childNode = null;
+            KElement childNode = null;
             if (src.OwnerDocument == parent.OwnerDocument)
             {
-               childNode = src.Clone();
+               childNode = (KElement) src.CloneNode(true);
             }
             else
             {
-               childNode = parent.OwnerDocument.ImportNode(src, true);
+               childNode = (KElement) parent.OwnerDocument.ImportNode(src, true);
             }
 
             if (beforeChild != null && beforeChild.ParentNode != parent)
             {
                throw new JDFException("KElement.copyElement" + " beforeChild is not child of this");
             }
+
             return parent.InsertBefore(childNode, beforeChild);
          }
       }
+
 
       ///   
       ///	 <summary> * Replaces 'this' with src. <br>
@@ -4176,7 +4186,7 @@ namespace org.cip4.jdflib.core
 
          commentTextLocal = StringUtil.replaceString(commentTextLocal, "--", "__");
          XmlComment newChild = OwnerDocument.CreateComment(commentTextLocal);
-         insertBefore(newChild, beforeChild);
+         InsertBefore(newChild, beforeChild);
       }
 
       ///   
@@ -4731,7 +4741,7 @@ namespace org.cip4.jdflib.core
          KElement newChild = createChildFromName(elementName, nameSpaceURI);
          if (newChild != null)
          {
-            insertBefore(newChild, beforeChild);
+            InsertBefore(newChild, beforeChild);
             newChild.init();
          }
          return newChild;
@@ -5173,7 +5183,7 @@ namespace org.cip4.jdflib.core
             KElement r = getDocRoot();
             string rootNodeName = r.Name;
             int nextPos = pathLocal.IndexOf("/", 2);
-            string rootPath = nextPos > 0 ? pathLocal.Substring(1, nextPos) : pathLocal.Substring(1);
+            string rootPath = nextPos > 0 ? pathLocal.Substring(1, (nextPos - 1)) : pathLocal.Substring(1);
             string nextPath = nextPos > 0 ? pathLocal.Substring(nextPos + 1) : "";
             if (rootPath.Equals(rootNodeName) || isWildCard(rootPath))
             {
@@ -5233,7 +5243,7 @@ namespace org.cip4.jdflib.core
 
             // TODO fix escape attribute values
 
-            string n = pathLocal.Substring(posB0 + 1, posB1);
+            string n = pathLocal.Substring(posB0 + 1, (posB1-(posB0 + 1)));
             iSkip = StringUtil.parseInt(n, 0);
             if (iSkip <= 0)
                throw new ArgumentException("getXPathVector: bad index:" + iSkip);
@@ -5323,10 +5333,10 @@ namespace org.cip4.jdflib.core
       private JDFAttributeMap getXPathAtMap(string path, int posBAt, int posB1)
       {
          JDFAttributeMap map = new JDFAttributeMap();
-         string attEqVal = path.Substring(posBAt + 3, posB1);
+         string attEqVal = path.Substring(posBAt + 3, (posB1 - (posBAt + 3)));
          // TODO multiple attributes, maybe tokenize by ","
          string attName = StringUtil.token(attEqVal, 0, "=");
-         string attVal = attEqVal.Substring(attName.Length + 2, attEqVal.Length - 1);
+         string attVal = attEqVal.Substring(attName.Length + 2, ((attEqVal.Length - 1) - (attName.Length + 2)));
          map.put(attName, attVal);
          return map;
       }
@@ -5368,7 +5378,7 @@ namespace org.cip4.jdflib.core
          {
             KElement r = getDocRoot();
             int nextPos = path.IndexOf(JDFConstants.SLASH, 2);
-            if (!path.Substring(1, nextPos).Equals(r.Name))
+            if (!path.Substring(1, (nextPos - 1)).Equals(r.Name))
             {
                throw new JDFException("GetCreateXPathElement:: invalid path: " + path);
             }
@@ -5406,7 +5416,7 @@ namespace org.cip4.jdflib.core
          if (posB0 != -1 && (posB0 < pos || pos == -1))
          {
             int posB1 = path.IndexOf("]");
-            string siSkip = path.Substring(posB0 + 1, posB1);
+            string siSkip = path.Substring(posB0 + 1, (posB1 - (posB0 + 1)));
             if (!StringUtil.isInteger(siSkip))
             {
                throw new ArgumentException("GetCreateXPath: illegal path:" + path);
@@ -6278,7 +6288,7 @@ namespace org.cip4.jdflib.core
 
       public XmlNode appendChild(XmlNode arg0)
       {
-         return insertBefore(arg0, null);
+         return InsertBefore(arg0, null);
       }
 
       [MethodImpl(MethodImplOptions.Synchronized)]
@@ -6294,7 +6304,7 @@ namespace org.cip4.jdflib.core
       }
 
       [MethodImpl(MethodImplOptions.Synchronized)]
-      public XmlNode insertBefore(XmlNode arg0, XmlNode arg1)
+      public override XmlNode InsertBefore(XmlNode arg0, XmlNode arg1)
       {
          setDirty(false);
          return base.InsertBefore(arg0, arg1);
@@ -6316,7 +6326,7 @@ namespace org.cip4.jdflib.core
       ///	 *  </summary>
       ///	 * <returns> the XMLDocUserData of this </returns>
       ///	 
-      protected internal virtual XMLDocUserData getXMLDocUserData()
+      public virtual XMLDocUserData getXMLDocUserData()
       {
          return (OwnerDocument == null) ? null : ((DocumentJDFImpl)OwnerDocument).getUserData();
       }

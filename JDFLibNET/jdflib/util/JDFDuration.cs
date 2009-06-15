@@ -359,7 +359,7 @@ namespace org.cip4.jdflib.util
                factor = -1;
          }
 
-         string strPeriod = a_aDuration.Substring(++iPPos, a_aDuration.Length);
+         string strPeriod = a_aDuration.Substring(++iPPos);
 
          // devide periodInstant into date and time part, which are separated by
          // 'T'
@@ -370,12 +370,12 @@ namespace org.cip4.jdflib.util
             if (iTPos == 0)
             { // e.g. if durationInstant looks like "PT10H30M" - without date
                // part
-               strTime = strPeriod.Substring(1, strPeriod.Length);
+               strTime = strPeriod.Substring(1, (strPeriod.Length - 1));
             }
             else
             { // e.g. if durationInstant looks like "P1Y2M3DT10H30M"
                strDate = strPeriod.Substring(0, iTPos);
-               strTime = strPeriod.Substring(++iTPos, strPeriod.Length);
+               strTime = strPeriod.Substring(++iTPos);
             }
          }
          else
@@ -398,7 +398,7 @@ namespace org.cip4.jdflib.util
                int iMPos = strDate.IndexOf("M");
                if (iMPos > 0)
                {
-                  iMonths = Convert.ToInt32(strDate.Substring(iDateLastPos, iMPos));
+                  iMonths = Convert.ToInt32(strDate.Substring(iDateLastPos, (iMPos-iDateLastPos)));
                   int nYears = iMonths / 12;
                   iduration += (iMonths * 30 + nYears * 5) * 24 * 60 * 60; // add
                   // 5
@@ -419,7 +419,7 @@ namespace org.cip4.jdflib.util
                int iDPos = strDate.IndexOf("D");
                if (iDPos > 0)
                {
-                  iDays = Convert.ToInt32(strDate.Substring(iDateLastPos, iDPos));
+                  iDays = Convert.ToInt32(strDate.Substring(iDateLastPos, (iDPos - iDateLastPos)));
                   iduration += iDays * 24 * 60 * 60;
                }
             }
@@ -436,7 +436,7 @@ namespace org.cip4.jdflib.util
                int iMPos = strTime.IndexOf("M");
                if (iMPos > 0)
                {
-                  iMinutes = Convert.ToInt32(strTime.Substring(iTimeLastPos, iMPos));
+                  iMinutes = Convert.ToInt32(strTime.Substring(iTimeLastPos, (iMPos - iTimeLastPos)));
                   iduration += iMinutes * 60;
                   iTimeLastPos = ++iMPos;
                }
@@ -447,12 +447,12 @@ namespace org.cip4.jdflib.util
                   int iDotPos = strTime.IndexOf(".");
                   if (iDotPos > 0)
                   {
-                     iSeconds = Convert.ToInt32(strTime.Substring(iTimeLastPos, iDotPos));
+                     iSeconds = Convert.ToInt32(strTime.Substring(iTimeLastPos, (iDotPos - iTimeLastPos)));
                      iDotPos++;
                      int mLen = iSPos - iDotPos;
                      if (mLen > 0)
                      {
-                        string sMilli = "0." + strTime.Substring(iDotPos, iSPos);
+                        string sMilli = "0." + strTime.Substring(iDotPos, (iSPos - iDotPos));
                         fracSecs = Convert.ToDouble(sMilli);
                      }
                      iduration += iSeconds;
@@ -460,7 +460,7 @@ namespace org.cip4.jdflib.util
                   }
                   else
                   {
-                     iSeconds = Convert.ToInt32(strTime.Substring(iTimeLastPos, iSPos));
+                     iSeconds = Convert.ToInt32(strTime.Substring(iTimeLastPos, (iSPos - iTimeLastPos)));
                      iduration += iSeconds;
                   }
                }

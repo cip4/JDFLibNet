@@ -617,7 +617,7 @@ namespace org.cip4.jdflib.util
             int pos = strWork.IndexOf(c, lastPos);
             if (pos >= 0)
             {
-               b.Append(strWork.Substring(lastPos, pos));
+               b.Append(strWork.Substring(lastPos, (pos - lastPos)));
                if (replaceString != null)
                   b.Append(replaceString);
             }
@@ -1454,6 +1454,10 @@ namespace org.cip4.jdflib.util
             return true;
          }
          catch (FormatException)
+         {
+            return false;
+         }
+         catch (OverflowException)
          {
             return false;
          }

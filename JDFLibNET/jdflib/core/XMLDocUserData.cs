@@ -446,6 +446,8 @@ namespace org.cip4.jdflib.core
 
          if (idLocal != null)
          {
+            if (m_mapTarget.ContainsKey(idLocal))
+               m_mapTarget.Remove(idLocal);
             m_mapTarget.Add(idLocal, targetElement); // put the correct in
          }
       }

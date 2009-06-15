@@ -148,7 +148,7 @@ namespace org.cip4.jdflib.util
             for (int i = 0; i < names.Length; i++)
             {
                if (names[i].FullName.Length > 9)
-                  l = StringUtil.parseInt(names[i].FullName.Substring(1, 9), 0);
+                  l = StringUtil.parseInt(names[i].FullName.Substring(1, 8), 0);
                else
                   l = 0;
                if (l > max)
