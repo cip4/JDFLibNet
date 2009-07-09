@@ -131,7 +131,7 @@ namespace org.cip4.jdflib.jmf
       ///	 *  </summary>
       ///	 * <returns> the document </returns>
       ///	 
-      protected internal override JDFDoc getURLDoc()
+      public override JDFDoc getURLDoc()
       {
          return base.getURLDoc();
       }

@@ -115,15 +115,16 @@ namespace org.cip4.jdflib.util
       private DateTime m_DateTime;
       private TimeZone m_TimeZone = null;
 
-      private long ToMillisecs(DateTime dt)
+      public static long ToMillisecs(DateTime dt)
       {
          return (dt.Ticks - TICKS_ON_JAN_1_1970) / 10000;
       }
 
-      private DateTime FromMillisecs(long millisecs)
+      public static DateTime FromMillisecs(long millisecs)
       {
          return new DateTime((millisecs * 10000) + TICKS_ON_JAN_1_1970);
       }
+
 
 
       /// <summary>

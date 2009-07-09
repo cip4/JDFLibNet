@@ -3765,10 +3765,11 @@ public class SupportClass
       /// </summary>
       /// <param name="message">The message which will receive the attachments.</param>
       /// <param name="attchs">An ArrayList containing the attachments.</param>
-      public static void AddAttachments(System.Net.Mail.MailMessage message, System.Collections.ArrayList attchs)
+      /// 
+      public static void AddAttachments(System.Net.Mail.MailMessage message, System.Net.Mail.AttachmentCollection attachments)
       {
-         for (int index = 0; index < attchs.Count; index++)
-            message.Attachments.Add((System.Net.Mail.Attachment)attchs[index]);
+         foreach(System.Net.Mail.Attachment attatchment in attachments)
+            message.Attachments.Add(attatchment);
       }
 
       /// <summary>

@@ -127,17 +127,17 @@ namespace org.cip4.jdflib.cformat
 
       // ~ Instance fields
 
-      internal bool addBlank = false;
-      internal bool addSign = false;
-      internal bool alternate = false;
-      internal bool leftAdjust = false;
-      internal int prec = -1;
+      public bool addBlank = false;
+      public bool addSign = false;
+      public bool alternate = false;
+      public bool leftAdjust = false;
+      public int prec = -1;
 
-      internal string prefix = null;
-      internal string suffix = null;
-      internal char type = '\0';
-      internal int width = 0;
-      internal bool zeropad = false;
+      public string prefix = null;
+      public string suffix = null;
+      public char type = '\0';
+      public int width = 0;
+      public bool zeropad = false;
       private DecDouble dd;
       private int idx;
       private readonly OutBuffer output;

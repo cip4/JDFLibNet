@@ -104,11 +104,11 @@ namespace org.cip4.jdflib.cformat
 
       // ~ Instance fields
 
-      internal string cmatch;
-      internal string prefix;
-      internal string suffix;
+      public string cmatch;
+      public string prefix;
+      public string suffix;
       public int type;
-      internal int width;
+      public int width;
 
       // ~ Constructors
 

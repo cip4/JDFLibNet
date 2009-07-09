@@ -1881,7 +1881,7 @@ namespace org.cip4.jdflib.validate
             {
                try
                {
-                  processMimeStream(new FileStream(argFile.FullName, FileMode.Open));
+                  ProcessMimeStream(new FileStream(argFile.FullName, FileMode.Open));
                }
                catch (FileNotFoundException)
                {
@@ -1972,15 +1972,16 @@ namespace org.cip4.jdflib.validate
          return pOut;
       }
 
-      ///   
-      ///	 <summary> * process a mime file
-      ///	 *  </summary>
-      ///	 * <param name="argFile">
-      ///	 * @return </param>
-      ///	 
-      public virtual XMLDoc processMimeStream(Stream inStream)
+         
+      /// <summary>
+      ///  Process a mime file
+      /// </summary>
+      /// <param name="inStream">Stream containing MIME file data</param>
+      /// <returns>XML Document or null if not found or error</returns>
+      /// 
+      public virtual XMLDoc ProcessMimeStream(Stream inStream)
       {
-         ArrayList multi = MimeUtil.getMultiPart(inStream);
+         AttachmentCollection multi = MimeUtil.GetMultiPart(inStream);
          bool bTryKeep = bTryFormats;
          if (multi == null)
          {
@@ -2001,14 +2002,14 @@ namespace org.cip4.jdflib.validate
          {
             try
             {
-               Attachment bp = (Attachment)multi[i];
+               Attachment bp = multi[i];
                if (bp != null)
                {
                   Stream bpStream;
                   bpStream = bp.ContentStream;
                   string fiName = bp.Name;
                   string contentType = bp.ContentType.Name;
-                  if (MimeUtil.isJDFMimeType(contentType))
+                  if (MimeUtil.IsJDFMimeType(contentType))
                   {
                      processSingleStream(bpStream, fiName, bp);
                      bTryKeep = bTryKeep && bTryFormats;
@@ -2122,7 +2123,7 @@ namespace org.cip4.jdflib.validate
          {
             try
             {
-               d = processMimeStream(new FileStream(file.FullName, FileMode.Open));
+               d = ProcessMimeStream(new FileStream(file.FullName, FileMode.Open));
             }
             catch (FileNotFoundException)
             {

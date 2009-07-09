@@ -8336,7 +8336,7 @@ namespace org.cip4.jdflib.node
 
                if (vsMapKeys != null)
                {
-                  isLeaf = vsMapKeys.containsAll(vsPartIDKeys);
+                  isLeaf = vsMapKeys.ContainsAll(vsPartIDKeys);
                }
             }
             else
@@ -8584,7 +8584,7 @@ namespace org.cip4.jdflib.node
                {
                   JDFResource resource = (JDFResource)linkedResources[i];
                   VString partIDKeys = resource.getPartIDKeys();
-                  if (partIDKeys.Count >= partMap.Count && partIDKeys.containsAll(partMap.getKeys()))
+                  if (partIDKeys.Count >= partMap.Count && partIDKeys.ContainsAll(partMap.getKeys()))
                   {
                      matchingPartIDKeys = partIDKeys;
                      break;

@@ -202,6 +202,11 @@ namespace org.cip4.jdflib.util
          m_BufferedStream.SetLength(value);
       }
 
+      public int Read()
+      {
+         return Read(new byte[1], 0, 1);
+      }
+
       public override int Read(byte[] buffer, int offset, int count)
       {
          return m_BufferedStream.Read(buffer, offset, count);

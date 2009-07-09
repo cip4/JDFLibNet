@@ -69,8 +69,6 @@
 
 
 
-//JAVA TO VB & C# CONVERTER NOTE: Beginning of line comments are not maintained by Java to VB & C# Converter
-//ORIGINAL LINE: *//**
  /*
  * Copyright (c) 2001 Heidelberger Druckmaschinen AG, All Rights Reserved.
  *

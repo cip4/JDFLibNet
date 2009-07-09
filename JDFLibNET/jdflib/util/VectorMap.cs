@@ -165,7 +165,7 @@ namespace org.cip4.jdflib.util
          if (v == null)
          {
             v = new List<vectorObject>();
-            this[key] = v; // put(key, v);
+            this.Add(key, v); // put(key, v);
          }
          if (!v.Contains(val))
             v.Add(val);

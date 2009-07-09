@@ -131,7 +131,7 @@ namespace org.cip4.jdflib.util
       public virtual void restart()
       {
          if (runThread != null)
-            stop();
+            Stop();
          runThread = new SupportClass.ThreadClass(new ThreadStart(this.Run), "HotFolder_" + nThread++);
          interrupt = false;
          runThread.Start();
@@ -142,7 +142,7 @@ namespace org.cip4.jdflib.util
       ///	 <summary> * stop this thread;
       ///	 *  </summary>
       ///	 
-      public virtual void stop()
+      public virtual void Stop()
       {
          interrupt = true;
          if (runThread != null)

@@ -4651,7 +4651,7 @@ namespace org.cip4.jdflib.core
       ///	 *  </summary>
       ///	 * <returns> the document </returns>
       ///	 
-      protected internal virtual JDFDoc getURLDoc()
+      public virtual JDFDoc getURLDoc()
       {
          string url = getAttribute(AttributeName.URL, null, JDFConstants.EMPTYSTRING);
          if (isWildCard(url))

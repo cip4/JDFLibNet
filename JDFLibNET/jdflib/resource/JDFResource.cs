@@ -4307,7 +4307,7 @@ namespace org.cip4.jdflib.resource
          VString vsPartIDKeysThis = getPartIDKeys();
          if (vsPartIDKeysThis == null || vsPartIDKeysThis.IsEmpty())
             return false;
-         return vsPartIDKeysThis.containsAll(vsPartitions);
+         return vsPartIDKeysThis.ContainsAll(vsPartitions);
       }
 
       ///   

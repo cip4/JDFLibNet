@@ -880,7 +880,7 @@ namespace org.cip4.jdflib.util
       ///	 * <param name="d2"> </param>
       ///	 * <returns> int 1,0 or -1 </returns>
       ///	 
-      public static int compareTo(double d1, double d2)
+      public static int CompareTo(double d1, double d2)
       {
          if (isEqual(d1, d2))
             return 0;

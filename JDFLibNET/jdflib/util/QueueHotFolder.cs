@@ -143,7 +143,7 @@ namespace org.cip4.jdflib.util
       ///     
       public virtual void stop()
       {
-         hf.stop();
+         hf.Stop();
       }
 
       ///    

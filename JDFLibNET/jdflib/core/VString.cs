@@ -544,7 +544,7 @@ namespace org.cip4.jdflib.core
       /// </summary>
       /// <param name="list">VString list of strings</param>
       /// <returns>true if all the strings in the list are in this VString instance</returns>
-      public virtual bool containsAll(VString list)
+      public virtual bool ContainsAll(VString list)
       {
          if (list == null)
             return true;

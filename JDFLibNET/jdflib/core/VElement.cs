@@ -623,5 +623,28 @@ namespace org.cip4.jdflib.core
       {
          return (this.Count == 0);
       }
+
+
+      /// <summary>
+      /// Check if all the elements in the list are in this VElement instance
+      /// </summary>
+      /// <param name="list">VElement list</param>
+      /// <returns>true if all of the Elements in the list are in this VElement instance</returns>
+      public virtual bool ContainsAll(VElement list)
+      {
+         if (list == null)
+            return true;
+
+         if (list.Count > this.Count)
+            return false;
+
+         foreach (KElement item in list)
+         {
+            if (!this.Contains(item))
+               return false;
+         }
+         return true;
+      }
+
    }
 }

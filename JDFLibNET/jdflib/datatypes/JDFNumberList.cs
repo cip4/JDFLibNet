@@ -179,7 +179,7 @@ namespace org.cip4.jdflib.datatypes
       ///	 
       public virtual bool Contains(double d)
       {
-         return Contains(d);
+         return base.Contains(d);
       }
    }
 }

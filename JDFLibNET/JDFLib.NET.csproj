@@ -1308,6 +1308,7 @@
     </Compile>
     <Compile Include="jdflib\util\VectorMap.cs" />
     <Compile Include="jdflib\util\XMLstrm.cs" />
+    <Compile Include="jdflib\validate\CheckJDF.cs" />
     <Compile Include="jdflib\validate\ICheckValidator.cs" />
     <Compile Include="jdflib\validate\ICheckValidatorFactory.cs" />
     <Compile Include="jdflib\validate\JDFValidator.cs" />

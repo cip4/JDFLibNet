@@ -528,6 +528,12 @@ namespace org.cip4.jdflib.datatypes
          return m_hashTable.ContainsKey(key);
       }
 
+
+      public virtual bool ContainsValue(string value)
+      {
+         return m_hashTable.ContainsValue(value);
+      }
+
       ///   
       ///	 <summary> * isEmpty - returns true if the hashtable is empty
       ///	 *  </summary>

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JDFLib.NET", "JDFLibNET\JDFLib.NET.csproj", "{6CB240AD-00FD-4825-9FEA-261739F3B5CF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JDFLib.NET", "JDFLib.NET.csproj", "{6CB240AD-00FD-4825-9FEA-261739F3B5CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

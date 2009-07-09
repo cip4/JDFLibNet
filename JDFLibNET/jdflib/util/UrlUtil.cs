@@ -82,6 +82,7 @@ namespace org.cip4.jdflib.util
    using System.Net;
    using System.Net.Mail;
    using System.Net.Mime;
+   using System.Web;
    using System.Text;
 
 
@@ -288,21 +289,19 @@ namespace org.cip4.jdflib.util
          return cleanDots(s);
       }
 
-      ///   
-      ///	 <summary> * get a readable inputstream from the CID url
-      ///	 *  </summary>
-      ///	 * <param name="url"> the url to get a stream for </param>
-      ///	 * <param name="multipart"> the multipart mime to which the cid refers
-      ///	 *  </param>
-      ///	 * <returns> InputStream - the readable input stream that this filespec refers to, <code>null</code> if broken or
-      ///	 *         non-existent
-      ///	 *  </returns>
-      ///	 
-      public static Stream getCidURLStream(string url, ArrayList multipart)
+               	 
+      /// <summary>
+      /// Get a readable inputstream from the CID url
+      /// </summary>
+      /// <param name="url">The url to get a stream for </param>
+      /// <param name="multipart">The multipart mime to which the cid refers</param>
+      /// <returns>The readable input stream that this filespec refers to, or null if broken or non-existent</returns>
+      /// 
+      public static Stream GetCidURLStream(string url, AttachmentCollection multipart)
       {
          if (url == null || url.Equals(JDFConstants.EMPTYSTRING))
             return null;
-         System.Net.Mail.Attachment bp = MimeUtil.getPartByCID(multipart, url);
+         System.Net.Mail.Attachment bp = MimeUtil.GetPartByCID(multipart, url);
          if (bp == null)
             return null;
 
@@ -353,27 +352,29 @@ namespace org.cip4.jdflib.util
          return (index == -1) ? pathName : pathName.Substring(0, index);
       }
 
-      ///   
-      ///	 <summary> * get an array of urlparts, regardless of whether this was mime or not if the stream is mime/multipart get also
-      ///	 * extract that
-      ///	 *  </summary>
-      ///	 * <returns> the array of body parts input stream </returns>
-      ///	 
-      public static UrlPart[] getURLParts(HttpWebRequest connection)
+         
+      /// <summary>
+      /// Get an array of urlparts, regardless of whether this was mime or not if the stream is mime/multipart also extract that
+      /// </summary>
+      /// <param name="connection">Web request/response</param>
+      /// <returns>The array of body parts input stream </returns>
+      /// 
+      public static UrlPart[] GetURLParts(HttpWebRequest connection)
       {
          if (connection == null)
             return null;
 
-         string ContentType;
+         string contentType;
          try
          {
-            ContentType = connection.GetResponse().Headers.Get("Content-Type");
+            contentType = connection.GetResponse().Headers.Get("Content-Type");
          }
-         catch (System.ArgumentNullException)
+         catch (ArgumentNullException)
          {
-            ContentType = null;
+            contentType = null;
          }
-         System.String urlContentType = ContentType;
+         
+         string urlContentType = contentType;
 
          if (!MimeUtil.MULTIPART_RELATED.ToLower().Equals(urlContentType.ToLower()))
          {
@@ -389,27 +390,29 @@ namespace org.cip4.jdflib.util
             return new UrlPart[] { p };
          }
 
-         ArrayList mp;
+         AttachmentCollection attachments;
          try
          {
-            mp = MimeUtil.getMultiPart(connection.GetResponse().GetResponseStream());
+            attachments = MimeUtil.GetMultiPart(connection.GetResponse().GetResponseStream());
          }
          catch (IOException)
          {
             return null;
          }
-         Attachment[] bp = MimeUtil.getBodyParts(mp);
-         if (bp == null)
+
+         if (attachments == null)
             return null;
-         UrlPart[] parts = new UrlPart[bp.Length];
-         for (int i = 0; i < bp.Length; i++)
+         UrlPart[] parts = new UrlPart[attachments.Count];
+
+         int i = 0;
+         foreach(Attachment attatchment in attachments)
          {
             try
             {
-               ContentType ct = bp[i].ContentType;
-               parts[i] = new UrlPart(bp[i]);
+               ContentType ct = attatchment.ContentType;
+               parts[i] = new UrlPart(attatchment);
             }
-            catch (System.Web.HttpException)
+            catch (HttpException)
             {
                parts[i] = null;
             }
@@ -417,7 +420,7 @@ namespace org.cip4.jdflib.util
             {
                parts[i] = null;
             }
-
+            ++i;
          }
          return parts;
       }

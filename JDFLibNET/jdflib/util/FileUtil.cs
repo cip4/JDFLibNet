@@ -277,7 +277,7 @@ namespace org.cip4.jdflib.util
       ///	 * <param name="dirToZapp"> the file directory to utterly anihilate </param>
       ///	 * <returns> true if ciao </returns>
       ///	 
-      public static bool deleteAll(FileInfo dirToZapp)
+      public static bool DeleteAll(FileInfo dirToZapp)
       {
          if (dirToZapp == null)
             return false;
@@ -288,12 +288,33 @@ namespace org.cip4.jdflib.util
             FileInfo[] ff = dirToZapp.Directory.GetFiles();
             if (ff != null)
             {
-               int siz = ff.Length;
-               for (int i = 0; i < siz; i++)
-                  b = deleteAll(ff[i]) && b;
+               int size = ff.Length;
+               for (int i = 0; i < size; i++)
+                  b = DeleteAll(ff[i]) && b;
             }
          }
          dirToZapp.Directory.Delete();
+         return b;
+      }
+
+
+      public static bool DeleteAll(DirectoryInfo dirToZapp)
+      {
+         if (dirToZapp == null)
+            return false;
+
+         bool b = true;
+         if (dirToZapp.Exists)
+         {
+            FileInfo[] ff = dirToZapp.GetFiles();
+            if (ff != null)
+            {
+               int size = ff.Length;
+               for (int i = 0; i < size; i++)
+                  b = DeleteAll(ff[i]) && b;
+            }
+         }
+         dirToZapp.Delete();
          return b;
       }
 

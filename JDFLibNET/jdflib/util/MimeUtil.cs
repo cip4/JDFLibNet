@@ -81,25 +81,13 @@ namespace org.cip4.jdflib.util
    using System.Runtime.CompilerServices;
    using System.Collections;
    using System.Collections.Generic;
+   using System.Text;
    using System.Net;
    using System.Net.Mail;
    using System.Net.Mime;
    using System.Web;
    using System.IO;
 
-
-   //using DataHandler = javax.activation.DataHandler;
-   //using DataSource = javax.activation.DataSource;
-   //using FileDataSource = javax.activation.FileDataSource;
-   //using BodyPart = javax.mail.BodyPart;
-   //using Message = javax.mail.Message;
-   //using MessagingException = javax.mail.MessagingException;
-   //using Multipart = javax.mail.Multipart;
-   //using Session = javax.mail.Session;
-   //using MimeBodyPart = javax.mail.internet.MimeBodyPart;
-   //using MimeMessage = javax.mail.internet.MimeMessage;
-   //using MimeMultipart = javax.mail.internet.MimeMultipart;
-   //using SharedFileInputStream = javax.mail.util.SharedFileInputStream;
 
    using IOUtils = org.apache.commons.io.IOUtils;
    using AttributeName = org.cip4.jdflib.core.AttributeName;
@@ -508,116 +496,52 @@ namespace org.cip4.jdflib.util
          return urlToCid(s).Substring(4);
       }
 
-      ///   
-      ///	 <summary> * Extracts all the parts of a multipart MIME message and returns an array of InputStream for each of the separate
-      ///	 * MIME parts.
-      ///	 *  </summary>
-      ///	 * <param name="mimeStream">
-      ///	 * @return </param>
-      ///	 
-      public static Attachment[] extractMultipartMime(Stream mimeStream)
+               	 
+      /// <summary>
+      /// Get the MIME Attachment from a multiPart package with a given cid
+      /// </summary>
+      /// <param name="mp">The multipart package to search in </param>
+      /// <param name="cid">The cid of the requested attachment</param>
+      /// <returns>The matching attachment, null if none is found </returns>
+      /// 
+      public static Attachment GetPartByCID(AttachmentCollection attachments, string cid)
       {
-         Attachment[] bodyParts = null;
-         ArrayList mp = getMultiPart(mimeStream);
-         bodyParts = getBodyParts(mp);
-         return bodyParts;
+         foreach (Attachment attachment in attachments)
+         {
+            if (MatchesCID(attachment, cid))
+               return attachment;
+         }
+         return null;
       }
 
-      ///   
-      ///	 <summary> * get all the parts of of a multipart an
-      ///	 *  </summary>
-      ///	 * <param name="mp"> the multiPart to extract
-      ///	 *  </param>
-      ///	 * <returns> the array of parts, null if snafu... </returns>
-      ///	 
-      public static Attachment[] getBodyParts(ArrayList mp)
+      	 
+      /// <summary>
+      /// Get the MIME attachment from the attachment package with a given cid. Create one if it does not exist
+      /// </summary>
+      /// <param name="attachments">the attachment collection to search in </param>
+      /// <param name="cid">the cid of the requested attachment</param>
+      /// <returns>The matching attachment or new attachment if none is found </returns>
+      /// 
+      public static Attachment GetCreatePartByCID(AttachmentCollection attachments, string cid)
       {
-         List<Attachment> v = new List<Attachment>();
-         try
-         {
-            for (int i = 0; true; i++)
-            {
-               Attachment bp = (Attachment)mp[i];
-               v.Add(bp);
-            }
-
-         }
-         catch (HttpException)
-         {
-            return null;
-         }
-         // this may seem messy, but getCount() can be very costly since it
-         // requires a complete mime parse.
-         // simply getting the next reduces the time by a factor 2, since only
-         // one linear parse is required
-         catch (IndexOutOfRangeException)
-         {
-            if (v.Count == 0)
-               return null;
-            Attachment[] ret = new Attachment[v.Count];
-            ret = v.ToArray();
-            return ret;
-         }
-      }
-
-      ///   
-      ///	 <summary> * get the MIME BodyPart from a multiPart package with a given cid
-      ///	 *  </summary>
-      ///	 * <param name="mp"> the multipart package to search in </param>
-      ///	 * <param name="cid"> the cid of the requested bodypart
-      ///	 *  </param>
-      ///	 * <returns> BodyPart the matching BodyPart, null if none is found </returns>
-      ///	 
-      public static Attachment getPartByCID(ArrayList mp, string cid)
-      {
-         try
-         {
-            for (int i = 0; true; i++)
-            {
-               Attachment bp = (Attachment)mp[i];
-               if (matchesCID(bp, cid))
-                  return bp;
-            }
-         }
-         catch (HttpException)
-         {
-            // log.error("MessagingException: ", e);
-            return null;
-         }
-         catch (IndexOutOfRangeException)
-         {
-            // log.error("MessagingException: ", e);
-            return null;
-         }
-      }
-
-      ///   
-      ///	 <summary> * get the MIME BodyPart from a multiPart package with a given cid create one if it does not exist;
-      ///	 *  </summary>
-      ///	 * <param name="mp"> the multipart package to search in </param>
-      ///	 * <param name="cid"> the cid of the requested bodypart
-      ///	 *  </param>
-      ///	 * <returns> BodyPart the matching BodyPart, null if none is found </returns>
-      ///	 
-      public static Attachment getCreatePartByCID(ArrayList mp, string cid)
-      {
-         Attachment bp = getPartByCID(mp, cid);
-         if (bp != null)
-            return bp;
+         Attachment attachment = GetPartByCID(attachments, cid);
+         if (attachment != null)
+            return attachment;
 
          // Java to C# Conversion - TODO: Need a file name or a stream to create a new Attachment
-         bp = new Attachment("FileName");
+         attachment = new Attachment("FileName");
          try
          {
-            bp.ContentId = cid;
-            mp.Add(bp);
+            attachment.ContentId = cid;
+            attachments.Add(attachment);
          }
          catch (HttpException)
          {
-            bp = null;
+            attachment = null;
          }
-         return bp;
+         return attachment;
       }
+
 
       ///   
       ///	 <summary> * get the JDF Doc from a given body part
@@ -633,7 +557,7 @@ namespace org.cip4.jdflib.util
          try
          {
             string mimeType = bp.ContentType.Name;
-            if (!isJDFMimeType(mimeType))
+            if (!IsJDFMimeType(mimeType))
                return null;
             Stream @is = bp.ContentStream;
             JDFParser p = new JDFParser();
@@ -652,15 +576,15 @@ namespace org.cip4.jdflib.util
          }
       }
 
-      ///   
-      ///	 <summary> * check if a BodyPart matches a given cid
-      ///	 *  </summary>
-      ///	 * <param name="bp"> the Attachment to check </param>
-      ///	 * <param name="cid"> the cid string any '<' '>' or 'cid:' prefixes are removed if null, anything matches
-      ///	 *  </param>
-      ///	 * <returns> true if this bp matches the cid </returns>
-      ///	 
-      public static bool matchesCID(Attachment bp, string cid)
+         
+      /// <summary>
+      /// Check if an Attachment matches a given cid
+      /// </summary>
+      /// <param name="bp">the Attachment to check </param>
+      /// <param name="cid">the cid string any '<' '>' or 'cid:' prefixes are removed if null, anything matches</param>
+      /// <returns>true if this attachment matches the cid </returns>
+      /// 
+      public static bool MatchesCID(Attachment attachment, string cid)
       {
          string cidLocal = cid;
 
@@ -676,21 +600,21 @@ namespace org.cip4.jdflib.util
          if (cidLocal.EndsWith(">"))
             cidLocal = cidLocal.Substring(0, cidLocal.Length - 1);
 
-         string s = getContentID(bp);
+         string s = attachment.ContentId;
          if (s == null)
             return false;
 
          return cidLocal.ToLower().Equals(s.ToLower());
       }
 
-      ///   
-      ///	 <summary> * helper to create a root multipart from a file
-      ///	 *  </summary>
-      ///	 * <param name="fileName"> the name of the file used as input
-      ///	 *  </param>
-      ///	 * <returns> MultiPart the Multipart that represents the root mime, null if something went wrong </returns>
-      ///	 
-      public static ArrayList getMultiPart(string fileName)
+         
+      /// <summary>
+      /// Helper to create a root multipart from a file
+      /// </summary>
+      /// <param name="fileName">The name of the file used as input</param>
+      /// <returns>The Multipart that represents the root mime, null if something went wrong </returns>
+      /// 
+      public static AttachmentCollection GetMultiPart(string fileName)
       {
          FileInfo f = urlToFile(fileName);
          try
@@ -698,8 +622,7 @@ namespace org.cip4.jdflib.util
             // MUST be SharedFileInputStream, as the body part retrieving methods rely on the stream remaining open!
             // Java to C# Conversion - TODO: Do we need to find an equivalent of Java's SharedFileInputStream for this?
             Stream fis = new FileStream(f.FullName, FileMode.Open);
-            ArrayList mp = MimeUtil.getMultiPart(fis);
-            return mp;
+            return MimeUtil.GetMultiPart(fis);
          }
          catch (FileNotFoundException)
          {
@@ -711,30 +634,27 @@ namespace org.cip4.jdflib.util
          }
       }
 
-      ///   
-      ///	 <summary> * create a root multipart from an input stream
-      ///	 *  </summary>
-      ///	 * <param name="mimeStream"> the input stream
-      ///	 *  </param>
-      ///	 * <returns> MultiPart the Multipart that represents the root mime, null if something went wrong </returns>
-      ///	 
-      public static ArrayList getMultiPart(Stream mimeStream)
+      
+	   /// <summary>
+	   /// Create a root multipart from an input stream
+	   /// </summary>
+	   /// <param name="mimeStream">The input stream</param>
+	   /// <returns>The Multipart that represents the root mime, null if something went wrong </returns>
+      public static AttachmentCollection GetMultiPart(Stream mimeStream)
       {
          if (mimeStream == null)
             return null;
 
          try
          {
-            // ManagedMemoryDataSource
-            // TODO rethink memory management for large files
-            // SharedInputStream sis=new Shared
             MailMessage mimeMessage = new MailMessage();
+
 
             // Java to C# Conversion - TODO: Not translated
             //mimeMessage.getDataHandler().getDataSource();
+            throw new NotImplementedException("Need to implement stream to MailMessage");
 
-            ArrayList mp = new ArrayList();
-            return mp;
+            //return mimeMessage.Attachments;
          }
          catch (HttpException)
          {
@@ -762,9 +682,7 @@ namespace org.cip4.jdflib.util
          return ext == null ? TEXT_UNKNOWN : ext;
       }
 
-      ///   
-      ///	 <summary> *  </summary>
-      ///	 
+
       private static void fillExtensionMap()
       {
          if (extensionMap == null)
@@ -784,18 +702,18 @@ namespace org.cip4.jdflib.util
             extensionMap.Add("mjm", MULTIPART_RELATED);
             extensionMap.Add("mjd", MULTIPART_RELATED);
             extensionMap.Add("mim", MULTIPART_RELATED);
-
          }
       }
 
-      ///   
-      ///	 <summary> * checkst whether the mime type corresponds to one of "application/vnd.cip4-jdf+xml";
-      ///	 * "application/vnd.cip4-jmf+xml"; "text/xml";
-      ///	 *  </summary>
-      ///	 * <param name="mimeType"> the string to test </param>
-      ///	 * <returns> true if matches </returns>
-      ///	 
-      public static bool isJDFMimeType(string mimeType)
+               	 
+      /// <summary>
+      /// Checks whether the mime type corresponds to one of "application/vnd.cip4-jdf+xml", 
+      /// "application/vnd.cip4-jmf+xml", or "text/xml"
+      /// </summary>
+      /// <param name="mimeType">The string to test </param>
+      /// <returns>true if matches</returns>
+      /// 
+      public static bool IsJDFMimeType(string mimeType)
       {
          string mimeTypeLocal = mimeType;
 
@@ -809,20 +727,12 @@ namespace org.cip4.jdflib.util
          return JDFConstants.MIME_JDF.ToLower().Equals(mimeTypeLocal.ToLower()) || JDFConstants.MIME_JMF.ToLower().Equals(mimeTypeLocal.ToLower()) || JDFConstants.MIME_TEXTXML.ToLower().Equals(mimeTypeLocal.ToLower());
       }
 
-      // public static MimeMessage parseMime(InputStream mimeStream) {
-      // //MimeMessage
-      // return null;
-      // }
 
-      // public static boolean isMultipart(Message message)
-      // throws MessagingException {
-      // return message.isMimeType("multipart/*");
-      // }
       ///   
       ///	 * @deprecated use 3 parameter version 
       ///	 
       [Obsolete("use 3 parameter version")]
-      public static ArrayList buildMimePackage(JDFDoc docJMF, JDFDoc docJDF)
+      public static AttachmentCollection buildMimePackage(JDFDoc docJMF, JDFDoc docJDF)
       {
          return buildMimePackage(docJMF, docJDF, true);
       }
@@ -838,12 +748,12 @@ namespace org.cip4.jdflib.util
       ///	 *  </param>
       ///	 * <returns> a Message representing the resulting MIME package, null if an error occured </returns>
       ///	 
-      public static ArrayList buildMimePackage(JDFDoc docJMF, JDFDoc docJDF, bool extendReferenced)
+      public static AttachmentCollection buildMimePackage(JDFDoc docJMF, JDFDoc docJDF, bool extendReferenced)
       {
          // Create a MIME package
          MailMessage message = new MailMessage();
          // Java to C# Conversion - TODO: Need some work here.
-         ArrayList multipart = new ArrayList(); // new MimeMultipart("related"); // JDF:
+         AttachmentCollection multipart = null; ;  // new MimeMultipart("related"); // JDF:
          // multipart/related
 
          string cid = null;
@@ -896,7 +806,7 @@ namespace org.cip4.jdflib.util
       ///	 * <param name="cid"> the CID the JDF document should have in the multipart </param>
       ///	 * <returns> the number of files added to the multipart </returns>
       ///	 
-      private static int extendMultipart(ArrayList multipart, JDFDoc docJDF, string cid)
+      private static int extendMultipart(AttachmentCollection multipart, JDFDoc docJDF, string cid)
       {
          int n = 0;
 
@@ -1032,6 +942,7 @@ namespace org.cip4.jdflib.util
          return urlStrings;
       }
 
+
       private static string urlToCid(string urlString)
       {
          string urlStringLocal = urlString;
@@ -1051,6 +962,7 @@ namespace org.cip4.jdflib.util
          return "cid:" + new FileInfo(urlStringLocal).Name;
       }
 
+
       ///   
       ///	 <summary> * Builds a MIME package.
       ///	 *  </summary>
@@ -1058,14 +970,14 @@ namespace org.cip4.jdflib.util
       ///	 *            t </param>
       ///	 * <returns> a Message representing the resulting MIME package, null if an error occured </returns>
       ///	 
-      public static ArrayList buildMimePackage(ArrayList vXMLDocs)
+      public static AttachmentCollection buildMimePackage(ArrayList vXMLDocs)
       {
          if (vXMLDocs == null || vXMLDocs.Count == 0)
             return null;
 
          // Create a MIME package
-         System.Net.Mail.MailMessage message = new MailMessage();
-         ArrayList multipart = new ArrayList(); //new MimeMultipart("related"); // JDF:
+         MailMessage message = new MailMessage();
+         AttachmentCollection multipart = null; //new MimeMultipart("related"); // JDF:
          // multipart/related
          // Add other body parts
          int imax = vXMLDocs.Count;
@@ -1087,7 +999,8 @@ namespace org.cip4.jdflib.util
          return multipart;
       }
 
-      public static Attachment updateXMLMultipart(ArrayList multipart, XMLDoc xmlDoc, string cid)
+
+      public static Attachment updateXMLMultipart(AttachmentCollection multipart, XMLDoc xmlDoc, string cid)
       {
          string cidLocal = cid;
 
@@ -1104,7 +1017,7 @@ namespace org.cip4.jdflib.util
             cidLocal = "CID_" + ((root is JDFNode && root.hasAttribute(AttributeName.ID)) ? ((JDFNode)root).getID() : JDFElement.uniqueID(0));
          }
 
-         Attachment messageBodyPart = getCreatePartByCID(multipart, cidLocal);
+         Attachment messageBodyPart = GetCreatePartByCID(multipart, cidLocal);
          try
          {
             setFileName(messageBodyPart, originalFileName);
@@ -1193,7 +1106,7 @@ namespace org.cip4.jdflib.util
       ///	 * <exception cref="IOException"> </exception>
       ///	 * <exception cref="MessagingException"> </exception>
       ///	 
-      public static HttpWebRequest writeToURL(ArrayList mp, string strUrl)
+      public static HttpWebRequest writeToURL(AttachmentCollection mp, string strUrl)
       {
          return writeToURL(mp, strUrl, null);
       }
@@ -1211,7 +1124,7 @@ namespace org.cip4.jdflib.util
       ///	 * <exception cref="MessagingException"> </exception>
       ///	 
 
-      public static HttpWebRequest writeToURL(ArrayList mp, string strUrl, MIMEDetails ms)
+      public static HttpWebRequest writeToURL(AttachmentCollection mp, string strUrl, MIMEDetails ms)
       {
          MIMEDetails msLocal = ms;
 
@@ -1245,7 +1158,7 @@ namespace org.cip4.jdflib.util
             try
             {
                Stream @out = httpURLconnection.GetRequestStream();
-               writeToStream(mp, @out, msLocal);
+               WriteToStream(mp, @out, msLocal);
             }
             catch (System.Exception)
             {
@@ -1269,7 +1182,7 @@ namespace org.cip4.jdflib.util
       {
          JDFDoc doc = null;
 
-         ArrayList mp = buildMimePackage(docJMF, docJDF, true);
+         AttachmentCollection mp = buildMimePackage(docJMF, docJDF, true);
          HttpWebRequest uc = writeToURL(mp, strUrl, urlDet);
          if (uc == null)
             return doc; // file
@@ -1281,7 +1194,7 @@ namespace org.cip4.jdflib.util
             Stream inputStream = uc.GetResponse().GetResponseStream();
             BufferedStream bis = new BufferedStream(inputStream);
             SupportClass.BufferedStreamManager.manager.MarkPosition(100000, bis);
-            ArrayList mpRet = getMultiPart(bis);
+            AttachmentCollection mpRet = GetMultiPart(bis);
             if (mpRet != null)
             {
                try
@@ -1328,7 +1241,7 @@ namespace org.cip4.jdflib.util
       ///	 * @return </param>
       ///	 
       [Obsolete]
-      public static FileInfo writeToFile(ArrayList m, string fileName)
+      public static FileInfo writeToFile(AttachmentCollection m, string fileName)
       {
          return writeToFile(m, fileName, null);
       }
@@ -1342,13 +1255,13 @@ namespace org.cip4.jdflib.util
       ///	 * <exception cref="IOException"> </exception>
       ///	 * <exception cref="MessagingException"> </exception>
       ///	 
-      public static FileInfo writeToFile(ArrayList m, string fileName, MIMEDetails md)
+      public static FileInfo writeToFile(AttachmentCollection m, string fileName, MIMEDetails md)
       {
          FileInfo file = new FileInfo(fileName);
          try
          {
             FileStream fos = new FileStream(file.FullName, FileMode.OpenOrCreate);
-            writeToStream(m, fos, md);
+            WriteToStream(m, fos, md);
             return file;
          }
          catch (FileNotFoundException)
@@ -1373,28 +1286,26 @@ namespace org.cip4.jdflib.util
       ///	 * <exception cref="MessagingException"> </exception>
       ///	 
       [Obsolete]
-      public static void writeToStream(ArrayList m, Stream outStream)
+      public static void writeToStream(AttachmentCollection m, Stream outStream)
       {
-         writeToStream(m, outStream, null);
+         WriteToStream(m, outStream, null);
       }
+      	 
 
-      ///   
-      ///	 <summary> * write a Multipart to a Stream
-      ///	 *  </summary>
-      ///	 * <param name="outStream"> the existing output stream, note that a buffered output stream is created in case outStream is
-      ///	 *            unbuffered </param>
-      ///	 * <param name="md"> TODO </param>
-      ///	 * <param name="mp"> the mime MultiPart to write
-      ///	 *  </param>
-      ///	 * <exception cref="IOException"> </exception>
-      ///	 * <exception cref="MessagingException"> </exception>
-      ///	 
-      public static void writeToStream(ArrayList m, Stream outStream, MIMEDetails md)
+      /// <summary>
+      /// Write a Multipart to a Stream
+      /// </summary>
+      /// <param name="attachments">The mime MultiPart to write</param>
+      /// <param name="outStream">The existing output stream, note that a buffered output stream is created 
+      /// in case outStream is unbuffered</param>
+      /// <param name="md">MIME Details</param>
+      ///  
+      public static void WriteToStream(AttachmentCollection attachments, Stream outStream, MIMEDetails md)
       {
          Stream outStreamLocal = outStream;
 
          MailMessage mm = new MailMessage();
-         SupportClass.MailMessageSupport.AddAttachments(mm, m);
+         SupportClass.MailMessageSupport.AddAttachments(mm, attachments);
          // buffers are good - the encoders decoders otherwise hit stream
          // read/write once per byte...
          if (!(outStreamLocal is BufferedStream))
@@ -1407,99 +1318,76 @@ namespace org.cip4.jdflib.util
 
          if (md != null && md.transferEncoding != null)
          {
-            Attachment[] bp = getBodyParts(m);
-            if (bp != null)
+            foreach (Attachment attachment in attachments)
             {
-               int size = bp.Length;
-               for (int i = 0; i < size; i++)
-               {
-                  // Java to C# Conversion - TODO: What should transfer encoding be
-                  //setHeader(UrlUtil.CONTENT_TRANSFER_ENCODING, md.transferEncoding);
-                  bp[i].TransferEncoding = TransferEncoding.Unknown;
-               }
+               // Java to C# Conversion - TODO: What should transfer encoding be
+               //setHeader(UrlUtil.CONTENT_TRANSFER_ENCODING, md.transferEncoding);
+               attachment.TransferEncoding = TransferEncoding.Unknown;
             }
+
          }
 
-         // Java to C# Conversion - TODO: How to we write to the stream?
+         // Java to C# Conversion - TODO: To write mail message to stream see http://www.codeproject.com/KB/IP/smtpclientext.aspx
+         //                         For an example of using the internal MailWriter type to do this.
          //mm.writeTo(outStreamLocal);
+
          outStreamLocal.Flush();
          outStreamLocal.Close();
       }
 
-      ///   
-      ///	 <summary> * write a Message to a directory
-      ///	 *  </summary>
-      ///	 * <param name="mp"> the mime Message to write </param>
-      ///	 * <param name="directory"> the directory to use as '.' for writing the mime parts </param>
-      ///	 * <exception cref="MessagingException">
-      ///	 *  </exception>
-      ///	 * <exception cref="IOException"> </exception>
-      ///	 * <exception cref="MessagingException"> </exception>
-      ///	 
-      public static void writeToDir(ArrayList mp, FileInfo directory)
+
+      /// <summary>
+      /// Write a Message to a directory
+      /// </summary>
+      /// <param name="attachments">The mime parts to write </param>
+      /// <param name="directory">The directory to use as '.' for writing the mime parts </param>
+      ///
+      public static void WriteToDir(AttachmentCollection attachments, DirectoryInfo directory)
       {
-         bool exists = directory.Directory.Exists;
-         if (!exists)
+         if (!directory.Exists)
+            directory.Create();
+
+         foreach (Attachment attachment in attachments)
          {
-            directory.Directory.Create();
-            exists = directory.Directory.Exists;
-         }
-
-         if (!exists)
-            throw new FileNotFoundException();
-
-         // Java to C# Conversion - Not .NET Equivalent for canWrite()
-         //if (!directory.canWrite())
-         //   throw new IOException();
-
-         int parts = mp.Count;
-         for (int i = 0; i < parts; i++)
-         {
-            Attachment bp = (Attachment)mp[i];
-            writeBodyPartToFile(bp, directory);
+            WriteBodyPartToFile(attachment, directory);
             // TODO update urls to the new file values
          }
       }
 
-      ///   
-      ///	 * <param name="bp"> </param>
-      ///	 * <param name="directory"> </param>
-      ///	 * <exception cref="MessagingException"> </exception>
-      ///	 * <exception cref="IOException"> </exception>
-      ///	 
-      public static void writeBodyPartToFile(Attachment bp, FileInfo directory)
+	 
+      /// <summary>
+      /// Write a MIME message attachment to a file in the given directory
+      /// </summary>
+      /// <param name="attachment">The attachment to write</param>
+      /// <param name="directory">The directory to place the file into</param>
+      /// 
+      public static void WriteBodyPartToFile(Attachment attachment, DirectoryInfo directory)
       {
-         bool exists = directory.Directory.Exists;
-         if (!exists)
-         {
-            directory.Directory.Create();
-            exists = directory.Directory.Exists;
-         }
+         if (!directory.Exists)
+            directory.Create();
 
-         if (!exists)
-            throw new FileNotFoundException();
-
-         string fileName = getFileName(bp);
-         FileInfo outFile = new FileInfo(directory.Directory + Path.DirectorySeparatorChar.ToString() + fileName);
+         string fileName = getFileName(attachment);
+         FileInfo outFile = new FileInfo(directory.FullName + Path.DirectorySeparatorChar.ToString() + fileName);
          BufferedStream fos = new BufferedStream(new FileStream(outFile.FullName, FileMode.Open));
-         Stream ins = bp.ContentStream;
+         Stream ins = attachment.ContentStream;
          IOUtils.copy(ins, fos);
          fos.Flush();
          fos.Close();
       }
 
-      ///   
-      ///	 <summary> * gets the JMF document of a submitqueueentry or returnqueuentry and the attached jdf document
-      ///	 *  </summary>
-      ///	 * <param name="mp"> the Multipart to search </param>
-      ///	 * <returns> one or two JDFDocs: bp[0] is the jmf, bp[1] is the jdf, if a JDF is referenced; </returns>
-      ///	 
-      public static JDFDoc[] getJMFSubmission(ArrayList mp)
+         
+	   /// <summary>
+	   /// Gets the JMF document of a submitqueueentry or returnqueuentry and the attached jdf document
+	   /// </summary>
+	   /// <param name="mp">The Multipart to search </param>
+	   /// <returns>One or two JDFDocs: bp[0] is the jmf, bp[1] is the jdf, if a JDF is referenced</returns>
+      /// 
+      public static JDFDoc[] GetJMFSubmission(AttachmentCollection mp)
       {
-         Attachment[] bp = getBodyParts(mp);
-         if (bp == null || bp.Length < 1)
+         //Attachment[] bp = getBodyParts(mp);
+         if (mp == null || mp.Count < 1)
             return null;
-         JDFDoc jmf = getJDFDoc(bp[0]);
+         JDFDoc jmf = getJDFDoc(mp[0]);
          JDFJMF jmfRoot = jmf == null ? null : jmf.getJMFRoot();
          if (jmfRoot == null)
             return null;
@@ -1509,7 +1397,7 @@ namespace org.cip4.jdflib.util
          {
             return new JDFDoc[] { jmf };
          }
-         Attachment bpJDF = getPartByCID(mp, subURL);
+         Attachment bpJDF = GetPartByCID(mp, subURL);
          JDFDoc[] docs = new JDFDoc[2];
          docs[0] = jmf;
          docs[1] = getJDFDoc(bpJDF);
@@ -1517,5 +1405,45 @@ namespace org.cip4.jdflib.util
             return new JDFDoc[] { jmf };
          return docs;
       }
+
+
+      /// <summary>
+      /// Get the content in the form of a string from the given attachment
+      /// </summary>
+      /// <param name="attachment">Attachment to get the content from</param>
+      /// <returns>content string or null if not found</returns>
+      /// 
+      public static string GetAttachmentContent(Attachment attachment)
+      {
+         StringBuilder sb = new StringBuilder();
+         int i = -1;
+         while ((i = attachment.ContentStream.ReadByte()) != -1)
+         {
+            sb.Append((char)i);
+         }
+         if (sb.Length > 0)
+            return sb.ToString();
+         else
+            return null;
+      }
+
+
+      /// <summary>
+      /// Set the content of the given attachment, of necessity content type must be text.
+      /// </summary>
+      /// <param name="attachment">Attachment to set the content to</param>
+      /// <param name="content">content string</param>
+      /// 
+      public static void SetAttachmentContent(Attachment attachment, string content)
+      {
+         if (content.Length > 0)
+         {
+            attachment.ContentType = new ContentType(JDFConstants.MIME_TEXTXML);
+            byte[] ba = Encoding.Default.GetBytes(content);
+            attachment.ContentStream.Write(ba, 0, content.Length);
+         }
+      }
    }
 }
+
+

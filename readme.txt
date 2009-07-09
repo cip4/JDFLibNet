@@ -25,6 +25,14 @@ RELEASE NOTES:
 
 
 
+   08-Jul-2009
+
+- Converted all unit tests to C# and to run under MS Visual Studio 2005 Team Edition for Software Developers Unit Testing utility.  
+
+- 905 of 1166 total tests currently pass.
+
+- Added unit test code to CIP4 Subversion Code Repository
+
 
 
 
