@@ -1,0 +1,298 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{940A8C4C-CB75-4AFE-B6AA-14477E786F86}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>JDFLibNet.Test</RootNamespace>
+    <AssemblyName>JDFLibNet.Test</AssemblyName>
+    <WarningLevel>4</WarningLevel>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>.\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>false</DebugSymbols>
+    <Optimize>true</Optimize>
+    <OutputPath>.\bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="JDFLib.NET, Version=1.3.52.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\JDFLibNET\JDFLibNET\bin\Debug\JDFLib.NET.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="jdflib\auto\AutoClassInstantiateVisitor.cs" />
+    <Compile Include="jdflib\auto\AutoTest.cs" />
+    <Compile Include="jdflib\auto\DirectoryInstantiateVisitor.cs" />
+    <Compile Include="jdflib\auto\DirectoryPrintVisitor.cs" />
+    <Compile Include="jdflib\auto\DirectorySizeVisitor.cs" />
+    <Compile Include="jdflib\auto\DirectoryVisitor.cs" />
+    <Compile Include="jdflib\auto\JDFClassInstantiationTest.cs" />
+    <Compile Include="jdflib\cformat\PrintfFormatTest.cs" />
+    <Compile Include="jdflib\cformat\ScanfFormatTest.cs" />
+    <Compile Include="jdflib\cformat\ScanfReaderTest.cs" />
+    <Compile Include="jdflib\CheckJDFTest.cs" />
+    <Compile Include="jdflib\core\AttrInfoTest.cs" />
+    <Compile Include="jdflib\core\DocumentJDFImplTest.cs" />
+    <Compile Include="jdflib\core\DummyTest.cs" />
+    <Compile Include="jdflib\core\ElemInfoTest.cs" />
+    <Compile Include="jdflib\core\FactoryTest.cs" />
+    <Compile Include="jdflib\core\FixVersionTest.cs" />
+    <Compile Include="jdflib\core\JDFAuditTest.cs" />
+    <Compile Include="jdflib\core\JDFCommentTest.cs" />
+    <Compile Include="jdflib\core\JDFCustomerInfoTest.cs" />
+    <Compile Include="jdflib\core\JDFDocTest.cs" />
+    <Compile Include="jdflib\core\JDFElementTest.cs" />
+    <Compile Include="jdflib\core\JDFExceptionTest.cs" />
+    <Compile Include="jdflib\core\JDFNodeInfoTest.cs" />
+    <Compile Include="jdflib\core\JDFParserTest.cs" />
+    <Compile Include="jdflib\core\JDFPartAmountTest.cs" />
+    <Compile Include="jdflib\core\JDFRefElementTest.cs" />
+    <Compile Include="jdflib\core\JDFResourceLinkTest.cs" />
+    <Compile Include="jdflib\core\JDFSourceResourceTest.cs" />
+    <Compile Include="jdflib\core\JDFTestType.cs" />
+    <Compile Include="jdflib\core\KElementTest.cs" />
+    <Compile Include="jdflib\core\VElementTest.cs" />
+    <Compile Include="jdflib\core\VStringTest.cs" />
+    <Compile Include="jdflib\core\XMLDocTest.cs" />
+    <Compile Include="jdflib\datatypes\JDFAttributeMapTest.cs" />
+    <Compile Include="jdflib\datatypes\JDFDateTimeRangeTest.cs" />
+    <Compile Include="jdflib\datatypes\JDFDurationRangeTest.cs" />
+    <Compile Include="jdflib\datatypes\JDFDurationTest.cs" />
+    <Compile Include="jdflib\datatypes\JDFEnumerationTest.cs" />
+    <Compile Include="jdflib\datatypes\JDFIntegerListTest.cs" />
+    <Compile Include="jdflib\datatypes\JDFIntegerRangeListTest.cs" />
+    <Compile Include="jdflib\datatypes\JDFIntegerRangeTest.cs" />
+    <Compile Include="jdflib\datatypes\JDFMatrixTest.cs" />
+    <Compile Include="jdflib\datatypes\JDFNumberRangeListTest.cs" />
+    <Compile Include="jdflib\datatypes\JDFNumListTest.cs" />
+    <Compile Include="jdflib\datatypes\JDFPathTest.cs" />
+    <Compile Include="jdflib\datatypes\JDFRectangleRangeListTest.cs" />
+    <Compile Include="jdflib\datatypes\JDFRectangleRangeTest.cs" />
+    <Compile Include="jdflib\datatypes\JDFRectangleTest.cs" />
+    <Compile Include="jdflib\datatypes\JDFShapeRangeListTest.cs" />
+    <Compile Include="jdflib\datatypes\JDFURLTest.cs" />
+    <Compile Include="jdflib\datatypes\JDFXYPairRangeListTest.cs" />
+    <Compile Include="jdflib\datatypes\JDFXYPairTest.cs" />
+    <Compile Include="jdflib\datatypes\VJDFAttributeMapTest.cs" />
+    <Compile Include="jdflib\devicecapability\JDFActionPoolTest.cs" />
+    <Compile Include="jdflib\devicecapability\JDFDevCapsTest.cs" />
+    <Compile Include="jdflib\devicecapability\JDFDevCapTest.cs" />
+    <Compile Include="jdflib\devicecapability\JDFDeviceCapTest.cs" />
+    <Compile Include="jdflib\devicecapability\JDFDurationStateTest.cs" />
+    <Compile Include="jdflib\devicecapability\JDFEvaluationTest.cs" />
+    <Compile Include="jdflib\devicecapability\JDFIntegerStateTest.cs" />
+    <Compile Include="jdflib\devicecapability\JDFMatrixStateTest.cs" />
+    <Compile Include="jdflib\devicecapability\JDFModulePoolTest.cs" />
+    <Compile Include="jdflib\devicecapability\JDFNameStateTest.cs" />
+    <Compile Include="jdflib\devicecapability\JDFNumberStateTest.cs" />
+    <Compile Include="jdflib\devicecapability\JDFStateBaseTest.cs" />
+    <Compile Include="jdflib\devicecapability\JDFStringStateTest.cs" />
+    <Compile Include="jdflib\devicecapability\JDFTestTest.cs" />
+    <Compile Include="jdflib\elementwalker\BaseWalkerTest.cs" />
+    <Compile Include="jdflib\elementwalker\UnlinkFinderTest.cs" />
+    <Compile Include="jdflib\EmptyNamespace.cs" />
+    <Compile Include="jdflib\examples\AmountTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="jdflib\examples\AutomatedLayoutTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="jdflib\examples\ContentCreationTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="jdflib\examples\DigiPrintTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="jdflib\examples\IterationTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="jdflib\examples\JDFExampleDocTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="jdflib\examples\MISFinTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="jdflib\examples\NColorTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="jdflib\examples\PreflightTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="jdflib\examples\RIPTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="jdflib\examples\StrippingTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="jdflib\examples\VarnishTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="jdflib\examples\WebTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="jdflib\generator\UtilGeneratorTest.cs" />
+    <Compile Include="jdflib\goldenticket\BaseGoldenTicketTest.cs" />
+    <Compile Include="jdflib\goldenticket\GoldenTicketTest.cs" />
+    <Compile Include="jdflib\goldenticket\IDPGoldenTicketTest.cs" />
+    <Compile Include="jdflib\goldenticket\MISCPGoldenTicketTest.cs" />
+    <Compile Include="jdflib\goldenticket\MISPreGoldenTicketTest.cs" />
+    <Compile Include="jdflib\JDFTestCaseBase.cs" />
+    <Compile Include="jdflib\jmf\JDFDeviceInfoTest.cs" />
+    <Compile Include="jdflib\jmf\JDFJMFTest.cs" />
+    <Compile Include="jdflib\jmf\JDFJobPhaseTest.cs" />
+    <Compile Include="jdflib\jmf\JDFMessageServiceTest.cs" />
+    <Compile Include="jdflib\jmf\JDFMessageTest.cs" />
+    <Compile Include="jdflib\jmf\JDFPipeParamsTest.cs" />
+    <Compile Include="jdflib\jmf\JDFQueueEntryTest.cs" />
+    <Compile Include="jdflib\jmf\JDFQueueFilterTest.cs" />
+    <Compile Include="jdflib\jmf\JDFQueueSubmissionParamsTest.cs" />
+    <Compile Include="jdflib\jmf\JMFKnownMessagesTest.cs" />
+    <Compile Include="jdflib\jmf\JMFResourceInfoTest.cs" />
+    <Compile Include="jdflib\jmf\JMFResourceTest.cs" />
+    <Compile Include="jdflib\jmf\JMFStatusTest.cs" />
+    <Compile Include="jdflib\jmf\QueueTest.cs" />
+    <Compile Include="jdflib\node\JDFNodeProductTest.cs" />
+    <Compile Include="jdflib\node\JDFNodeTest.cs" />
+    <Compile Include="jdflib\pool\JDFAmountPoolTest.cs" />
+    <Compile Include="jdflib\pool\JDFAncestorPoolTest.cs" />
+    <Compile Include="jdflib\pool\JDFAuditPoolTest.cs" />
+    <Compile Include="jdflib\pool\JDFColorPoolTest.cs" />
+    <Compile Include="jdflib\pool\JDFResourceLinkPoolTest.cs" />
+    <Compile Include="jdflib\pool\JDFResourcePoolTest.cs" />
+    <Compile Include="jdflib\resource\JDFAssemblySectionTest.cs" />
+    <Compile Include="jdflib\resource\JDFAutoResourceTest.cs" />
+    <Compile Include="jdflib\resource\JDFDeviceListTest.cs" />
+    <Compile Include="jdflib\resource\JDFFilespecTest.cs" />
+    <Compile Include="jdflib\resource\JDFLayerListTest.cs" />
+    <Compile Include="jdflib\resource\JDFLayoutTest.cs" />
+    <Compile Include="jdflib\resource\JDFMediaColorTest.cs" />
+    <Compile Include="jdflib\resource\JDFNotificationTest.cs" />
+    <Compile Include="jdflib\resource\JDFPageListTest.cs" />
+    <Compile Include="jdflib\resource\JDFPartTest.cs" />
+    <Compile Include="jdflib\resource\JDFResourceTest.cs" />
+    <Compile Include="jdflib\resource\JDFStrippingTest.cs" />
+    <Compile Include="jdflib\resource\PhaseTimeTest.cs" />
+    <Compile Include="jdflib\resource\ProcessRunTest.cs" />
+    <Compile Include="jdflib\resource\process\JDFAddressTest.cs" />
+    <Compile Include="jdflib\resource\process\JDFColorantControlTest.cs" />
+    <Compile Include="jdflib\resource\process\JDFColorConversionParamsTest.cs" />
+    <Compile Include="jdflib\resource\process\JDFColorTest.cs" />
+    <Compile Include="jdflib\resource\process\JDFComChannelTest.cs" />
+    <Compile Include="jdflib\resource\process\JDFComponentTest.cs" />
+    <Compile Include="jdflib\resource\process\JDFContactTest.cs" />
+    <Compile Include="jdflib\resource\process\JDFContentDataTest.cs" />
+    <Compile Include="jdflib\resource\process\JDFContentObjectTest.cs" />
+    <Compile Include="jdflib\resource\process\JDFCutBlockTest.cs" />
+    <Compile Include="jdflib\resource\process\JDFDieLayoutTest.cs" />
+    <Compile Include="jdflib\resource\process\JDFEmployeeTest.cs" />
+    <Compile Include="jdflib\resource\process\JDFExposedMediaTest.cs" />
+    <Compile Include="jdflib\resource\process\JDFMediaTest.cs" />
+    <Compile Include="jdflib\resource\process\JDFPageDataTest.cs" />
+    <Compile Include="jdflib\resource\process\JDFPersonTest.cs" />
+    <Compile Include="jdflib\resource\process\JDFPRItemTest.cs" />
+    <Compile Include="jdflib\resource\process\JDFRunListTest.cs" />
+    <Compile Include="jdflib\resource\process\JDFTileTest.cs" />
+    <Compile Include="jdflib\resource\process\JDFUsageCounterTest.cs" />
+    <Compile Include="jdflib\resource\process\postpress\JDFStitchingParamsTest.cs" />
+    <Compile Include="jdflib\span\JDFEnumerationSpanTest.cs" />
+    <Compile Include="jdflib\util\BiHashMapTest.cs" />
+    <Compile Include="jdflib\util\ByteArrayIOStreamTest.cs" />
+    <Compile Include="jdflib\util\ContainerUtilTest.cs" />
+    <Compile Include="jdflib\util\EnumUtilTest.cs" />
+    <Compile Include="jdflib\util\FileUtilTest.cs" />
+    <Compile Include="jdflib\util\HashUtilTest.cs" />
+    <Compile Include="jdflib\util\HotFolderTest.cs" />
+    <Compile Include="jdflib\util\JDFDateTest.cs" />
+    <Compile Include="jdflib\util\JDFSpawnTest.cs" />
+    <Compile Include="jdflib\util\MimeUtilTest.cs" />
+    <Compile Include="jdflib\util\MyArgsTest.cs" />
+    <Compile Include="jdflib\util\PrefixInputStreamTest.cs" />
+    <Compile Include="jdflib\util\QueueHotFolderTest.cs" />
+    <Compile Include="jdflib\util\SkipInputStreamTest.cs" />
+    <Compile Include="jdflib\util\SScanfTest.cs" />
+    <Compile Include="jdflib\util\StatusCounterTest.cs" />
+    <Compile Include="jdflib\util\StringUtilTest.cs" />
+    <Compile Include="jdflib\util\UrlUtilTest.cs" />
+    <Compile Include="jdflib\util\VectorMapTest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AuthoringTests.txt" />
+    <Content Include="data\Device_Elk_ConventionalPrinting2.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="data\000023_Test_PR3.0.jdf" />
+    <None Include="data\big.pdf" />
+    <None Include="data\bigWhite.jdf" />
+    <None Include="data\bookintent.jdf" />
+    <None Include="data\checkjdf.mjm" />
+    <None Include="data\checkJDF.zip" />
+    <None Include="data\corrupt.jdf" />
+    <None Include="data\DevCaps_Product_MISPrepress_ICS_Minimal.jdf" />
+    <None Include="data\Elk_ConventionalPrinting.jdf" />
+    <None Include="data\emptyAuthorAttribute.jdf" />
+    <None Include="data\extension.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="data\FixVersionProblem.jdf" />
+    <None Include="data\getChildrenByTagNameTest.jdf" />
+    <None Include="data\GetReferencedPartition.jdf" />
+    <None Include="data\job.jdf" />
+    <None Include="data\km2.jdf" />
+    <None Include="data\km4444.jdf" />
+    <None Include="data\Link33458670_000214km4444Qua0.NSp33486069_000371_37_out.jdf" />
+    <None Include="data\matsch.jdf" />
+    <None Include="data\MISPrepress-ICS-Complex.jdf" />
+    <None Include="data\MISPrepress_ICS_Minimal.jdf" />
+    <None Include="data\NarrowWeb.jdf" />
+    <None Include="data\Normalizer.jdf" />
+    <None Include="data\partitionedSource.jdf" />
+    <None Include="data\partitioned_private_resources.jdf" />
+    <None Include="data\pdyv5.jdf" />
+    <None Include="data\PreflightImport1.jdf" />
+    <None Include="data\ref.jdf" />
+    <None Include="data\ResourceCmd.jdf" />
+    <None Include="data\ResourceCmd.jmf" />
+    <None Include="data\ResourceCommandTest.jdf" />
+    <None Include="data\SampleFiles\MISPrepress-ICS-Complex.jdf" />
+    <None Include="data\SampleFiles\MISPrepress-ICS-Minimal.jdf" />
+    <None Include="data\SampleFiles\MISPrepress-ICS-PlateMaking.jdf" />
+    <None Include="data\SampleFiles\MISPrepress-ICS-ProofPlateMaking.jdf" />
+    <None Include="data\SampleFiles\ResourceCMD_ExposedMedia_all.jmf" />
+    <None Include="data\SampleFiles\ResourceCMD_ExposedMedia_first.jmf" />
+    <None Include="data\SampleFiles\ResourceCMD_Preview_all.jmf" />
+    <None Include="data\SampleFiles\ResourceCMD_Preview_first.jmf" />
+    <None Include="data\SampleFiles\ResourceSignal_ExposedMedia_all.jmf" />
+    <None Include="data\SampleFiles\ResourceSignal_ExposedMedia_first.jmf" />
+    <None Include="data\SampleFiles\ResourceSignal_Preview_all.jmf" />
+    <None Include="data\SampleFiles\ResourceSignal_Preview_first.jmf" />
+    <None Include="data\test.icc" />
+    <None Include="data\TestClipPfadCorr.jdf" />
+    <None Include="data\testMatchRes.jdf" />
+    <None Include="data\testMergeJDF2.jdf" />
+    <None Include="data\url1.pdf" />
+    <None Include="data\url2.pdf" />
+    <None Include="data\ZoneTest.jdf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="data\BadSampleFiles\" />
+    <Folder Include="data\temp\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSHARP.Targets" />
+</Project>
