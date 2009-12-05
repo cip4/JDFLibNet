@@ -681,7 +681,9 @@ namespace org.cip4.jdflib.util
       {
          if (pathName == null || pathName.Length <= 1 || isUNC(pathName))
             return false;
-         return StringUtils.isAlpha(pathName.Substring(0, 1)) && pathName.Substring(1, 2).Equals(":") || StringUtils.countMatches(pathName, "\\") > StringUtils.countMatches(pathName, "/");
+         //.Net Substring different than java substring.
+         return StringUtils.isAlpha(pathName.Substring(0, 1)) && pathName.Substring(1, 1).Equals(":")
+                 || StringUtils.countMatches(pathName, "\\") > StringUtils.countMatches(pathName, "/");
 
       }
 

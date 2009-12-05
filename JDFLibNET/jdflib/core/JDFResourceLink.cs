@@ -657,7 +657,8 @@ namespace org.cip4.jdflib.core
       public virtual string getAuditString()
       {
          string s = Name;
-         return s.Substring(3, s.Length) + JDFConstants.AUDIT;
+         //.Net Substring different than java substring.
+         return s.Substring(3, s.Length - 3) + JDFConstants.AUDIT;
       }
 
       ///   

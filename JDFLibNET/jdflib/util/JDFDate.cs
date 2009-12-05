@@ -321,6 +321,7 @@ namespace org.cip4.jdflib.util
             {
                // handle sign explicitly, because "+02" is no valid Integer,
                // while "-02" and "02" are valid Integer
+               //.Net Substring different than java substring.
                setTimeZoneOffsetInMillis(3600 * 1000 * Convert.ToInt32(strDateTimeLocal.Substring(20 + decimalLength, 2)));
                if (strDateTimeLocal[19 + decimalLength] == '-')
                {

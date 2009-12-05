@@ -108,6 +108,7 @@ namespace org.cip4.jdflib.auto
          string elementName = fileName;
          string prefix = elementName.StartsWith("JDFAuto") ? "JDFAuto" : "JDF";
 
+         //.Net Substring different than java substring.
          elementName = elementName.Substring(prefix.Length, elementName.Length - ".java".Length - prefix.Length);
 
       // adjust the element name

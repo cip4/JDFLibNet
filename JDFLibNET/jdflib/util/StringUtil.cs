@@ -617,6 +617,7 @@ namespace org.cip4.jdflib.util
             int pos = strWork.IndexOf(c, lastPos);
             if (pos >= 0)
             {
+               //.Net Substring different than java substring.
                b.Append(strWork.Substring(lastPos, (pos - lastPos)));
                if (replaceString != null)
                   b.Append(replaceString);
@@ -1382,7 +1383,8 @@ namespace org.cip4.jdflib.util
                      int n;
                      for (n = l; n > posDot; n--)
                      {
-                        if (!s.Substring(n - 1, n).Equals("0"))
+                        //.Net Substring different than java substring.
+                        if (!s.Substring(n - 1, 1).Equals("0"))
                            break;
                      }
                      s = s.Substring(0, n);

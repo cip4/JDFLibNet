@@ -359,6 +359,7 @@ namespace org.cip4.jdflib.util
                factor = -1;
          }
 
+         //.Net Substring different than java substring.
          string strPeriod = a_aDuration.Substring(++iPPos);
 
          // devide periodInstant into date and time part, which are separated by
@@ -370,11 +371,13 @@ namespace org.cip4.jdflib.util
             if (iTPos == 0)
             { // e.g. if durationInstant looks like "PT10H30M" - without date
                // part
+               //.Net Substring different than java substring.
                strTime = strPeriod.Substring(1, (strPeriod.Length - 1));
             }
             else
             { // e.g. if durationInstant looks like "P1Y2M3DT10H30M"
                strDate = strPeriod.Substring(0, iTPos);
+               //.Net Substring different than java substring.
                strTime = strPeriod.Substring(++iTPos);
             }
          }
@@ -398,7 +401,8 @@ namespace org.cip4.jdflib.util
                int iMPos = strDate.IndexOf("M");
                if (iMPos > 0)
                {
-                  iMonths = Convert.ToInt32(strDate.Substring(iDateLastPos, (iMPos-iDateLastPos)));
+                  //.Net Substring different than java substring.
+                  iMonths = Convert.ToInt32(strDate.Substring(iDateLastPos, (iMPos - iDateLastPos)));
                   int nYears = iMonths / 12;
                   iduration += (iMonths * 30 + nYears * 5) * 24 * 60 * 60; // add
                   // 5
@@ -419,6 +423,7 @@ namespace org.cip4.jdflib.util
                int iDPos = strDate.IndexOf("D");
                if (iDPos > 0)
                {
+                  //.Net Substring different than java substring.
                   iDays = Convert.ToInt32(strDate.Substring(iDateLastPos, (iDPos - iDateLastPos)));
                   iduration += iDays * 24 * 60 * 60;
                }
@@ -436,6 +441,7 @@ namespace org.cip4.jdflib.util
                int iMPos = strTime.IndexOf("M");
                if (iMPos > 0)
                {
+                  //.Net Substring different than java substring.
                   iMinutes = Convert.ToInt32(strTime.Substring(iTimeLastPos, (iMPos - iTimeLastPos)));
                   iduration += iMinutes * 60;
                   iTimeLastPos = ++iMPos;
@@ -447,11 +453,13 @@ namespace org.cip4.jdflib.util
                   int iDotPos = strTime.IndexOf(".");
                   if (iDotPos > 0)
                   {
+                     //.Net Substring different than java substring.
                      iSeconds = Convert.ToInt32(strTime.Substring(iTimeLastPos, (iDotPos - iTimeLastPos)));
                      iDotPos++;
                      int mLen = iSPos - iDotPos;
                      if (mLen > 0)
                      {
+                        //.Net Substring different than java substring.
                         string sMilli = "0." + strTime.Substring(iDotPos, (iSPos - iDotPos));
                         fracSecs = Convert.ToDouble(sMilli);
                      }
@@ -460,6 +468,7 @@ namespace org.cip4.jdflib.util
                   }
                   else
                   {
+                     //.Net Substring different than java substring.
                      iSeconds = Convert.ToInt32(strTime.Substring(iTimeLastPos, (iSPos - iTimeLastPos)));
                      iduration += iSeconds;
                   }

@@ -147,6 +147,7 @@ namespace org.cip4.jdflib.util
             int l;
             for (int i = 0; i < names.Length; i++)
             {
+               //.Net Substring different than java substring.
                if (names[i].FullName.Length > 9)
                   l = StringUtil.parseInt(names[i].FullName.Substring(1, 8), 0);
                else

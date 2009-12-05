@@ -133,7 +133,8 @@ namespace org.apache.commons.lang
        {
            for (int i = 127; i >= 0; i--)
            {
-               CHAR_STRING_ARRAY[i] = CHAR_STRING.Substring(i, i + 1);
+               //.Net Substring different than java substring.
+               CHAR_STRING_ARRAY[i] = CHAR_STRING.Substring(i, 1);
                CHAR_ARRAY[i] = (char)i; // new char((char)i);
            }
        }

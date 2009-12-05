@@ -7056,6 +7056,7 @@ namespace org.cip4.jdflib.node
             // 300402 RP added
             if (pos > 0)
             {
+               //.Net Substring different than java substring.
                s = s.Substring(s.Length - pos); //.rightStr(-pos)
                // ;
             }

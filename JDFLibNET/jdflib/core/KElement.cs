@@ -5183,6 +5183,7 @@ namespace org.cip4.jdflib.core
             KElement r = getDocRoot();
             string rootNodeName = r.Name;
             int nextPos = pathLocal.IndexOf("/", 2);
+            //.Net Substring different than java substring.
             string rootPath = nextPos > 0 ? pathLocal.Substring(1, (nextPos - 1)) : pathLocal.Substring(1);
             string nextPath = nextPos > 0 ? pathLocal.Substring(nextPos + 1) : "";
             if (rootPath.Equals(rootNodeName) || isWildCard(rootPath))
@@ -5243,6 +5244,7 @@ namespace org.cip4.jdflib.core
 
             // TODO fix escape attribute values
 
+            //.Net Substring different than java substring.
             string n = pathLocal.Substring(posB0 + 1, (posB1-(posB0 + 1)));
             iSkip = StringUtil.parseInt(n, 0);
             if (iSkip <= 0)
@@ -5333,9 +5335,11 @@ namespace org.cip4.jdflib.core
       private JDFAttributeMap getXPathAtMap(string path, int posBAt, int posB1)
       {
          JDFAttributeMap map = new JDFAttributeMap();
+         //.Net Substring different than java substring.
          string attEqVal = path.Substring(posBAt + 3, (posB1 - (posBAt + 3)));
          // TODO multiple attributes, maybe tokenize by ","
          string attName = StringUtil.token(attEqVal, 0, "=");
+         //.Net Substring different than java substring.
          string attVal = attEqVal.Substring(attName.Length + 2, ((attEqVal.Length - 1) - (attName.Length + 2)));
          map.put(attName, attVal);
          return map;
@@ -5378,6 +5382,7 @@ namespace org.cip4.jdflib.core
          {
             KElement r = getDocRoot();
             int nextPos = path.IndexOf(JDFConstants.SLASH, 2);
+            //.Net Substring different than java substring.
             if (!path.Substring(1, (nextPos - 1)).Equals(r.Name))
             {
                throw new JDFException("GetCreateXPathElement:: invalid path: " + path);
@@ -5416,6 +5421,7 @@ namespace org.cip4.jdflib.core
          if (posB0 != -1 && (posB0 < pos || pos == -1))
          {
             int posB1 = path.IndexOf("]");
+            //.Net Substring different than java substring.
             string siSkip = path.Substring(posB0 + 1, (posB1 - (posB0 + 1)));
             if (!StringUtil.isInteger(siSkip))
             {
@@ -6478,7 +6484,8 @@ namespace org.cip4.jdflib.core
                   return false;
                if (@value.Length < 2 || !@value.StartsWith("\"") || !@value.EndsWith("\""))
                   return false;
-               @value = @value.Substring(1, @value.Length - 1);
+               //.Net Substring different than java substring.
+               @value = @value.Substring(1, @value.Length - 2);
                return @value.Equals("*") && hasAttribute_KElement(nam, null, false) || @value.Equals(getAttribute_KElement(nam));
             }
          }
