@@ -105,36 +105,33 @@ namespace org.cip4.jdflib.util
       // 1 Millisecond = 1 X 10 to the -3 seconds
       // 
       // .NET Time is based on the number of Ticks past 12:00 AM Jan 1, Year 0001
-      // Java Time is based on the number of millisecs past 12:00 AM Jan 1, 1970
-      // JDFDate date/time data will be stored internally as a .NET DataTime object
+      // Java (UNIX) Time is based on the number of millisecs past 12:00 AM Jan 1, 1970
+      // JDFDate date/time data will be stored internally as a .NET DataTimeOffset object
       // And Converted to and from Java Millisecs as necessary
-      // 
+      //
 
-      private static long TICKS_ON_JAN_1_1970 = 621355968000000000L;
+      /// <summary>Difference in ticks between .NET time and Java (UNIX) time.<summary>
+      private const long TICKS_ON_JAN_1_1970 = 621355968000000000L;
 
-      private DateTime m_DateTime;
-      private TimeZone m_TimeZone = null;
-
-      public static long ToMillisecs(DateTime dt)
-      {
-         return (dt.Ticks - TICKS_ON_JAN_1_1970) / 10000;
-      }
-
-      public static DateTime FromMillisecs(long millisecs)
-      {
-         return new DateTime((millisecs * 10000) + TICKS_ON_JAN_1_1970);
-      }
-
-
+      private DateTimeOffset m_DateTimeOffset;
 
       /// <summary>
-      /// The basic constructor
+      /// Converts from .NET DateTime to Java (UNIX) time in milliseconds.
       /// </summary>
-      /// <param name="dateTime">.NET DateTime object</param>
-      public JDFDate(DateTime dateTime)
+      /// <param name="dt">A .NET DateTimeOffset.</param>
+      /// <returns>Milliseconds since Jan 1, 1970, 0:00:00 GMT.</returns>
+      public static long ToMillisecs(DateTimeOffset dto)
       {
-         m_DateTime = dateTime;
-         m_TimeZone = TimeZone.CurrentTimeZone;
+         return (dto.UtcTicks - TICKS_ON_JAN_1_1970) / TimeSpan.TicksPerMillisecond;
+      }
+      /// <summary>
+      /// Converts from Java (UNIX) time to .NET DateTimeOffset in UTC.
+      /// </summary>
+      /// <param name="millisecs">Milliseconds since Jan 1, 1970, 0:00:00 GMT.</param>
+      /// <returns>A .NET DateTimeOffset.</returns>
+      public static DateTimeOffset FromMillisecs(long millisecs)
+      {
+         return new DateTimeOffset((millisecs * TimeSpan.TicksPerMillisecond) + TICKS_ON_JAN_1_1970, TimeSpan.Zero);
       }
 
       ///   
@@ -142,7 +139,7 @@ namespace org.cip4.jdflib.util
       ///	 * allocated, measured to the nearest millisecond. Also sets the current time zone to the system default time zone </summary>
       ///	 
       public JDFDate()
-         : this(System.DateTime.Now)
+         : this(System.DateTimeOffset.Now)
       {
       }
 
@@ -154,26 +151,33 @@ namespace org.cip4.jdflib.util
       ///	 *            will be modified to handle only JDFDate objects </param>
       ///	 
       public JDFDate(long iTime)
-         : this()
+         : this(FromMillisecs(iTime).ToLocalTime())
       {
-         m_DateTime = FromMillisecs(iTime);
+      }
+
+      /// <summary>
+      /// Allocates a <see cref="JDFDate"/> object and initializes it so that it represents the time point, expressed as
+      /// a DateTimeOffset object, including the time zone.
+      /// </summary>
+      /// <param name="dateTimeOffset">.NET DateTimeOffset object.</param>
+      public JDFDate(DateTimeOffset dateTimeOffset)
+      {
+         m_DateTimeOffset = dateTimeOffset;
       }
 
       ///   
       ///	 * <param name="other"> the  date to clone </param>
       ///	 
       public JDFDate(JDFDate other)
+         : this()
       {
          if (other != null)
          {
-            m_DateTime = other.m_DateTime;
-            m_TimeZone = other.m_TimeZone;
+            m_DateTimeOffset = other.m_DateTimeOffset;
          }
       }
 
 
-      // Java to C# Conversion - TODO: String to time conversion needs work, add calendar stuff back in? 
-      //                          Still need time zone offset?
       ///   
       ///	 <summary> * Allocates a <code>JDFDate</code> object and initializes it so that the JDFDate represents a date set by
       ///	 * <code>strDateTime</code> Format of <code>strDateTime</code>
@@ -185,14 +189,14 @@ namespace org.cip4.jdflib.util
       ///	 * <li>"yyyy-mm-ddThh:mm:ssZ"</li>
       ///	 * <p>
       ///	 * Attention!<br>
-      ///	 * you can enter milliseconds, but <code>getDateTimeISO()</code> still returns the time rounded to full seconds.
-      ///	 * Only <code>long getTimeInMillis()</code> returns the exact time
+      ///	 * you can enter milliseconds, but <code>DateTimeISO</code> still returns the time rounded to full seconds.
+      ///	 * Only <code>long TimeInMillis</code> returns the exact time
       ///	 *  </summary>
       ///	 * <param name="strDateTime"> formatted date and time </param>
       ///	 * <exception cref="FormatException"> if strDateTime is not a valid DateTime
       ///	 * 
-      ///	 *             Attention! you can enter milliseconds, but getDateTimeISO() still returns the time rounded to full
-      ///	 *             seconds only long getTimeInMillis() returns the exact time </exception>
+      ///	 *             Attention! you can enter milliseconds, but DateTimeISO still returns the time rounded to full
+      ///	 *             seconds only long TimeInMillis returns the exact time </exception>
       ///	 
       public JDFDate(string strDateTime)
          : this()
@@ -208,7 +212,7 @@ namespace org.cip4.jdflib.util
       ///	 
       public override string ToString()
       {
-         return "JDFDate[ " + DateTimeISO + " TimeZoneOffsetInMillis=(" + getTimeZoneOffsetInMillis() + ")  --> " + " ]";
+         return "JDFDate[ " + DateTimeISO + " TimeZoneOffsetInMillis=(" + TimeZoneOffsetInMillis + ")  --> " + " ]";
       }
 
       ///   
@@ -234,28 +238,29 @@ namespace org.cip4.jdflib.util
 
          if (strDateTimeLocal == null || strDateTimeLocal.Equals(JDFConstants.EMPTYSTRING))
          {
-            m_DateTime = System.DateTime.Now;
+            m_DateTimeOffset = System.DateTimeOffset.Now;
             return;
          }
 
          try
          {
 
-            if (strDateTimeLocal.IndexOf("T") == -1)
+            if (strDateTimeLocal.IndexOf('T') == -1)
                strDateTimeLocal += "T00:00:00" + TimeZoneISO;
 
             // check for zulu style time zone
             int length = strDateTimeLocal.Length;
-            string lastChar = strDateTimeLocal.Substring(length - 1);
-
+            // .NET String.CompareTo works differently from Java, but
+            // .NET Char.CompareTo has the expected result.
+            char lastChar = strDateTimeLocal[length - 1];
 
             // not necessarily valid but let's not be too picky
-            if ((lastChar.CompareTo("a") >= 0) && (lastChar.CompareTo("z") <= 0))
+            if ((lastChar.CompareTo('a') >= 0) && (lastChar.CompareTo('z') <= 0))
             {
-               lastChar = lastChar.ToUpper();
+               lastChar = Char.ToUpperInvariant(lastChar);
             }
 
-            int iCmp = lastChar[0].CompareTo('A');
+            int iCmp = lastChar.CompareTo('A');
             bool bZulu = (iCmp >= 0) && (iCmp <= 25);
             // The last character is a ZULU style timezone
             if (bZulu)
@@ -264,7 +269,7 @@ namespace org.cip4.jdflib.util
                string bias = null;
                if (iCmp >= 0 && iCmp <= 8) // A-I
                {
-                  bias = "+0" + Convert.ToString(iCmp + 1);
+                  bias = "+0" + Convert.ToString(iCmp + 1, CultureInfo.InvariantCulture);
                }
                else if (iCmp == 9) // J
                {
@@ -272,15 +277,15 @@ namespace org.cip4.jdflib.util
                }
                else if (iCmp >= 10 && iCmp <= 12) // K-M
                {
-                  bias = "+" + Convert.ToString(iCmp);
+                  bias = "+" + Convert.ToString(iCmp, CultureInfo.InvariantCulture);
                }
                else if (iCmp >= 13 && iCmp <= 21) // N-V
                {
-                  bias = "-0" + Convert.ToString(iCmp - 12);
+                  bias = "-0" + Convert.ToString(iCmp - 12, CultureInfo.InvariantCulture);
                }
                else if (iCmp >= 22 && iCmp <= 24) // W-Y
                {
-                  bias = "-1" + Convert.ToString(iCmp - 22);
+                  bias = "-1" + Convert.ToString(iCmp - 22, CultureInfo.InvariantCulture);
                }
                else if (iCmp == 25) // Z
                {
@@ -310,29 +315,28 @@ namespace org.cip4.jdflib.util
                }
             }
 
+            TimeSpan timeZoneOffset = TimeSpan.Zero;
             // if the time looks like 2004-07-14T18:21:47
             // check if there is an +xx:00 or -xx:00 at the end specifying the
             // timezone
             if ((strDateTimeLocal.IndexOf('+', 19) == -1) && (strDateTimeLocal.IndexOf('-', 19) == -1))
             {
-               setTimeZoneOffsetInMillis(TimeZone.CurrentTimeZone.GetUtcOffset(m_DateTime).Milliseconds);
+               timeZoneOffset = TimeZone.CurrentTimeZone.GetUtcOffset(m_DateTimeOffset.LocalDateTime);
             }
             else
             {
                // handle sign explicitly, because "+02" is no valid Integer,
                // while "-02" and "02" are valid Integer
                //.Net Substring different than java substring.
-               setTimeZoneOffsetInMillis(3600 * 1000 * Convert.ToInt32(strDateTimeLocal.Substring(20 + decimalLength, 2)));
+               timeZoneOffset = new TimeSpan(Convert.ToInt32(strDateTimeLocal.Substring(20 + decimalLength, 2)), 0, 0);
                if (strDateTimeLocal[19 + decimalLength] == '-')
                {
-                  setTimeZoneOffsetInMillis(-getTimeZoneOffsetInMillis());
+                  timeZoneOffset = -timeZoneOffset;
                }
             }
 
             // interpret the string - low level enhances performance quite a bit...
-            // sbyte[] b = strDateTimeLocal.getBytes();
-            Encoding encoding = Encoding.Default;
-            sbyte[] b = SupportClass.ToSByteArray(encoding.GetBytes(strDateTimeLocal));
+            string b = strDateTimeLocal;
             if (b[4] != '-' || b[7] != '-' || b[10] != 'T' || b[13] != ':' || b[16] != ':' || strDateTimeLocal.Length - decimalLength != 25) // 6 digit tz
             {
                throw new FormatException("JDFDate.init: invalid date String " + strDateTimeLocal);
@@ -370,7 +374,7 @@ namespace org.cip4.jdflib.util
                }
 
             }
-            m_DateTime = new DateTime(iYear, iMonth, iDay, iHour, iMinute, iSecond, iMillisec);
+            m_DateTimeOffset = new DateTimeOffset(iYear, iMonth, iDay, iHour, iMinute, iSecond, iMillisec, timeZoneOffset);
          }
          catch (IndexOutOfRangeException)
          {
@@ -395,7 +399,7 @@ namespace org.cip4.jdflib.util
       ///	 * <param name="pos2">  </param>
       ///	 * <returns> the parsed integer value </returns>
       ///	 
-      private int getIntFromPos(sbyte[] strDateTime, int pos1, int pos2)
+      private int getIntFromPos(string strDateTime, int pos1, int pos2)
       {
          int ret = 0;
          int f = 1;
@@ -407,7 +411,27 @@ namespace org.cip4.jdflib.util
          return ret;
       }
 
+      ///
+		///	 <summary> ** returns the date and time of this in nonean arbitrary pattern
+		///	 *  </summary>
+		///	 * <param name="format"> the format string using {@link FastDateFormat} formatting </param>
+		///	 * <returns> String - the date as specified by the pattern </returns>
+		///	 * <exception cref="IllegalArgumentException"></exception>
+		///
+      public virtual string getFormattedDateTime(string format)
+      {
+         return m_DateTimeOffset.ToString(format, CultureInfo.InvariantCulture);
+      }
 
+      ///   
+      ///	 <summary> * returns the date and time of this in non ISO pattern 'yyyyMMddHHmmss'
+      ///	 *  </summary>
+      ///	 * <returns> String - the date in pattern yyyyMMddHHmmss </returns>
+      ///	 
+      public virtual string DateTime
+      {
+         get { return getFormattedDateTime("yyyyMMddHHmmss"); }
+      }
 
       ///   
       ///	 <summary> * setOffset: set the offset to this time. Note: The time stored in this is not resetted if you want an offset based
@@ -432,17 +456,7 @@ namespace org.cip4.jdflib.util
       ///	 
       public virtual void addOffset(int seconds, int minutes, int hours, int days)
       {
-         long newTime = m_DateTime.Ticks + 10000000 * (seconds + 60 * minutes + 3600 * hours + 3600 * 24 * days);
-         m_DateTime = new DateTime(newTime);
-      }
-      ///   
-      ///	 <summary> * returns the date and time of this in non ISO pattern 'yyyyMMddHHmmss'
-      ///	 *  </summary>
-      ///	 * <returns> String - the date in pattern yyyyMMddHHmmss </returns>
-      ///	 
-      public virtual string DateTime
-      {
-         get { return m_DateTime.ToString("yyyyMMddHHmmss"); }
+         m_DateTimeOffset = m_DateTimeOffset.Add(new TimeSpan(days, hours, minutes, seconds));
       }
 
       ///   
@@ -452,7 +466,7 @@ namespace org.cip4.jdflib.util
       ///	 
       public virtual string DateTimeISO
       {
-         get { return m_DateTime.ToString("yyyy-MM-ddTHH:mm:sszzz"); }
+         get { return getFormattedDateTime("yyyy-MM-ddTHH:mm:sszzz"); }
       }
 
       ///   
@@ -461,7 +475,7 @@ namespace org.cip4.jdflib.util
       ///	 
       public virtual string DateTimeISOBD
       {
-         get { return m_DateTime.ToString("yyyy-MM-dd"); }
+         get { return getFormattedDateTime("yyyy-MM-dd"); }
       }
 
       ///   
@@ -471,7 +485,7 @@ namespace org.cip4.jdflib.util
       ///	 
       public virtual string DateISO
       {
-         get { return m_DateTime.ToString("yyyy-MM-dd"); }
+         get { return getFormattedDateTime("yyyy-MM-dd"); }
       }
 
       ///   
@@ -481,7 +495,7 @@ namespace org.cip4.jdflib.util
       ///	 
       public virtual string TimeISO
       {
-         get { return m_DateTime.ToString("HH:mm:ss"); }
+         get { return getFormattedDateTime("HH:mm:ss"); }
       }
 
       ///   
@@ -491,7 +505,7 @@ namespace org.cip4.jdflib.util
       ///	 
       public virtual string TimeZoneISO
       {
-         get { return m_DateTime.ToString("zzz"); }
+         get { return getFormattedDateTime("zzz"); }
       }
 
       ///   
@@ -503,7 +517,7 @@ namespace org.cip4.jdflib.util
       ///	 
       public virtual bool isLater(JDFDate x)
       {
-         return this.TimeInMillis > x.TimeInMillis;
+         return this.m_DateTimeOffset > x.m_DateTimeOffset;
       }
 
       ///   
@@ -515,7 +529,7 @@ namespace org.cip4.jdflib.util
       ///	 
       public virtual bool isEarlier(JDFDate x)
       {
-         return this.TimeInMillis < x.TimeInMillis;
+         return this.m_DateTimeOffset < x.m_DateTimeOffset;
       }
 
       ///   
@@ -525,8 +539,8 @@ namespace org.cip4.jdflib.util
       ///	 
       public virtual long TimeInMillis
       {
-         get { return ToMillisecs(m_DateTime); }
-         set { m_DateTime = FromMillisecs(value); }
+         get { return ToMillisecs(m_DateTimeOffset); }
+         set { m_DateTimeOffset = FromMillisecs(value); }
       }
 
 
@@ -551,7 +565,7 @@ namespace org.cip4.jdflib.util
       {
          if (other == null)
             return true;
-         return m_DateTime.Ticks < other.m_DateTime.Ticks;
+         return this.m_DateTimeOffset < other.m_DateTimeOffset;
       }
 
       ///   
@@ -564,17 +578,17 @@ namespace org.cip4.jdflib.util
       {
          if (other == null)
             return true;
-         return m_DateTime.Ticks > other.m_DateTime.Ticks;
+         return this.m_DateTimeOffset > other.m_DateTimeOffset;
       }
 
 
       /// <summary>
       /// Get/Set the Date and Time using .NET DateTime class
       /// </summary>
-      public virtual DateTime Time
+      public virtual DateTimeOffset Time
       {
-         get { return m_DateTime; }
-         set { m_DateTime = value; }
+         get { return m_DateTimeOffset; }
+         set { m_DateTimeOffset = value; }
       }
 
       ///   
@@ -587,6 +601,19 @@ namespace org.cip4.jdflib.util
       ///	 
       public override bool Equals(object other)
       {
+         return (other != null && Equals(other as JDFDate));
+      }
+
+      ///
+      ///	 <summary> * Compares two JDFDates for equality.<br>
+      ///	 * The result is <code>true</code> if and only if the argument is not <code>null</code> and is a
+      ///	 * <code>JDFDate</code> object that represents the same point in time, to the millisecond, as this object.
+      ///	 * <p>
+      ///	 * Thus, two <code>JDFDate</code> objects are equal if and only if the <code>getTimeInMillis</code> method returns
+      ///	 * the same <code>long</code> value for both. </summary>
+      ///
+      public bool Equals(JDFDate other)
+      {
          if (this == other)
             return true;
          if (other == null)
@@ -594,25 +621,14 @@ namespace org.cip4.jdflib.util
          if (other.GetType() != this.GetType())
             return false;
 
-         return ((this.m_DateTime.Ticks / 10000000) == (((JDFDate)other).m_DateTime.Ticks / 10000000));
-      }
-
-
-      public bool Equals(JDFDate other)
-      {
-         if (this == other)
-            return true;
-         if (other == null)
-            return false;
-
-         return ((this.m_DateTime.Ticks / 10000000) == (other.m_DateTime.Ticks / 10000000));
+         return ((this.m_DateTimeOffset.UtcTicks / TimeSpan.TicksPerSecond) == (other.m_DateTimeOffset.UtcTicks / TimeSpan.TicksPerSecond));
       }
       ///   
       ///	 <summary> * hashCode complements equals() to fulfill the equals/hashCode contract </summary>
       ///	 
       public override int GetHashCode()
       {
-         return HashUtil.GetHashCode(base.GetHashCode(), getTimeZoneOffsetInMillis());
+         return HashUtil.GetHashCode(base.GetHashCode(), TimeZoneOffsetInMillis);
       }
 
       //   
@@ -643,19 +659,13 @@ namespace org.cip4.jdflib.util
       }
 
       ///   
-      ///	 * <param name="timeZoneOffsetInMillis"> The timeZoneOffsetInMillis to set. </param>
+      ///	 <summary> * Get/Set the timezone offset in milliseconds
+      ///	 *  </summary>
+      ///	 * <returns> int - the timezone offset in milliseconds </returns>
       ///	 
-      public virtual void setTimeZoneOffsetInMillis(int timeZoneOffsetInMillis)
+      public virtual int TimeZoneOffsetInMillis
       {
-         //m_TimeZone.OffsetInMillis = timeZoneOffsetInMillis;
-      }
-
-      ///   
-      ///	 * <returns> Returns the timeZoneOffsetInMillis. </returns>
-      ///	 
-      public virtual int getTimeZoneOffsetInMillis()
-      {
-         return m_TimeZone.GetUtcOffset(m_DateTime).Milliseconds;
+         get { return (int)m_DateTimeOffset.Offset.TotalMilliseconds; }
       }
 
       //   

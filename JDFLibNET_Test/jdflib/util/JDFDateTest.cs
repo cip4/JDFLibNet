@@ -389,16 +389,19 @@ namespace org.cip4.jdflib.util
       {
          const string dateString = "2008-12-19T07:00:11.300+00:00";
          JDFDate date = new JDFDate(dateString);
-         //Assert.AreEqual("2008", date.getFormattedDateTime("yyyy"));
-         Assert.AreEqual(2008, date.Time.Year);
-         //Assert.AreEqual("12", date.getFormattedDateTime("MM"));
-         Assert.AreEqual(12, date.Time.Month);
-         //Assert.AreEqual("300", date.getFormattedDateTime("SSS")); // test for milliseconds
-         Assert.AreEqual(300, date.Time.Millisecond); // test for milliseconds
+         Assert.AreEqual("2008", date.getFormattedDateTime("yyyy"));
+         Assert.AreEqual("12", date.getFormattedDateTime("MM"));
+         // .NET second fractions are fff instead of SSS.
+         Assert.AreEqual("300", date.getFormattedDateTime("fff")); // test for milliseconds
+         // milliseconds
+         // No .NET equivalent to S. will test f instead.
          //Assert.AreEqual("300", date.getFormattedDateTime("S")); // test for milliseconds
-         Assert.AreEqual(dateString, date.Time.ToString("yyyy'-'MM'-'dd'T'HH:mm:ss.SSSZZ"));
-         Assert.AreEqual(dateString, date.Time.ToString("yyyy-MM-dd'T'HH:mm:ss.SSSZZ"));
-         Assert.AreEqual("12 19-07:00:11", date.Time.ToString("MM dd-HH:mm:ss"));
+         // milliseconds
+         Assert.AreEqual("3", date.getFormattedDateTime("%f")); //test for tenths of a second.
+         // .NET timezone offsets are zzz instead of ZZ.
+         Assert.AreEqual(dateString, date.getFormattedDateTime("yyyy'-'MM'-'dd'T'HH:mm:ss.fffzzz"));
+         Assert.AreEqual(dateString, date.getFormattedDateTime("yyyy-MM-dd'T'HH:mm:ss.fffzzz"));
+         Assert.AreEqual("12 19-07:00:11", date.getFormattedDateTime("MM dd-HH:mm:ss"));
       }
 
 
@@ -431,7 +434,7 @@ namespace org.cip4.jdflib.util
       {
          TimeZone t = TimeZone.CurrentTimeZone;
          JDFDate d = new JDFDate();
-         Assert.AreEqual(t.GetUtcOffset(DateTime.Now), d.getTimeZoneOffsetInMillis());
+         Assert.AreEqual(t.GetUtcOffset(DateTime.Now), d.TimeZoneOffsetInMillis);
       }
    }
 }
