@@ -434,7 +434,7 @@ namespace org.cip4.jdflib.util
       {
          TimeZone t = TimeZone.CurrentTimeZone;
          JDFDate d = new JDFDate();
-         Assert.AreEqual(t.GetUtcOffset(DateTime.Now), d.TimeZoneOffsetInMillis);
+         Assert.AreEqual((int)t.GetUtcOffset(DateTime.Now).TotalMilliseconds, d.TimeZoneOffsetInMillis);
       }
    }
 }
