@@ -103,7 +103,7 @@ namespace org.cip4.jdflib.util
       public virtual void testReadBytes()
       {
          PrefixInputStream pis = new PrefixInputStream("abc", new MemoryStream(Encoding.Default.GetBytes("123")));
-         sbyte[] b = new sbyte[2];
+         byte[] b = new byte[2];
          Assert.AreEqual(2, pis.read(b));
          Assert.AreEqual(1, pis.read(b));
          Assert.AreEqual(2, pis.read(b));
@@ -116,7 +116,7 @@ namespace org.cip4.jdflib.util
       public virtual void testReadByteslen()
       {
          PrefixInputStream pis = new PrefixInputStream("abc", new MemoryStream(Encoding.Default.GetBytes("123")));
-         sbyte[] b = new sbyte[2];
+         byte[] b = new byte[2];
          Assert.AreEqual(2, pis.read(b, 0, 2));
          Assert.AreEqual(1, pis.read(b, 0, 2));
          Assert.AreEqual(2, pis.read(b, 0, 2));

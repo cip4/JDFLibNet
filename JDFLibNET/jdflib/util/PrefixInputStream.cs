@@ -103,8 +103,7 @@ namespace org.cip4.jdflib.util
       {
          bDone = false;
          // streamPre = new ByteArrayInputStream(prefix.getBytes());
-         Encoding encoding = Encoding.Default;
-         streamPre = new MemoryStream(encoding.GetBytes(prefix));
+         streamPre = new MemoryStream(Encoding.Default.GetBytes(prefix));
       }
 
       //   
@@ -130,7 +129,7 @@ namespace org.cip4.jdflib.util
       //	 * 
       //	 * @see java.io.FilterInputStream#read(byte[], int, int)
       //	 
-      public virtual int read(sbyte[] b, int off, int len)
+      public virtual int read(byte[] b, int off, int len)
       {
          if (!bDone)
          {
@@ -147,7 +146,7 @@ namespace org.cip4.jdflib.util
       //	 * 
       //	 * @see java.io.FilterInputStream#read(byte[])
       //	 
-      public virtual int read(sbyte[] b)
+      public virtual int read(byte[] b)
       {
          if (!bDone)
          {

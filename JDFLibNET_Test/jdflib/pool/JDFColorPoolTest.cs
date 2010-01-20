@@ -166,7 +166,7 @@ namespace org.cip4.jdflib.pool
          Assert.IsNull(cp.getDuplicateColors());
          JDFColor c = cp.appendColorWithName("grun", "grun");
          Assert.IsNull(cp.getDuplicateColors());
-         c.set8BitNames(SupportClass.ToSByteArray(Encoding.Default.GetBytes("Grün")));
+         c.set8BitNames(Encoding.Default.GetBytes("Grün"));
          c.setName("grun");
          Assert.IsTrue(cp.getDuplicateColors().Contains("grun"));
       }

@@ -289,7 +289,7 @@ namespace org.cip4.jdflib.util
          Assert.AreEqual("./a%20b", StringUtil.replaceChar(UrlUtil.getRelativeURL(f, null, true), '\\', "/", 0));
          f = new FileInfo("../a.ä");
          Assert.AreEqual("../a.%c3%a4", StringUtil.replaceChar(UrlUtil.getRelativeURL(f, null, true), '\\', "/", 0), "escaped utf8");
-         Assert.AreEqual(Encoding.UTF8.GetString(SupportClass.ToByteArray((StringUtil.setUTF8String("../a.ä")))), StringUtil.replaceChar(UrlUtil.getRelativeURL(f, null, false), '\\', "/", 0), "unescaped but utf8");
+         Assert.AreEqual(Encoding.UTF8.GetString((StringUtil.setUTF8String("../a.ä"))), StringUtil.replaceChar(UrlUtil.getRelativeURL(f, null, false), '\\', "/", 0), "unescaped but utf8");
       }
 
 

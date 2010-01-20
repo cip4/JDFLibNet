@@ -258,15 +258,11 @@ namespace org.cip4.jdflib.core
          MemoryStream @is;
          try
          {
-            //@is = new ByteArrayInputStream(stringInput.getBytes("UTF-8"));
-            Encoding encoding = Encoding.UTF8;
-            @is = new MemoryStream(SupportClass.ToByteArray(SupportClass.ToSByteArray(encoding.GetBytes(stringInput))));
+            @is = new MemoryStream(Encoding.UTF8.GetBytes(stringInput));
          }
          catch (IOException)
          {
-            //@is = new ByteArrayInputStream(stringInput.getBytes());
-            Encoding encoding = Encoding.Default;
-            @is = new MemoryStream(SupportClass.ToByteArray(SupportClass.ToSByteArray(encoding.GetBytes(stringInput))));
+            @is = new MemoryStream(Encoding.Default.GetBytes(stringInput));
          }
          return parseStream(@is);
       }

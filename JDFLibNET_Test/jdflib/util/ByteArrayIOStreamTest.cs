@@ -94,8 +94,7 @@ namespace org.cip4.jdflib.util
          byte[] ba = new byte[1];
          for (int i = 0; i < 12345; i++)
          {
-            ba[0] = (byte)(i % 256);
-            ios.Write(ba, 0, 1);
+            ios.WriteByte((byte)i);
             Assert.AreEqual(1 + i, ios.Length);
          }
       }
@@ -105,16 +104,14 @@ namespace org.cip4.jdflib.util
       public virtual void testInRead()
       {
          ByteArrayIOStream ios = new ByteArrayIOStream();
-         byte[] ba = new byte[1];
          for (int i = 0; i < 200000; i++)
          {
-            ba[0] = (byte)(i % 256);
-            ios.Write(ba, 0, 1);
+            ios.WriteByte((byte)i);
          }
          Stream @is = ios.getInputStream();
          int n = 0;
          int j;
-         while ((j = @is.Read(ba, 0, 1)) >= 0)
+         while ((j = @is.ReadByte()) >= 0)
          {
             Assert.AreEqual(n % 256, j, "" + n);
             n++;
@@ -127,19 +124,17 @@ namespace org.cip4.jdflib.util
       public virtual void testInReadMulti()
       {
          ByteArrayIOStream ios = new ByteArrayIOStream();
-         byte[] ba = new byte[1];
          for (int i = 0; i < 50000; i++)
          {
-            ba[0] = (byte) (i % 256);
-            ios.Write(ba, 0, 1);
+            ios.WriteByte((byte)i);
          }
          Stream @is = ios.getInputStream();
          Stream is2 = ios.getInputStream();
          int n = 0;
          int j;
-         while ((j = @is.Read(ba, 0, 1)) >= 0)
+         while ((j = @is.ReadByte()) >= 0)
          {
-            int jj = is2.Read(ba, 0,1);
+            int jj = is2.ReadByte();
             Assert.AreEqual(n % 256, j, "" + n);
             Assert.AreEqual(j, jj);
             n++;

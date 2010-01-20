@@ -3016,9 +3016,9 @@ public class SupportClass
    /// </summary>
    /// <param name="FileStreamWrite">FileStream that must be updated.</param>
    /// <param name="Source">Array of bytes that must be written in the FileStream.</param>
-   public static void WriteOutput(System.IO.FileStream FileStreamWrite, sbyte[] Source)
+   public static void WriteOutput(System.IO.FileStream FileStreamWrite, byte[] Source)
    {
-      FileStreamWrite.Write(ToByteArray(Source), 0, Source.Length);
+      FileStreamWrite.Write(Source, 0, Source.Length);
    }
 
 
@@ -4184,7 +4184,7 @@ public class SupportClass
    /// <param name="start">The starting index of the target array.</param>
    /// <param name="count">The maximum number of characters to read from the source Stream.</param>
    /// <returns>The number of characters read. The number will be less than or equal to count depending on the data available in the source Stream. Returns -1 if the end of the stream is reached.</returns>
-   public static System.Int32 ReadInput(System.IO.Stream sourceStream, sbyte[] target, int start, int count)
+   public static System.Int32 ReadInput(System.IO.Stream sourceStream, byte[] target, int start, int count)
    {
       // Returns 0 bytes if not enough space in target
       if (target.Length == 0)
@@ -4198,7 +4198,7 @@ public class SupportClass
          return -1;
 
       for (int i = start; i < start + bytesRead; i++)
-         target[i] = (sbyte)receiver[i];
+         target[i] = receiver[i];
 
       return bytesRead;
    }
@@ -4209,7 +4209,7 @@ public class SupportClass
    /// <param name="start">The starting index of the target array.</param>
    /// <param name="count">The maximum number of characters to read from the source TextReader.</param>
    /// <returns>The number of characters read. The number will be less than or equal to count depending on the data available in the source TextReader. Returns -1 if the end of the stream is reached.</returns>
-   public static System.Int32 ReadInput(System.IO.TextReader sourceTextReader, sbyte[] target, int start, int count)
+   public static System.Int32 ReadInput(System.IO.TextReader sourceTextReader, byte[] target, int start, int count)
    {
       // Returns 0 bytes if not enough space in target
       if (target.Length == 0) return 0;
@@ -4221,7 +4221,7 @@ public class SupportClass
       if (bytesRead == 0) return -1;
 
       for (int index = start; index < start + bytesRead; index++)
-         target[index] = (sbyte)charArray[index];
+         target[index] = (byte)charArray[index];
 
       return bytesRead;
    }

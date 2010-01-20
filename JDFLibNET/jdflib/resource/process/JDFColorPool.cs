@@ -281,7 +281,7 @@ namespace org.cip4.jdflib.resource.process
          for (int i = 0; i < v.Count; i++)
          {
             JDFColor c = (JDFColor)v[i];
-            string pRawName = new string(SupportClass.ToCharArray(SupportClass.ToByteArray(StringUtil.getRawBytes(c.get8BitName()))));
+            string pRawName = Encoding.Default.GetString(StringUtil.getRawBytes(c.get8BitName()));
             if (pRawName.Equals(rawName))
             {
                return c;
@@ -303,10 +303,7 @@ namespace org.cip4.jdflib.resource.process
       public virtual JDFColor getColorWithRawName(string rawName)
       {
          JDFAttributeMap m = new JDFAttributeMap();
-
-         //string hexRawName = StringUtil.setHexBinaryBytes(rawName.getBytes(), -1);
-         Encoding encoding = Encoding.Default;
-         string hexRawName = StringUtil.setHexBinaryBytes(SupportClass.ToSByteArray(encoding.GetBytes(rawName)), -1);
+         string hexRawName = StringUtil.setHexBinaryBytes(Encoding.Default.GetBytes(rawName), -1);
 
          m.put(AttributeName.RAWNAME, hexRawName);
          VElement v = getChildElementVector(ElementName.COLOR, null, m, true, 0, false);
@@ -344,9 +341,7 @@ namespace org.cip4.jdflib.resource.process
             col = appendColor();
             if (rawName != null)
             {
-               //col.set8BitNames(rawName.getBytes());
-               Encoding encoding = Encoding.Default;
-               col.set8BitNames(SupportClass.ToSByteArray(encoding.GetBytes(rawName)));
+               col.set8BitNames(Encoding.Default.GetBytes(rawName));
             }
             col.setName(colorName);
          }
@@ -386,9 +381,7 @@ namespace org.cip4.jdflib.resource.process
             col = appendColor();
             if (rawName != null)
             {
-               //col.set8BitNames(rawName.getBytes());
-               Encoding encoding = Encoding.Default;
-               col.set8BitNames(SupportClass.ToSByteArray(encoding.GetBytes(rawName)));
+               col.set8BitNames(Encoding.Default.GetBytes(rawName));
             }
             col.setName(colorName);
          }

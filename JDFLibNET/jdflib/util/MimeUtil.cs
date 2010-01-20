@@ -148,7 +148,7 @@ namespace org.cip4.jdflib.util
          private bool done = false;
          private int pos = 0;
 
-         private sbyte[] smallBuf = new sbyte[5000];
+         private byte[] smallBuf = new byte[5000];
 
          ///      
          ///		 * <param name="out"> </param>
@@ -175,7 +175,7 @@ namespace org.cip4.jdflib.util
                }
                else
                {
-                  smallBuf[pos++] = (sbyte)b;
+                  smallBuf[pos++] = (byte)b;
                   int first = Math.Max(0, pos - 50);
                   if (b == ';')
                   {
@@ -184,12 +184,12 @@ namespace org.cip4.jdflib.util
                      {
                         smallBuf = null;
                         done = true;
-                        m_BufferedStream.WriteByte(Convert.ToByte('\n'));
+                        m_BufferedStream.WriteByte((byte)'\n');
                      }
                   }
                }
             }
-            m_BufferedStream.WriteByte(Convert.ToByte(b));
+            m_BufferedStream.WriteByte((byte)b);
          }
 
          //      
@@ -198,11 +198,11 @@ namespace org.cip4.jdflib.util
          //		 * @see java.io.BufferedOutputStream#write(byte[], int, int)
          //		 
          [MethodImpl(MethodImplOptions.Synchronized)]
-         public void write(sbyte[] b, int off, int len)
+         public void write(byte[] b, int off, int len)
          {
             if (done)
             {
-               m_BufferedStream.Write(SupportClass.ToByteArray(b), off, len);
+               m_BufferedStream.Write(b, off, len);
             }
             else
             {

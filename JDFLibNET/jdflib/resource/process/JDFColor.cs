@@ -145,11 +145,11 @@ namespace org.cip4.jdflib.resource.process
       ///	 *  </summary>
       ///	 * <param name="char">[] cName the 8 bit string to set the name to </param>
       ///	 
-      public virtual void set8BitNames(sbyte[] cName)
+      public virtual void set8BitNames(byte[] cName)
       {
          string rawName = StringUtil.setHexBinaryBytes(cName, -1);
          setRawName(rawName);
-         setName(new string(SupportClass.ToCharArray(SupportClass.ToByteArray(cName))));
+         setName(Encoding.Default.GetString(cName));
       }
 
       ///   
@@ -176,13 +176,10 @@ namespace org.cip4.jdflib.resource.process
          string strName = getAttribute(AttributeName.RAWNAME, null, null);
          if (strName != null)
          {
+            byte[] rawName = Encoding.Default.GetBytes(strName);
+            byte[] foundName = StringUtil.getHexBinaryBytes(rawName);
 
-            //sbyte[] rawName = strName.getBytes();
-            Encoding encoding = Encoding.Default;
-            sbyte[] rawName = SupportClass.ToSByteArray(encoding.GetBytes(strName));
-            sbyte[] foundName = StringUtil.getHexBinaryBytes(rawName);
-
-            return new string(SupportClass.ToCharArray(SupportClass.ToByteArray(foundName)));
+            return Encoding.Default.GetString(foundName);
          }
          return getActualColorName();
       }

@@ -90,7 +90,7 @@ namespace org.cip4.jdflib.resource.process
       public virtual void testSetRawName()
       {
          JDFColor c = cp.appendColor();
-         sbyte[] b = SupportClass.ToSByteArray(Encoding.Default.GetBytes("grün"));
+         byte[] b = Encoding.Default.GetBytes("grün");
          c.set8BitNames(b);
          Assert.AreEqual("grün", c.get8BitName());
       }

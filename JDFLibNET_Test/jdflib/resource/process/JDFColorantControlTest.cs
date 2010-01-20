@@ -115,9 +115,9 @@ namespace org.cip4.jdflib.resource.process
          VString vAlias = new VString("Grün grün", null);
          ca.setSeparations(vAlias);
          Assert.IsTrue(ca.isValid(EnumValidationLevel.Complete));
-         sbyte[] b = SupportClass.ToSByteArray(Encoding.Default.GetBytes(vAlias.stringAt(0)));
+         byte[] b = Encoding.Default.GetBytes(vAlias.stringAt(0));
          string rawNames = StringUtil.setHexBinaryBytes(b, -1) + " ";
-         b = SupportClass.ToSByteArray(Encoding.Default.GetBytes(vAlias.stringAt(1)));
+         b = Encoding.Default.GetBytes(vAlias.stringAt(1));
          rawNames += StringUtil.setHexBinaryBytes(b, -1);
          Assert.IsTrue(ca.isValid(EnumValidationLevel.Complete));
          ca.setAttribute("RawNames", rawNames);
@@ -172,9 +172,9 @@ namespace org.cip4.jdflib.resource.process
          VString vAlias = new VString("noir schwärz", null);
          ca.setSeparations(vAlias);
          Assert.IsTrue(ca.isValid(EnumValidationLevel.Complete));
-         sbyte[] b = SupportClass.ToSByteArray(Encoding.Default.GetBytes(vAlias.stringAt(0)));
+         byte[] b = Encoding.Default.GetBytes(vAlias.stringAt(0));
          string rawNames = StringUtil.setHexBinaryBytes(b, -1) + " ";
-         b = SupportClass.ToSByteArray(Encoding.Default.GetBytes(vAlias.stringAt(1)));
+         b = Encoding.Default.GetBytes(vAlias.stringAt(1));
          rawNames += StringUtil.setHexBinaryBytes(b, -1);
          ca.setAttribute("RawNames", rawNames);
          d.write2File(sm_dirTestDataTemp + "ActualColorName_with_CA.jdf", 2, false);

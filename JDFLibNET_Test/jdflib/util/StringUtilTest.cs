@@ -223,10 +223,10 @@ namespace org.cip4.jdflib.util
       public virtual void testSetHexBinaryBytes()
       {
          string strTestString = "ABCDEFGHIJKLMNOPQESTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ÖÄÜöäü€";
-         sbyte[] buffer = SupportClass.ToSByteArray(Encoding.Default.GetBytes(strTestString));
+         byte[] buffer = Encoding.Default.GetBytes(strTestString);
          string strTemp = StringUtil.setHexBinaryBytes(buffer, -1);
-         sbyte[] tempBuffer = StringUtil.getHexBinaryBytes(SupportClass.ToSByteArray(Encoding.Default.GetBytes(strTemp)));
-         string strResultString = Encoding.Default.GetString(SupportClass.ToByteArray(tempBuffer));
+         byte[] tempBuffer = StringUtil.getHexBinaryBytes(Encoding.Default.GetBytes(strTemp));
+         string strResultString = Encoding.Default.GetString(tempBuffer);
          Assert.AreEqual(strTestString, strResultString, "Input and Outputstring are not equal");
       }
 
@@ -236,9 +236,9 @@ namespace org.cip4.jdflib.util
       {
       // String strTestString = "€";
          string strTestString = "ABCDEFGHIJKLMNOPQESTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ÖÄÜöäü€";
-         sbyte[] utf8Buf = StringUtil.setUTF8String(strTestString);
+         byte[] utf8Buf = StringUtil.setUTF8String(strTestString);
          string newString = StringUtil.getUTF8String(utf8Buf);
-         sbyte[] utf8Buf2 = StringUtil.setUTF8String(newString);
+         byte[] utf8Buf2 = StringUtil.setUTF8String(newString);
          string strResultString = StringUtil.getUTF8String(utf8Buf2);
          Assert.AreEqual(utf8Buf.Length, utf8Buf2.Length, "Input and Output bytes are not equal");
          Assert.AreEqual(strTestString, newString, "Input and Output string are not equal");
@@ -283,9 +283,9 @@ namespace org.cip4.jdflib.util
       public virtual void testEscape()
       {
          string iri = "file://myHost/a/c%20äöü%25&?.txtß€";
-         Assert.AreEqual("escape round trip", iri, StringUtil.unEscape(StringUtil.escape(iri, ":&?%", "%", 16, 2, 0x21, 127), "%", 16, 2));
-         Assert.AreEqual("escape ", "%25_%e4", StringUtil.escape("%_ä", ":&?%", "%", 16, 2, 0x21, 127));
-         Assert.AreEqual("escape ", "%e2%82%ac", StringUtil.escape(Encoding.Default.GetString(SupportClass.ToByteArray(StringUtil.setUTF8String("€"))), ":&?%", "%", 16, 2, 0x21, 127));
+         Assert.AreEqual(iri, StringUtil.unEscape(StringUtil.escape(iri, ":&?%", "%", 16, 2, 0x21, 127), "%", 16, 2), "escape round trip");
+         Assert.AreEqual("%25_%e4", StringUtil.escape("%_ä", ":&?%", "%", 16, 2, 0x21, 127), "escape ");
+         Assert.AreEqual("%e2%82%ac", StringUtil.escape(Encoding.Default.GetString(StringUtil.setUTF8String("€")), ":&?%", "%", 16, 2, 0x21, 127), "escape ");
          Assert.AreEqual("ß", StringUtil.escape("ß", null, "%", 16, 2, 0x21, -1));
          Assert.AreEqual("€", StringUtil.escape("€", null, "%", 16, 2, 0x21, -1));
          Assert.AreEqual("a_a", StringUtil.escape("aäa", null, "_", -1, 0, 0x21, 127));

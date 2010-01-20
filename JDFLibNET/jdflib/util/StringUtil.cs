@@ -134,11 +134,50 @@ namespace org.cip4.jdflib.util
       ///	 * leisure.... parts (c) Monty Python
       ///	 *  </summary>
       ///	 
-      private static string[] strings = { "Randomly inserted error", "fooBar", "Snafu", "Bad Karma", "What do you expect from a simulator", "Paper Jam", "Strawberry jam", "Elderberry jam", "Your mother was a hamster and your father smelt of elderberries!", "I'm French! Why do think I have this outrageous accent, you silly king-a?!", "You don't frighten us, English pig-dogs!", "Go and boil your bottom, sons of a silly person.", "I blow my nose at you, so-called Arthur King, you and all your silly English k-nnnnniggets. Thpppppt! Thppt! Thppt!", "I don't wanna talk to you no more, you empty headed animal food trough wiper!", "I fart in your general direction!", "C'est un lapin, lapin de bois.", "Quoi? Un cadeau. What? A present. Oh, un cadeau. Oui, oui. Hurry. What? Let's go. Oh. On y va. Bon magne. Over here...", "Oh. Oh, I see. Running away, eh? You yellow bastards! Come back here and take what's coming to you. I'll bite your legs off!", "You're using coconuts!", "The swallow may fly south with the sun or the house martin or the plover may seek warmer climes in winter, yet these are not strangers to our land?", "Are you suggesting coconuts migrate?", "It's not a question of where he grips it! It's a simple question of weight ratios! A five ounce bird could not carry a one pound coconut.", "Listen. In order to maintain air-speed velocity, a swallow needs to beat its wings forty-three times every second, right?", "Oh, King, eh, very nice. And how d'you get that, eh? By exploiting the workers! By 'anging on to outdated imperialist dogma which perpetuates the economic and social differences in our society. If there's ever going to be any progress with the--", "Oh! Come and see the violence inherent in the system! Help! Help! I'm being repressed!", "Here I am, brain the size of a planet, and they ask me to take you to the bridge. Call that job satisfaction, 'cause I don't.", "Ghastly, isn't it? All the doors on this spaceship have been programmed to have a cheery and sunny disposition.", "whazzap?", "Explain again how sheep's bladders may be employed to prevent earthquakes.", "Pardon me for breathing, which I never do anyway so I don't know why I even bothered to say it. Oh god, I'm so depressed.", "I've got this pain in all the diodes down my left side", "I would like to say that it is a very great pleasure, honour and privilege for me to open this bridge, but I can't because my lying circuits are all out of commission", "Do you want me to sit in the corner and rust, or just fall apart where I'm standing?", "You may think you've read Hamlet before, but you can't really appreciate it until you've read it in the original Klingon." };
+      private static string[] strings = {
+         "Randomly inserted error",
+         "fooBar",
+         "Snafu",
+         "Bad Karma",
+         "What do you expect from a simulator",
+         "Paper Jam",
+         "Strawberry jam",
+         "Elderberry jam",
+         "Your mother was a hamster and your father smelt of elderberries!",
+         "I'm French! Why do think I have this outrageous accent, you silly king-a?!",
+         "You don't frighten us, English pig-dogs!",
+         "Go and boil your bottom, sons of a silly person.",
+         "I blow my nose at you, so-called Arthur King, you and all your silly English k-nnnnniggets. Thpppppt! Thppt! Thppt!",
+         "I don't wanna talk to you no more, you empty headed animal food trough wiper!",
+         "I fart in your general direction!",
+         "C'est un lapin, lapin de bois.",
+         "Quoi? Un cadeau. What? A present. Oh, un cadeau. Oui, oui. Hurry. What? Let's go. Oh. On y va. Bon magne. Over here...",
+         "Oh. Oh, I see. Running away, eh? You yellow bastards! Come back here and take what's coming to you. I'll bite your legs off!",
+         "You're using coconuts!",
+         "The swallow may fly south with the sun or the house martin or the plover may seek warmer climes in winter, yet these are not strangers to our land?",
+         "Are you suggesting coconuts migrate?",
+         "It's not a question of where he grips it! It's a simple question of weight ratios! A five ounce bird could not carry a one pound coconut.",
+         "Listen. In order to maintain air-speed velocity, a swallow needs to beat its wings forty-three times every second, right?",
+         "Oh, King, eh, very nice. And how d'you get that, eh? By exploiting the workers! By 'anging on to outdated imperialist dogma which perpetuates the economic and social differences in our society. If there's ever going to be any progress with the--",
+         "Oh! Come and see the violence inherent in the system! Help! Help! I'm being repressed!",
+         "Here I am, brain the size of a planet, and they ask me to take you to the bridge. Call that job satisfaction, 'cause I don't.",
+         "Ghastly, isn't it? All the doors on this spaceship have been programmed to have a cheery and sunny disposition.",
+         "whazzap?",
+         "Explain again how sheep's bladders may be employed to prevent earthquakes.",
+         "Pardon me for breathing, which I never do anyway so I don't know why I even bothered to say it. Oh god, I'm so depressed.",
+         "I've got this pain in all the diodes down my left side",
+         "I would like to say that it is a very great pleasure, honour and privilege for me to open this bridge, but I can't because my lying circuits are all out of commission",
+         "Do you want me to sit in the corner and rust, or just fall apart where I'm standing?",
+         "You may think you've read Hamlet before, but you can't really appreciate it until you've read it in the original Klingon."
+
+      };
+
+      /// <summary>Random class for random number generation..</summary>
+      private static Random m_Random = new Random();
 
       public static string getRandomString()
       {
-         int pos = (int)(strings.Length * new Random(1).NextDouble() * 0.99999);
+         int pos = (int)(strings.Length * m_Random.NextDouble() * 0.99999);
          return strings[pos];
       }
 
@@ -1108,7 +1147,7 @@ namespace org.cip4.jdflib.util
       ///	 * <param name="buffer"> the buffer to assign to <code>this</code> </param>
       ///	 * <param name="len"> </param>
       ///	 
-      public static string setRawBytes(sbyte[] buffer, int len)
+      public static string setRawBytes(byte[] buffer, int len)
       {
          int lenLocal = len;
 
@@ -1149,17 +1188,17 @@ namespace org.cip4.jdflib.util
       ///	 *  </summary>
       ///	 * <returns> char array of the raw bytes assigned to this </returns>
       ///	 
-      public static sbyte[] getRawBytes(string strUnicode)
+      public static byte[] getRawBytes(string strUnicode)
       {
          char[] pBuf = strUnicode.ToCharArray();
 
          int len = pBuf.Length;
 
-         sbyte[] pc = new sbyte[len];
+         byte[] pc = new byte[len];
 
          for (int i = 0; i < len; i++)
          {
-            pc[i] = (sbyte)(pBuf[i] & 0x00ff);
+            pc[i] = (byte)(pBuf[i] & 0x00ff);
          }
          return pc;
       }
@@ -1172,8 +1211,7 @@ namespace org.cip4.jdflib.util
       ///	 * <param name="len"> the length of the buffer. <br>
       ///	 *            If<0, default is -1. In this case the lenght of the char array will be used. </param>
       ///	 
-
-      public static string setHexBinaryBytes(sbyte[] buffer, int len)
+      public static string setHexBinaryBytes(byte[] buffer, int len)
       {
          int lenLocal = len;
 
@@ -1215,9 +1253,9 @@ namespace org.cip4.jdflib.util
       ///	 * <param name="unicodeArray"> array which stores the HexBinary </param>
       ///	 * <returns> array of byte holding the unicode chars </returns>
       ///	 
-      public static sbyte[] getHexBinaryBytes(sbyte[] unicodeArray)
+      public static byte[] getHexBinaryBytes(byte[] unicodeArray)
       {
-         sbyte[] emptyArray = new sbyte[0];
+         byte[] emptyArray = new byte[0];
          int len = unicodeArray.Length;
 
          // check if there is at least one 16Bit unicode char
@@ -1227,8 +1265,8 @@ namespace org.cip4.jdflib.util
          }
 
          // this will be the container for output
-         sbyte[] pc = new sbyte[len / 2];
-         sbyte c = (sbyte)'0';
+         byte[] pc = new byte[len / 2];
+         byte c = (byte)'0';
 
          for (int i = 0; i < len / 2; i++)
          {
@@ -1239,19 +1277,19 @@ namespace org.cip4.jdflib.util
 
             if (p >= '0' && p <= '9')
             {
-               c = (sbyte)(p - '0');
+               c = (byte)(p - '0');
             }
             else
             {
                if (p >= 'A' && p <= 'F')
                {
-                  c = (sbyte)(10 + p - 'A');
+                  c = (byte)(10 + p - 'A');
                }
                else
                {
                   if (p >= 'a' && p <= 'f')
                   {
-                     c = (sbyte)(10 + p - 'a');
+                     c = (byte)(10 + p - 'a');
                   }
                   else
                   {
@@ -1260,25 +1298,25 @@ namespace org.cip4.jdflib.util
                }
             }
 
-            pc[i] = (sbyte)(c << 4);
+            pc[i] = (byte)(c << 4);
 
             p = unicodeArray[i * 2 + 1] & 0x00ff;
 
             if (p >= '0' && p <= '9')
             {
-               c = (sbyte)(p - '0');
+               c = (byte)(p - '0');
             }
             else
             {
                if (p >= 'A' && p <= 'F')
                {
-                  c = (sbyte)(10 + p - 'A');
+                  c = (byte)(10 + p - 'A');
                }
                else
                {
                   if (p >= 'a' && p <= 'f')
                   {
-                     c = (sbyte)(10 + p - 'a');
+                     c = (byte)(10 + p - 'a');
                   }
                   else
                   {
@@ -1297,17 +1335,15 @@ namespace org.cip4.jdflib.util
       ///	 * <param name="strUnicode"> the unicode string to transcode to utf8 </param>
       ///	 * <returns> a byte array[] representing the utf-8 code of the input string, <code>null</code> if an error occurred </returns>
       ///	 
-      public static sbyte[] setUTF8String(string strUnicode)
+      public static byte[] setUTF8String(string strUnicode)
       {
          if (strUnicode != null && !strUnicode.Equals(JDFConstants.EMPTYSTRING))
          {
             try
             {
-               //return strUnicode.getBytes("UTF-8");
-               Encoding encoding = Encoding.UTF8;
-               return SupportClass.ToSByteArray(encoding.GetBytes(strUnicode));
+               return Encoding.UTF8.GetBytes(strUnicode);
             }
-            catch (IOException)
+            catch (EncoderFallbackException)
             {
                return null;
             }
@@ -1321,15 +1357,15 @@ namespace org.cip4.jdflib.util
       ///	 * <returns> String - the unicode string representation of the utf8 bytes assigned to this, <code>null</code> if an
       ///	 *         error occurrred </returns>
       ///	 
-      public static string getUTF8String(sbyte[] utf8)
+      public static string getUTF8String(byte[] utf8)
       {
          if (utf8 != null && utf8.Length != 0)
          {
             try
             {
-               return System.Text.Encoding.GetEncoding("UTF-8").GetString(SupportClass.ToByteArray(utf8));
+               return Encoding.UTF8.GetString(utf8);
             }
-            catch (IOException e)
+            catch (DecoderFallbackException e)
             {
                SupportClass.WriteStackTrace(e, Console.Error);
                return null;
@@ -1503,21 +1539,18 @@ namespace org.cip4.jdflib.util
             iEscapeAboveLocal = 0x7fffffff;
 
          // String escapedString = JDFConstants.EMPTYSTRING;
-         //sbyte[] a_toEscape = strToEscape.getBytes();
-         Encoding encoding = Encoding.Default;
-         sbyte[] a_toEscape = SupportClass.ToSByteArray(encoding.GetBytes(strToEscape));
+         byte[] a_toEscape = Encoding.Default.GetBytes(strToEscape);
          int l = a_toEscape.Length;
          int cToEscape;
-         sbyte[] escaped = new sbyte[a_toEscape.Length * 4];
+         byte[] escaped = new byte[a_toEscape.Length * 4];
          int posE = 0;
-         //sbyte[] escapeCharbytes = strEscapeCharLocal.getBytes();
-         sbyte[] escapeCharbytes = SupportClass.ToSByteArray(encoding.GetBytes(strEscapeCharLocal));
+         byte[] escapeCharbytes = Encoding.Default.GetBytes(strEscapeCharLocal);
 
          for (int i = 0; i < l; i++)
          {
             cToEscape = a_toEscape[i];
-            if (cToEscape < 0)
-               cToEscape = 256 + cToEscape;
+            //if (cToEscape < 0)
+            //   cToEscape = 256 + cToEscape;
 
             if ((cToEscape > iEscapeAboveLocal) || (cToEscape < iEscapeBelow) || (strCharSet != null && strCharSet.IndexOf(Convert.ToChar(cToEscape)) != -1))
             { // the character must be escaped
@@ -1567,9 +1600,7 @@ namespace org.cip4.jdflib.util
                      }
                   }
 
-                  //sbyte[] bufbytes = buf.ToString().getBytes();
-                  encoding = Encoding.Default;
-                  sbyte[] bufbytes = SupportClass.ToSByteArray(encoding.GetBytes(buf.ToString()));
+                  byte[] bufbytes = Encoding.Default.GetBytes(buf.ToString());
                   for (int ee = 0; ee < bufbytes.Length; ee++)
                   {
                      escaped[posE] = bufbytes[ee];
@@ -1597,7 +1628,7 @@ namespace org.cip4.jdflib.util
             }
          }
 
-         string escapedString = new string(SupportClass.ToCharArray(escaped), 0, posE);
+         string escapedString = Encoding.Default.GetString(escaped, 0, posE);
 
          return escapedString;
       }
@@ -1614,16 +1645,13 @@ namespace org.cip4.jdflib.util
       ///	 
       public static string unEscape(string strToUnescape, string strEscapeChar, int iRadix, int escapeLen)
       {
-         // sbyte[] byteUnEscape = strToUnescape.getBytes();
-         Encoding encoding = Encoding.Default;
-         sbyte[] byteUnEscape = SupportClass.ToSByteArray(encoding.GetBytes(strToUnescape));
-         sbyte[] byteEscape = new sbyte[byteUnEscape.Length];
-         //sbyte escapeChar = strEscapeChar.getBytes()[0]; // dont even dream of
-         sbyte escapeChar = (sbyte)encoding.GetBytes(strEscapeChar)[0]; // dont even dream of
+         byte[] byteUnEscape = Encoding.Default.GetBytes(strToUnescape);
+         byte[] byteEscape = new byte[byteUnEscape.Length];
+         byte escapeChar = Encoding.Default.GetBytes(strEscapeChar)[0]; // dont even dream of
          // using € as an escape
          // char
          int n = 0;
-         sbyte[] escapeSeq = new sbyte[escapeLen];
+         byte[] escapeSeq = new byte[escapeLen];
 
          for (int i = 0; i < byteUnEscape.Length; i++)
          {
@@ -1636,26 +1664,26 @@ namespace org.cip4.jdflib.util
                for (int j = 0; j < escapeLen; j++)
                   escapeSeq[j] = byteUnEscape[++i];
 
-               string strIsEscaped = new string(SupportClass.ToCharArray(SupportClass.ToByteArray(escapeSeq))); // get the escaped
+               string strIsEscaped = Encoding.Default.GetString(escapeSeq); // get the escaped
                // str 'd6'
                int integer = Convert.ToInt32(strIsEscaped, iRadix); // and
                // get
                // the
                // int
                // value
-               byteEscape[n++] = (sbyte)integer; //.intValue();
+               byteEscape[n++] = (byte)integer; //.intValue();
             }
          }
-         sbyte[] stringByte = null;
+         byte[] stringByte = null;
          if (n == byteEscape.Length)
             stringByte = byteEscape;
          else
          {
-            stringByte = new sbyte[n];
+            stringByte = new byte[n];
             for (int i = 0; i < n; i++)
                stringByte[i] = byteEscape[i];
          }
-         return new string(SupportClass.ToCharArray(SupportClass.ToByteArray(stringByte)));
+         return Encoding.Default.GetString(stringByte);
       }
 
       ///   
@@ -2030,14 +2058,26 @@ namespace org.cip4.jdflib.util
          if (regExpLocal.Equals("*"))
             regExpLocal = ".*";
 
+         string regExpAll = regExpLocal;
+         if (!regExpAll.StartsWith("^"))
+         {
+            regExpAll = "^" + regExpAll;
+         }
+         if (!regExpAll.EndsWith("$"))
+         {
+            regExpAll += "$";
+         }
+
          bool b;
          try
          {
             //b = str.matches(regExpLocal);
-            b = Regex.IsMatch(str, regExpLocal);
+            //.Net IsMatch matches part of the string. Adding ^...$ matches the entire string.
+            //Have to match both because of some fringe cases, like regExp == "?"
+            b = Regex.IsMatch(str, regExpLocal) && Regex.IsMatch(str, regExpAll);
 
          }
-         catch (System.Data.SyntaxErrorException)
+         catch (System.ArgumentException)
          {
             b = false;
          }

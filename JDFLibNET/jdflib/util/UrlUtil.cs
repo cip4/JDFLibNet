@@ -223,8 +223,8 @@ namespace org.cip4.jdflib.util
          }
 
          relPath = StringUtil.replaceChar(relPath, '\\', "/", 0);
-         sbyte[] utf8 = StringUtil.setUTF8String(relPath);
-         relPath = new System.String(SupportClass.ToCharArray(SupportClass.ToByteArray(utf8)));
+         byte[] utf8 = StringUtil.setUTF8String(relPath);
+         relPath = Encoding.Default.GetString(utf8);
          relPath = StringUtil.escape(relPath, m_URIEscape, "%", 16, 2, 0x21, bEscape128 ? 128 : -1);
          return relPath;
       }
@@ -259,8 +259,8 @@ namespace org.cip4.jdflib.util
          {
             return null;
          }
-         VString vCwd = new VString(StringUtil.tokenize(cwd, Path.PathSeparator.ToString(), false));
-         VString vPath = new VString(StringUtil.tokenize(cPath, Path.PathSeparator.ToString(), false));
+         VString vCwd = new VString(StringUtil.tokenize(cwd, Path.DirectorySeparatorChar.ToString(), false));
+         VString vPath = new VString(StringUtil.tokenize(cPath, Path.DirectorySeparatorChar.ToString(), false));
 
          int lenPath = vPath.Count;
          int size = vCwd.Count;
@@ -285,7 +285,7 @@ namespace org.cip4.jdflib.util
          for (int i = 1; i < size; i++)
             prefix += "/..";
 
-         string s = lenPath == 0 ? prefix : StringUtil.setvString(vPath, Path.PathSeparator.ToString(), prefix + Path.PathSeparator.ToString(), null);
+         string s = lenPath == 0 ? prefix : StringUtil.setvString(vPath, Path.DirectorySeparatorChar.ToString(), prefix + Path.DirectorySeparatorChar.ToString(), null);
          return cleanDots(s);
       }
 
@@ -516,12 +516,12 @@ namespace org.cip4.jdflib.util
          if (f == null)
             return null;
          string s = f.FullName;
-         if (Path.DirectorySeparatorChar.ToString().Equals("\\"))
+         if (Path.DirectorySeparatorChar.Equals('\\'))
             s = StringUtil.replaceChar(s, '\\', "/", 0);
          s = UrlUtil.cleanDots(s);
          if (bEscape128)
          {
-            s = new string(SupportClass.ToCharArray(SupportClass.ToByteArray(StringUtil.setUTF8String(s))));
+            s = Encoding.Default.GetString(StringUtil.setUTF8String(s));
             s = StringUtil.escape(s, m_URIEscape, "%", 16, 2, 0x21, 127);
          }
          else
@@ -578,11 +578,9 @@ namespace org.cip4.jdflib.util
             urlStringLocal = StringUtil.replaceChar(urlStringLocal, '/', "\\", 0);
          }
 
-         urlStringLocal = new string(SupportClass.ToCharArray(SupportClass.ToByteArray(StringUtil.setUTF8String(urlStringLocal)))); // ensure that any non-utf8 gets encoded to utf-8
+         urlStringLocal = Encoding.Default.GetString(StringUtil.setUTF8String(urlStringLocal)); // ensure that any non-utf8 gets encoded to utf-8
          urlStringLocal = StringUtil.unEscape(urlStringLocal, "%", 16, 2);
-         //urlStringLocal = StringUtil.getUTF8String(urlStringLocal.getBytes());
-         Encoding encoding = Encoding.Default;
-         urlStringLocal = StringUtil.getUTF8String(SupportClass.ToSByteArray(encoding.GetBytes(urlStringLocal)));
+         urlStringLocal = StringUtil.getUTF8String(Encoding.Default.GetBytes(urlStringLocal));
 
          return new FileInfo(urlStringLocal);
       }

@@ -123,11 +123,8 @@ namespace org.cip4.jdflib.util
       {
          if (searchTag == null)
             return;
-         // sbyte[] bytes = searchTag.getBytes();
-         Encoding encoding = Encoding.Default;
-         sbyte[] bytes = SupportClass.ToSByteArray(encoding.GetBytes(searchTag));
-         //sbyte[] lowerBytes = searchTag.ToLower().getBytes();
-         sbyte[] lowerBytes = SupportClass.ToSByteArray(encoding.GetBytes(searchTag.ToLower()));
+         byte[] bytes = Encoding.Default.GetBytes(searchTag);
+         byte[] lowerBytes = Encoding.Default.GetBytes(searchTag.ToLower());
          int tagPos = 0;
          while (true)
          {
@@ -136,7 +133,7 @@ namespace org.cip4.jdflib.util
             int c = m_BufferedStream.ReadByte();
             if (c == -1)
                break;
-            if (c == bytes[tagPos] || ignoreCase && char.ToLower(Convert.ToChar(c)) == lowerBytes[tagPos])
+            if (c == bytes[tagPos] || ignoreCase && Char.ToLower((char)c) == lowerBytes[tagPos])
             {
                tagPos++;
                if (tagPos >= searchSize) // heureka

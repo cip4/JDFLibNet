@@ -245,10 +245,9 @@ namespace org.cip4.jdflib.util
             if (header != null)
             {
                //fs.write(header.getBytes());
-               Encoding encoding = Encoding.Default;
-               SupportClass.WriteOutput(fs, SupportClass.ToSByteArray(encoding.GetBytes(header)));
+               SupportClass.WriteOutput(fs, Encoding.Default.GetBytes(header));
                //fs.write("\n------ end of header ----!\n".getBytes());
-               SupportClass.WriteOutput(fs, SupportClass.ToSByteArray(encoding.GetBytes("\n------ end of header ----!\n")));
+               SupportClass.WriteOutput(fs, Encoding.Default.GetBytes("\n------ end of header ----!\n"));
                if (bClose)
                {
                   fs.Flush();

@@ -135,8 +135,8 @@ namespace org.cip4.jdflib.util
          if (o != null)
             mapKey.Remove(o);
 
-         mapVal.Add(val, key);
-         mapKey.Add(key, val);
+         mapVal[val] = key;
+         mapKey[key] = val;
       }
 
       ///   
