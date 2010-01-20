@@ -136,10 +136,13 @@ namespace org.cip4.jdflib.util
          Assert.AreEqual(1, m.size("a"));
          m.removeOne("a", "c");
          Assert.AreEqual(-2, m.getIndex("a", "b"));
-         Assert.IsNull(m["a"]);
+         System.Collections.Generic.List<string> list = null;
+         m.TryGetValue("a", out list);
+         Assert.IsNull(list);
          m.removeOne("a", "c");
          Assert.AreEqual(-2, m.getIndex("a", "b"));
-         Assert.IsNull(m["a"]);
+         m.TryGetValue("a", out list);
+         Assert.IsNull(list);
       }
 
 

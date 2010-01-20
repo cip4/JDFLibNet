@@ -109,11 +109,12 @@ namespace org.cip4.jdflib.util
       ///	 * <param name="i"> the index in the vecor matching key; if <0 count from the back of the vector </param>
       ///	 * <returns> the matching vectorObject; null if the key does not exist or i is out of range </returns>
       ///	 
-      public virtual vectorObject getOne(object key, int i)
+      public virtual vectorObject getOne(key key, int i)
       {
          int iLocal = i;
 
-         List<vectorObject> c = this[(key)key];
+         List<vectorObject> c = null;
+         TryGetValue(key, out c);
          if (c == null)
             return default(vectorObject);
 
@@ -135,7 +136,8 @@ namespace org.cip4.jdflib.util
       ///	 
       public virtual int getIndex(key key, vectorObject singleObject)
       {
-         List<vectorObject> keyVector = this[key]; // get(key);
+         List<vectorObject> keyVector = null;
+         TryGetValue(key, out keyVector);
          if (keyVector == null)
             return -2;
          return keyVector.IndexOf(singleObject);
@@ -148,7 +150,8 @@ namespace org.cip4.jdflib.util
       ///	 
       public virtual int size(key key)
       {
-         List<vectorObject> c = this[key]; // get(key);
+         List<vectorObject> c = null;
+         TryGetValue(key, out c);
          if (c == null)
             return 0;
          return c.Count;
@@ -161,11 +164,12 @@ namespace org.cip4.jdflib.util
       ///	 
       public virtual void putOne(key key, vectorObject val)
       {
-         List<vectorObject> v = this[key]; // get(key);
+         List<vectorObject> v = null;
+         TryGetValue(key, out v);
          if (v == null)
          {
             v = new List<vectorObject>();
-            this.Add(key, v); // put(key, v);
+            Add(key, v);
          }
          if (!v.Contains(val))
             v.Add(val);
@@ -179,7 +183,8 @@ namespace org.cip4.jdflib.util
       ///	 
       public virtual void removeOne(key key, vectorObject val)
       {
-         List<vectorObject> v = this[key]; // get(key);
+         List<vectorObject> v = null;
+         TryGetValue(key, out v);
          if (v != null)
          {
             v.Remove(val);
@@ -198,7 +203,8 @@ namespace org.cip4.jdflib.util
       public virtual void setOne(key key, vectorObject newObj, vectorObject oldObj)
       {
 
-         List<vectorObject> v = this[key]; // get(key);
+         List<vectorObject> v = null;
+         TryGetValue(key, out v);
          if (v != null)
          {
             int i = v.IndexOf(oldObj);

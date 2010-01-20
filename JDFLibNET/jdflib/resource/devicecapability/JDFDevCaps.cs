@@ -834,7 +834,8 @@ namespace org.cip4.jdflib.resource.devicecapability
                      int kk = (tocNum2 == null || tocNum2.Count == 0) ? -1 : tocNum2.getInt(0);
                      if (EnumUsage.Input.Equals(linkUsage))
                         kk--;
-                     List<JDFResource> v = indexResMap[kk]; // (new int(kk));
+                     List<JDFResource> v = null;
+                     indexResMap.TryGetValue(kk, out v);
                      if (v != null)
                      {
                         int sv = v.Count;

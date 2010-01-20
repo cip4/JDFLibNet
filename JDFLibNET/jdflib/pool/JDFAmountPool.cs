@@ -147,7 +147,8 @@ namespace org.cip4.jdflib.pool
          public virtual double getAmountDouble(JDFAttributeMap amParts, string strAttributeName)
          {
             double dValue = -1.0;
-            List<JDFPartAmount> lpa = null;  // TODO: Can't find definition for this method:  get(amParts);
+            List<JDFPartAmount> lpa = null;
+            TryGetValue(amParts, out lpa);
 
             if (lpa != null)
             {
