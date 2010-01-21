@@ -120,7 +120,8 @@ namespace org.cip4.jdflib.util
       // E.g. expressions "P60D" that is equal 60 days or "PT68H" that is equal
       // 68hours are allowed
 
-      private const string REGEX_DURATION = "([-])?[P](((\\d)+)[Y])?((\\d)+[M])?((\\d)+[D])?" + "([T]((\\d)+[H])?((\\d)+[M])?((\\d)+([.](\\d)+)?[S])?)?";
+      // .NET add ^ ... $ to force full match in Regex.
+      private const string REGEX_DURATION = "^([-])?[P](((\\d)+)[Y])?((\\d)+[M])?((\\d)+[D])?" + "([T]((\\d)+[H])?((\\d)+[M])?((\\d)+([.](\\d)+)?[S])?)?$";
 
       ///   
       ///	 <summary> * Allocates a <code>JDFDuration</code> object and initializes it with 0 </summary>
