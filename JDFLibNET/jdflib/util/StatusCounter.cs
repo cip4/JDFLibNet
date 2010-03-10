@@ -1059,7 +1059,7 @@ namespace org.cip4.jdflib.util
       {
          if (docJMFPhaseTime == null)
             setIdlePhase(EnumDeviceStatus.Idle, null);
-         return (JDFDoc)docJMFPhaseTime.clone();
+         return (JDFDoc)docJMFPhaseTime.Clone();
       }
 
       ///   
@@ -1070,7 +1070,7 @@ namespace org.cip4.jdflib.util
       {
          if (docJMFResource == null)
             return null;
-         return (JDFDoc)docJMFResource.clone();
+         return (JDFDoc)docJMFResource.Clone();
       }
 
       ///   
@@ -1089,7 +1089,7 @@ namespace org.cip4.jdflib.util
             }
             else
             {
-               ret = (JDFDoc)docJMFNotification.clone();
+               ret = (JDFDoc)docJMFNotification.Clone();
             }
          }
          return ret;

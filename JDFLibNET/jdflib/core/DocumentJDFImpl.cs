@@ -131,7 +131,7 @@ namespace org.cip4.jdflib.core
       ///	 
       public System.Net.Mail.Attachment m_Bodypart = null;
 
-      private string jdfNSURI = JDFElement.getSchemaURL();
+      private static readonly string jdfNSURI = JDFElement.getSchemaURL();
 
       ///   
       ///	 <summary> * rough guestimate of the memory used by this if called after parsing
@@ -140,22 +140,17 @@ namespace org.cip4.jdflib.core
       ///	 
       public virtual long getDocMemoryUsed()
       {
-         //Runtime rt = Runtime.getRuntime();
          System.Diagnostics.Process rt = System.Diagnostics.Process.GetCurrentProcess();
-         //long mem = rt.totalMemory() - rt.freeMemory();
-         // TODO: Don't know if this makes any sense
-
-         long mem = rt.WorkingSet64;
+         long mem = rt.PrivateMemorySize64;
          if (mem < initialMem)
-            return 0;
-         else
-            return mem - initialMem;
+            initialMem = mem;
+         return mem - initialMem;
       }
 
       ///   
       ///	 * <seealso cref= org.apache.xerces.dom.CoreDocumentImpl#clone() </seealso>
       ///	 
-      public object clone()
+      public override XmlNode CloneNode(bool deep)
       {
          DocumentJDFImpl clon = new DocumentJDFImpl();
 
@@ -165,10 +160,10 @@ namespace org.cip4.jdflib.core
          clon.m_Bodypart = m_Bodypart;
          clon.m_OriginalFileName = m_OriginalFileName;
 
-         getUserData().clear(); // otherwise, clon is indefinitely retained in userdata of the original document and we have a memory leak problem....
+         //getUserData().clear(); // otherwise, clon is indefinitely retained in userdata of the original document and we have a memory leak problem....
 
-         if (clon.getUserData() != null)
-            clon.getUserData().clear();
+         //if (clon.getUserData() != null)
+            //clon.getUserData().clear();
 
          return clon;
       }
@@ -191,7 +186,7 @@ namespace org.cip4.jdflib.core
       {
          lock (sm_PackageNames)
          {
-            sm_PackageNames.Add(strElement, packagepath);
+            sm_PackageNames[strElement] = packagepath;
             sm_ClassAlreadyInstantiated.Remove(strElement);
             sm_hashCtorElementNS.Remove(strElement);
          }
@@ -228,11 +223,8 @@ namespace org.cip4.jdflib.core
       public DocumentJDFImpl()
          : base()
       {
-         //Runtime rt = Runtime.getRuntime();
          System.Diagnostics.Process rt = System.Diagnostics.Process.GetCurrentProcess();
-         // Java to C# Conversion - NOTE: Don't know if this makes any sense
-         //initialMem = rt.totalMemory() - rt.freeMemory();
-         initialMem = rt.WorkingSet64;
+         initialMem = rt.PrivateMemorySize64;
       }
 
       /// <summary>
@@ -309,14 +301,7 @@ namespace org.cip4.jdflib.core
 
          lock (sm_hashCtorElementNS)
          {
-            if (sm_hashCtorElementNS.ContainsKey(qualifiedName))
-            {
-               constructi = sm_hashCtorElementNS[qualifiedName];
-            }
-            else
-            {
-               constructi = null;
-            }
+            sm_hashCtorElementNS.TryGetValue(qualifiedName, out constructi);
 
             // it has to be 1 coreDocImpl plus 3 String Parameters
             // otherwhise don't use hashtableentry
@@ -375,7 +360,7 @@ namespace org.cip4.jdflib.core
          bool bSpecialClass = isSpecialClass(qualifiedName, className);
          if (bSpecialClass)
          {
-            hashCtorElement.Add(qualifiedName, constructi);
+            hashCtorElement[qualifiedName] = constructi;
          }
       }
 
@@ -386,7 +371,10 @@ namespace org.cip4.jdflib.core
       ///	 
       private bool isSpecialClass(string qualifiedName, string className)
       {
-         bool bSpecialClass = !className.EndsWith("JDFResource") && !className.EndsWith("JDFElement") && !className.EndsWith("KElement") && !qualifiedName.Equals("HoleType") && !qualifiedName.Equals("Method") && !qualifiedName.Equals("Shape") && !qualifiedName.Equals("Position") && !qualifiedName.Equals("Surface");
+         bool bSpecialClass = !className.EndsWith("JDFResource") && !className.EndsWith("JDFElement")
+            && !className.EndsWith("KElement") && !qualifiedName.Equals("HoleType")
+            && !qualifiedName.Equals("Method") && !qualifiedName.Equals("Shape")
+            && !qualifiedName.Equals("Position") && !qualifiedName.Equals("Surface");
          return bSpecialClass;
       }
 
@@ -465,14 +453,7 @@ namespace org.cip4.jdflib.core
       {
 
          Type packageNameClass;
-         if (sm_ClassAlreadyInstantiated.ContainsKey(qualifiedName))
-         {
-            packageNameClass = sm_ClassAlreadyInstantiated[qualifiedName];
-         }
-         else
-         {
-            packageNameClass = null;
-         }
+         sm_ClassAlreadyInstantiated.TryGetValue(qualifiedName, out packageNameClass);
 
          if (packageNameClass == null)
          { // class not found in the buffer! Instantiate it and add it to the
@@ -509,7 +490,7 @@ namespace org.cip4.jdflib.core
 
                if (normalElement || strClassPath.Equals(sm_PackageNames["ResDefault"]))
                {
-                  sm_ClassAlreadyInstantiated.Add(qualifiedName, packageNameClass);
+                  sm_ClassAlreadyInstantiated[qualifiedName] = packageNameClass;
                }
             }
          }
@@ -533,23 +514,20 @@ namespace org.cip4.jdflib.core
          // CreateLink and RemoveLink are messages, no links
          if (qualifiedName.EndsWith(JDFConstants.LINK) && !ElementName.CREATELINK.Equals(qualifiedName) && !ElementName.REMOVELINK.Equals(qualifiedName))
          {
-            strClassPath = sm_PackageNames[ElementName.RESOURCELINK];
+            sm_PackageNames.TryGetValue(ElementName.RESOURCELINK, out strClassPath);
          }
          else if (qualifiedName.EndsWith(JDFConstants.REF) && !qualifiedName.Equals(ElementName.TESTREF))
          {
-            strClassPath = sm_PackageNames[ElementName.REFELEMENT];
+            sm_PackageNames.TryGetValue(ElementName.REFELEMENT, out strClassPath);
          }
          else
          {
-            if (sm_PackageNames.ContainsKey(qualifiedName))
-               strClassPath = sm_PackageNames[qualifiedName];
-
-            if (strClassPath == null && (null == strNameSpaceURI || jdfNSURI.Equals(strNameSpaceURI) || JDFConstants.EMPTYSTRING.Equals(strNameSpaceURI)))
+            sm_PackageNames.TryGetValue(qualifiedName, out strClassPath);
+            if (strClassPath == null
+               && (null == strNameSpaceURI || jdfNSURI.Equals(strNameSpaceURI) || JDFConstants.EMPTYSTRING.Equals(strNameSpaceURI)))
             { // the maps only contain local names for jdf - recheck in case of
                // prefix
-
-               if (sm_PackageNames.ContainsKey(localPart))
-                  strClassPath = sm_PackageNames[localPart];
+               sm_PackageNames.TryGetValue(localPart, out strClassPath);
             }
          }
          return strClassPath;
@@ -1412,7 +1390,7 @@ namespace org.cip4.jdflib.core
       ///   
       ///	 * <seealso cref= org.apache.xerces.dom.CoreDocumentImpl#removeChild(org.w3c.dom.Node) </seealso>
       ///	 
-      public XmlNode removeChild(XmlNode arg0)
+      public override XmlNode RemoveChild(XmlNode arg0)
       {
          XMLDocUserData ud = getXMLDocUserData();
          if (ud != null)
@@ -1424,7 +1402,7 @@ namespace org.cip4.jdflib.core
       ///   
       ///	 * <seealso cref= org.apache.xerces.dom.CoreDocumentImpl#replaceChild(org.w3c.dom.Node, org.w3c.dom.Node) </seealso>
       ///	 
-      public XmlNode replaceChild(XmlNode arg0, XmlNode arg1)
+      public override XmlNode ReplaceChild(XmlNode arg0, XmlNode arg1)
       {
          XMLDocUserData ud = getXMLDocUserData();
          if (ud != null)
@@ -1486,21 +1464,19 @@ namespace org.cip4.jdflib.core
 
       public virtual void putIdentifier(string idName, XmlElement element)
       {
-         m_Identifiers.Add(idName, element);
+         m_Identifiers[idName] = element;
       }
 
       public virtual XmlElement getIdentifier(string idName)
       {
-         if ((idName != null) && (m_Identifiers.ContainsKey(idName)))
-            return m_Identifiers[idName];
-         else
-            return null;
+         XmlElement ret;
+         m_Identifiers.TryGetValue(idName, out ret);
+         return ret;
       }
 
       public virtual void removeIdentifier(string idName)
       {
-         if ((idName != null) && (m_Identifiers.ContainsKey(idName)))
-            m_Identifiers.Remove(idName);
+         m_Identifiers.Remove(idName);
       }
 
 

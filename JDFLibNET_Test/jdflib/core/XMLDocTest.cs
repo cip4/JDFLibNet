@@ -524,14 +524,14 @@ namespace org.cip4.jdflib.core
       [TestMethod]
       public virtual void testCloneMem()
       {
-         //System.gc();
+         System.GC.Collect();
          XMLDoc doc = new XMLDoc("foobar", null);
          long l = doc.getDocMemoryUsed();
          Console.WriteLine(l);
          // Java to C# Conversion - Divide number of tests by 1000 for now
          for (int i = 0; i < 1000; i++)
-            doc.clone();
-         //System.gc();
+            doc.Clone();
+         System.GC.Collect();
          long l2 = doc.getDocMemoryUsed();
          Console.WriteLine(l2);
          Assert.IsTrue(l2 - l < 100000);
@@ -546,7 +546,7 @@ namespace org.cip4.jdflib.core
       public virtual void testClone()
       {
          XMLDoc doc = new XMLDoc("foobar", null);
-         XMLDoc doc2 = (XMLDoc)doc.clone();
+         XMLDoc doc2 = (XMLDoc)doc.Clone();
          Assert.IsNotNull(doc.getDocumentElement());
          Assert.IsNotNull(doc2.getDocumentElement());
          Assert.AreNotEqual(doc.getDocumentElement(), doc2.getDocumentElement());

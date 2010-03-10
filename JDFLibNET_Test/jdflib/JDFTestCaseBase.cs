@@ -180,6 +180,7 @@ namespace org.cip4.jdflib
       protected internal long mem;
 
 
+      [TestInitialize]
       public virtual void setUp()
       {
          JDFElement.uniqueID(1);
@@ -199,7 +200,7 @@ namespace org.cip4.jdflib
       {
          // Java to C# Conversion - NOTE: Don't know if this makes any sense
 
-         //System.gc();
+         System.GC.Collect();
          //Runtime rt = Runtime.getRuntime();
          //return rt.totalMemory() - rt.freeMemory();
 
@@ -212,6 +213,7 @@ namespace org.cip4.jdflib
       //	 * 
       //	 * @see junit.framework.TestCase#tearDown()
       //	 
+      [TestCleanup]
       public virtual void tearDown()
       {
          JDFElement.setLongID(true);

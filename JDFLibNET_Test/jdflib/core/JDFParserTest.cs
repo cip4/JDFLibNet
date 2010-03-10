@@ -137,7 +137,7 @@ namespace org.cip4.jdflib.core
       public virtual void testParseSpeed()
       {
          JDFParser parser = new JDFParser();
-         //System.gc();
+         System.GC.Collect();
          long l1 = DateTime.Now.Ticks;
          JDFDoc d = parser.parseFile(sm_dirTestData + "bigWhite.jdf");
          Assert.IsNotNull(d);

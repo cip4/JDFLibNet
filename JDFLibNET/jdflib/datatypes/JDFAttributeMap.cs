@@ -142,6 +142,16 @@ namespace org.cip4.jdflib.datatypes
       }
 
       ///   
+      ///	 <summary> * Method JDFAttributeMap clone the content of the input map
+      ///	 *  </summary>
+      ///	 * <param name="inputMap"> map to clone </param>
+      ///	 
+      public JDFAttributeMap(IDictionary<string, string> inputMap)
+      {
+         if (inputMap != null)
+            m_hashTable = new Dictionary<string, string>(inputMap);
+      }
+      ///   
       ///	 <summary> * constructor: create a new map with one entry that is defined by partIDKey, value
       ///	 *  </summary>
       ///	 * <param name="partIDKey"> the enumerated partIDKey </param>

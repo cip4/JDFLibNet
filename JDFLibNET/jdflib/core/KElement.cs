@@ -611,7 +611,7 @@ namespace org.cip4.jdflib.core
       ///   
       ///	 <summary> * Get The DOM Attribute node of a given attribute if attrib has no namespace prefix and nameSpaceURI is a wildcard
       ///	 * the attribute with the element prefix will be returned if no empty attribute exists e.g. getDOMAttr("a") will
-      ///	 * return the node x:a in <x:e x:a="b"/>
+      ///	 * return the node x:a in &lt;x:e x:a="b"/&gt;
       ///	 *  </summary>
       ///	 * <param name="attrib"> the attribute Name </param>
       ///	 * <param name="nameSpaceURI"> then namespaceURI, defaults to the local namespace </param>
@@ -635,11 +635,11 @@ namespace org.cip4.jdflib.core
 
             string attribPrefix = xmlnsPrefix(attrib);
             string elementPrefix = Prefix;
-            if (elementPrefix != null && attribPrefix != null && attribPrefix.Equals(elementPrefix))
+            if (!String.IsNullOrEmpty(elementPrefix) && attribPrefix != null && attribPrefix.Equals(elementPrefix))
             { // has attribute prefix
                a = GetAttributeNode(attrib.Substring(elementPrefix.Length + 1));
             }
-            else if (elementPrefix != null && attribPrefix == null)
+            else if (!String.IsNullOrEmpty(elementPrefix) && attribPrefix == null)
             {
                a = GetAttributeNode(elementPrefix + JDFConstants.COLON + attrib);
             }
@@ -723,7 +723,7 @@ namespace org.cip4.jdflib.core
                else if (!@value.Equals(getInheritedAttribute(key, null, null)))
                {
                   bDirty = true;
-                  base.SetAttribute(key, @value);
+                  SetAttribute(key, @value);
                   // Java to C# Conversion - Question - What is the point of this constant Namspace value, 
                   //    when setting this namespace attribute value?
                   // super.setAttributeNS(AttributeName.XMLNSURI, key, value);
@@ -737,7 +737,7 @@ namespace org.cip4.jdflib.core
                { // no attribute prefix, put the attribute in the default
                   // namespace
                   bDirty = true;
-                  base.SetAttribute(key, @value);
+                  SetAttribute(key, @value);
                }
                else
                { // try to find a namespace
@@ -764,7 +764,7 @@ namespace org.cip4.jdflib.core
                            { // overwrite default namespace with qualified
                               // namespace or vice versa
                               removeAttribute(nodeName);
-                              base.SetAttribute(key, @value);
+                              SetAttribute(key, @value);
                            }
                            else
                            { // same qualified name, simply overwrite the
@@ -781,13 +781,13 @@ namespace org.cip4.jdflib.core
                            }
                            try
                            {
-                              base.SetAttribute(key, nsURI2, @value);
+                              SetAttribute(key, nsURI2, @value);
                            }
                            catch (Exception)
                            {
                               // we punt here because it wil hopefully
                               // only be an ordering problem
-                              base.SetAttribute(key, @value);
+                              SetAttribute(key, @value);
                            }
                         }
                      }
@@ -808,7 +808,7 @@ namespace org.cip4.jdflib.core
                else if (!@value.Equals(getInheritedAttribute(xmlnsLocalName(key), nameSpaceURILocal, null)))
                {
                   bDirty = true;
-                  base.SetAttribute(key, AttributeName.XMLNSURI, @value);
+                  SetAttribute(key, AttributeName.XMLNSURI, @value);
                }
             }
             else
@@ -825,7 +825,7 @@ namespace org.cip4.jdflib.core
                      if (!key.Equals(nodeName))
                      { // overwrite default namespace with qualified
                         // namespace or vice versa
-                        base.SetAttribute(key, nameSpaceURILocal, @value);
+                        SetAttribute(key, nameSpaceURILocal, @value);
                      }
                      else
                      { // same qualified name, simply overwrite the value
@@ -855,7 +855,7 @@ namespace org.cip4.jdflib.core
                            nameSpaceURILocal = null; // avoid spurios NS1 prefix
                         }
                      }
-                     base.SetAttribute(xmlnsLocalName(key), nameSpaceURILocal, @value);
+                     SetAttribute(key, nameSpaceURILocal, @value);
                   }
                }
             }
@@ -866,7 +866,34 @@ namespace org.cip4.jdflib.core
             setDirty(true);
          }
       }
-
+      /// <summary>
+      /// SetAttribute that allows a prefix and a namespace.
+      /// </summary>
+      /// <param name="name"> the qualified name of the attribute to create or alter. </param>
+      /// <param name="namespaceURI"> the namespace the element is in </param>
+      /// <param name="value"> the value to set in string form. If null, the attribute is removed </param>
+      /// <returns>The value of the specified attribute. An empty string is returned if a matching
+      /// attribute is not found or if the attribute does not have a specified or default value.</returns>
+      /// <remarks>Use setAttribute and not SetAttribute.</remarks>
+      public override string SetAttribute(string key, string namespaceURI, string value)
+      {
+         string prefix = xmlnsPrefix(key);
+         if (String.IsNullOrEmpty(prefix))
+         {
+            return base.SetAttribute(key, namespaceURI, value);
+         }
+         else
+         {
+            XmlAttribute attr = SetAttributeNode(xmlnsLocalName(key), namespaceURI);
+            if (attr != null)
+            {
+               attr.Prefix = prefix;
+               attr.Value = value;
+               return attr.Value;
+            }
+         }
+         return JDFConstants.EMPTYSTRING;
+      }
       ///   
       ///	 <summary> * no namespace variant
       ///	 *  </summary>
@@ -875,7 +902,7 @@ namespace org.cip4.jdflib.core
       ///	 
       public void setAttribute(string key, string @value)
       {
-         SetAttribute(key, @value);
+         setAttribute(key, @value, null);
       }
 
       ///   
@@ -886,7 +913,7 @@ namespace org.cip4.jdflib.core
       ///	 
       public virtual void setAttributeRaw(string key, string @value)
       {
-         base.SetAttribute(key, @value);
+         SetAttribute(key, @value);
       }
 
       ///   
@@ -1045,7 +1072,8 @@ namespace org.cip4.jdflib.core
                base.RemoveAttribute(xmlnsLocalName(attrib), nameSpaceURI);
                if (nameSpaceURI.Equals(NamespaceURI))
                {
-                  base.RemoveAttribute(attrib, null);
+                  //C# and Java are different. Use single parameter RemoveAttribute.
+                  base.RemoveAttribute(attrib);
                }
             }
             setDirty(true);
@@ -1221,7 +1249,7 @@ namespace org.cip4.jdflib.core
          if (prefix == null || prefix.Equals(JDFConstants.EMPTYSTRING))
          {
             string elementPrefix = Prefix;
-            if (elementPrefix == null)
+            if (String.IsNullOrEmpty(elementPrefix))
             {
                strNamespaceURI = getNamespaceURI();
                if (strNamespaceURI != null)
@@ -1256,7 +1284,7 @@ namespace org.cip4.jdflib.core
                // therefore we assume that the same NamespaceURI also applies,
                // if it is set
                strNamespaceURI = getNamespaceURI();
-               if (strNamespaceURI != null)
+               if (!String.IsNullOrEmpty(strNamespaceURI))
                {
                   return strNamespaceURI;
                }
@@ -1302,6 +1330,13 @@ namespace org.cip4.jdflib.core
          return null;
       }
 
+      /// <summary>
+      /// Get the NameSpaceURI.
+      /// </summary>
+      public override string NamespaceURI
+      {
+         get { return getNamespaceURI(); }
+      }
       ///   
       ///	 <summary> * Get the NameSpaceURI
       ///	 *  </summary>
@@ -1321,7 +1356,7 @@ namespace org.cip4.jdflib.core
          while (parent != null)
          {
             string prefix = KElement.xmlnsPrefix(parent.Name);
-            if (prefix == null && s == null || prefix != null && prefix.Equals(s))
+            if (prefix == null && String.IsNullOrEmpty(s) || prefix != null && prefix.Equals(s))
             {
                string nsuri = parent.getNamespaceURI();
                if (nsuri != null) // we found a valid nsuri so we might as well
@@ -1337,7 +1372,7 @@ namespace org.cip4.jdflib.core
 
          string nsuri2;
 
-         if (s != null)
+         if (!String.IsNullOrEmpty(s))
          {
             nsuri2 = getInheritedAttribute(JDFConstants.XMLNS + JDFConstants.COLON + s, null, null);
          }
@@ -1351,7 +1386,7 @@ namespace org.cip4.jdflib.core
             // Java to C# Conversion - QUESTION: Do we need to be able to assign value?
             //NamespaceURI = nsuri2;
          }
-         else if (s == null)
+         else if (String.IsNullOrEmpty(s))
          {
             // ran into root and no default ns found - ciao from now on
             ((DocumentJDFImpl)OwnerDocument).setIgnoreNSDefault(true);
@@ -3708,26 +3743,45 @@ namespace org.cip4.jdflib.core
       ///	 *  </summary>
       ///	 * <param name="newName"> the new name of the actual element </param>
       ///	 * <param name="nameSpaceURI"> the new nameSpace, ignored if null</param>
-      ///	 * <returns> KElement the renamed child, i.e. this </returns>
-      ///	 
+      ///	 * <returns> KElement the renamed child. </returns>
+      ///	 <remarks>Different from Java because this element doesn't change.</remarks>
       public virtual KElement renameElement(string newName, string nameSpaceURI)
       {
          // Java to C# Conversion - TODO: How are we going to assign values?
-         // May have to:
          //   Create element with new name, 
          //   Copy this attributes and child node to new element, 
-         //   Insert new element before this element
-         //   Remove this element.
+         //   Replace this element.
          //   Make new element this element?
-         //   Seems like an awful lot of work.  Any better way?
 
-         //this.Name = newName;
-         //this.LocalName = xmlnsLocalName(newName);
-         //if (nameSpaceURI != null)
-         //{
-         //   this.NamespaceURI = nameSpaceURI;
-         //}
-         return this;
+         //if it isn't really a rename, don't bother.
+         if(this.Name == newName && (String.IsNullOrEmpty(nameSpaceURI) || this.NamespaceURI == nameSpaceURI))
+         {
+            return this;
+         }
+         //if no namespace, use this namespace.
+         string localnameSpaceURI = nameSpaceURI;
+         if (String.IsNullOrEmpty(localnameSpaceURI))
+         {
+            localnameSpaceURI = this.NamespaceURI;
+         }
+         KElement newElem = (KElement)this.OwnerDocument.CreateElement(newName, localnameSpaceURI);
+         if (newElem != null)
+         {
+            while (this.HasAttributes)
+            {
+               newElem.SetAttributeNode(this.RemoveAttributeNode(this.Attributes[0]));
+            }
+            while (this.HasChildNodes)
+            {
+               newElem.AppendChild(this.RemoveChild(this.FirstChild));
+            }
+            if (this.ParentNode != null)
+            {
+               this.ParentNode.ReplaceChild(newElem, this);
+            }
+            this.flush();
+         }
+         return newElem;
       }
 
       ///   
@@ -3951,7 +4005,7 @@ namespace org.cip4.jdflib.core
       ///	 * <param name="src"> node, that 'this' will be replaced with
       ///	 *  </param>
       ///	 * <returns> KElement the replaced element. If src is null or equal 'this', src is returned. </returns>
-      ///	 
+      ///	 <remarks>Different from Java because this element doesn't change.</remarks>
       public virtual KElement replaceElement(KElement src)
       {
          KElement srcLocal = src;
@@ -4004,23 +4058,24 @@ namespace org.cip4.jdflib.core
 
       //   
       //	 * used in replaceElement
-      //	 
+      //	 Different from Java because this element doesn't change.
       private KElement replaceElement_isDocRoot(KElement src)
       {
-         if (!Name.Equals(src.Name) || !getNamespaceURI().Equals(src.getNamespaceURI()))
+         KElement dst = this;
+         if (!dst.Name.Equals(src.Name) || !dst.getNamespaceURI().Equals(src.getNamespaceURI()))
          {
-            renameElement(src.Name, src.getNamespaceURI());
+            dst = dst.renameElement(src.Name, src.getNamespaceURI());
          }
-         flush();
-         setAttributes(src.getAttributeMap());
+         dst.flush();
+         dst.setAttributes(src.getAttributeMap());
          VElement children = src.getChildElementVector(null, null, null, true, 0, false);
 
          for (int iv = 0; iv < children.Count; iv++)
          {
-            copyElement(children[iv], null);
+            dst.copyElement(children[iv], null);
          }
 
-         return this; // return the original
+         return dst; // return the original
       }
 
       // ************************** end of methods needed in JDFRefElement
@@ -5063,7 +5118,7 @@ namespace org.cip4.jdflib.core
       ///	 * <exception cref="JDFException"> if the defined path is a bad attribute path
       ///	 * @default getXPathAttribute(path, null); </exception>
       ///	 
-      public virtual IDictionary getXPathAttributeMap(string path)
+      public virtual IDictionary<string, string> getXPathAttributeMap(string path)
       {
          int pos = path.LastIndexOf(JDFConstants.AET);
          if (pos == -1)
@@ -5078,17 +5133,26 @@ namespace org.cip4.jdflib.core
          }
          // Java to C# Conversion - QUESTION: Need to implement LinkedHashMap?
          //LinkedHashMap map = new LinkedHashMap();
-         Hashtable map = new Hashtable();
+         IDictionary<string, string> map = CreateAttributeMap();
          for (int i = 0; i < vEle.Count; i++)
          {
             KElement e = vEle[i];
             string s = e.getAttribute_KElement(attName, null, null);
             if (s != null)
             {
-               map.Add(e.buildXPath(null, 1) + "/@" + attName, s);
+               map[e.buildXPath(null, 1) + "/@" + attName] =  s;
             }
          }
          return map.Count > 0 ? map : null;
+      }
+      /// <summary>
+      /// May need to make a LinkedHashMap class at some point.
+      /// JDFElement overrides to return a JDFAttributeMap.
+      /// </summary>
+      /// <returns>A Dictionary.</returns>
+      protected virtual IDictionary<string, string> CreateAttributeMap()
+      {
+         return new Dictionary<string, string>();
       }
 
       // public Node getXPathNode(String path)

@@ -350,7 +350,8 @@ namespace org.cip4.jdflib.core
          int oldType = vBos.IndexOf(bos);
 
          Console.WriteLine("JDFNodeInfo:: " + businessObject.getValue() + " Boe:: " + boe);
-         boe.renameElement((string)vBos[businessObject.getValue()], JDFConstants.EMPTYSTRING);
+         //C# renameElement only returns the renamed element.
+         boe = boe.renameElement((string)vBos[businessObject.getValue()], JDFConstants.EMPTYSTRING);
 
          if (businessObject.getValue() > oldType)
          {

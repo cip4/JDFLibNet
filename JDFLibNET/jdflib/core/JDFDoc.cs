@@ -180,9 +180,9 @@ namespace org.cip4.jdflib.core
       ///	 * <returns> Object the cloned JDFDoc </returns>
       ///	 * <exception cref="CloneNotSupportedException"> </exception>
       ///	 
-      public override object clone()
+      public override object Clone()
       {
-         return new JDFDoc(((XMLDoc)base.clone()).getMemberDocument());
+         return new JDFDoc(((XMLDoc)base.Clone()).getMemberDocument());
       }
 
       ///   

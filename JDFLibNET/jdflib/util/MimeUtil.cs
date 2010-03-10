@@ -829,9 +829,7 @@ namespace org.cip4.jdflib.util
                {
                   // Convert URL to CID and update FileSpec
                   FileInfo f = UrlUtil.urlToFile(urlStrings[i]);
-
-                  // Java to C# Conversion - No .NET equivalent for isAbsolute()
-                  if (f != null) //&& !f.isAbsolute())
+                  if (f != null && !Path.IsPathRooted(f.ToString()))
                   {
                      // Resolve relative URLs
                      if (docJDF.getOriginalFileName() != null)
@@ -1367,7 +1365,7 @@ namespace org.cip4.jdflib.util
             directory.Create();
 
          string fileName = getFileName(attachment);
-         FileInfo outFile = new FileInfo(directory.FullName + Path.DirectorySeparatorChar.ToString() + fileName);
+         FileInfo outFile = new FileInfo(Path.Combine(directory.ToString(), fileName));
          BufferedStream fos = new BufferedStream(new FileStream(outFile.FullName, FileMode.Open));
          Stream ins = attachment.ContentStream;
          IOUtils.copy(ins, fos);

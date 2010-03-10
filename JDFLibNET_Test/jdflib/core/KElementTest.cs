@@ -196,10 +196,12 @@ namespace org.cip4.jdflib.core
          XMLDoc d = new XMLDoc("root", "www.root.com");
          KElement root = d.getRoot();
          string nsUri = root.getNamespaceURI();
-         root.renameElement("foo", null);
+         //C# renameElement only returns the renamed element.
+         root = root.renameElement("foo", null);
          Assert.AreEqual(nsUri, root.getNamespaceURI());
          Assert.AreEqual("foo", root.Name);
-         root.renameElement("bar", "www.bar.com");
+         //C# renameElement only returns the renamed element.
+         root = root.renameElement("bar", "www.bar.com");
          Assert.AreEqual("www.bar.com", root.getNamespaceURI());
          string s = d.write2String(2);
          Assert.IsTrue(s.IndexOf("www.root.com") < 0);
@@ -311,10 +313,14 @@ namespace org.cip4.jdflib.core
          e.appendElement("c1");
 
          KElement e2 = d2.getRoot();
-         e2.replaceElement(e);
+         //C# replaceElement on root only returns the replaced element.
+         e2 = e2.replaceElement(e);
          Assert.AreEqual(e2, d2.getRoot(), "copied root");
-         // Java to C# Conversion - Assert fails, What is "Equals" supposed to mean here?
-         Assert.IsTrue(e2.Equals(e), "same contents");
+         // Java to C# Conversion - No isEqualNode equivalent.
+         // Normalize and check innerxml (good enough for this test).
+         e.Normalize();
+         e2.Normalize();
+         Assert.IsTrue(e2.InnerXml == e.InnerXml, "same contents");
       }
 
       ///   
@@ -331,7 +337,7 @@ namespace org.cip4.jdflib.core
          // Java to C# Conversion - Divide number of tests by 1000 for now
          for (int i = 0; i < 100; i++)
          {
-            ec1.replaceElement(((XMLDoc)d.clone()).getRoot().getFirstChildElement());
+            ec1.replaceElement(((XMLDoc)d.Clone()).getRoot().getFirstChildElement());
          }
          GC.Collect();
          long l2 = d.getDocMemoryUsed();
@@ -373,7 +379,9 @@ namespace org.cip4.jdflib.core
          Assert.AreEqual(ec4, ec1.NextSibling, "c4 is next");
          Assert.AreEqual(e, ec1.ParentNode, "root");
 
-         KElement eNew = e.replaceElement(e2);
+         //C# replaceElement on root only returns the replaced element.
+         e = e.replaceElement(e2);
+         KElement eNew = e;
          Assert.IsTrue(eNew.isEqual(e2));
          Assert.IsTrue(e.isEqual(e2));
       }
@@ -747,7 +755,7 @@ namespace org.cip4.jdflib.core
          XMLDoc d2 = new XMLDoc("d2", null);
          KElement e2 = d2.getRoot();
          KElement e3 = e.copyElement(e2, null);
-         Assert.IsNull(e3.getNamespaceURI());
+         Assert.IsTrue(String.IsNullOrEmpty(e3.getNamespaceURI()));
          Assert.IsFalse(d.ToString().IndexOf("xmlns=\"\"") >= 0);
       }
 
@@ -764,8 +772,8 @@ namespace org.cip4.jdflib.core
          // Java to C# Conversion - Divide number of tests by 1000 for now
          for (int i = 0; i < 10; i++)
          {
-            KElement e3 = e.copyElement(((XMLDoc)d2.clone()).getRoot(), null);
-            Assert.IsNull(e3.getNamespaceURI());
+            KElement e3 = e.copyElement(((XMLDoc)d2.Clone()).getRoot(), null);
+            Assert.IsTrue(String.IsNullOrEmpty(e3.getNamespaceURI()));
          }
       }
 
@@ -802,7 +810,7 @@ namespace org.cip4.jdflib.core
          e2.addNameSpace("foo", "www.foo.com");
          e2.setAttribute("foo:bar", "blub");
          KElement e3 = e.copyElement(e2, null);
-         Assert.IsNull(e3.getNamespaceURI());
+         Assert.IsTrue(String.IsNullOrEmpty(e3.getNamespaceURI()));
          Assert.IsTrue(d.ToString().IndexOf("xmlns:foo=\"www.foo.com\"") > 0);
       }
 
@@ -949,11 +957,11 @@ namespace org.cip4.jdflib.core
          // cip4NameSpaceURI
          KElement kElement0 = root.appendElement("kElement0", null);
          Assert.IsTrue(kElement0.getNamespaceURI().Equals(cip4NameSpaceURI));
-         Assert.IsNull(kElement0.Prefix);
+         Assert.IsTrue(String.IsNullOrEmpty(kElement0.Prefix));
 
          KElement kElement1 = root.appendElement("kElement1", cip4NameSpaceURI);
          Assert.IsTrue(kElement1.getNamespaceURI().Equals(cip4NameSpaceURI));
-         Assert.IsNull(kElement1.Prefix);
+         Assert.IsTrue(String.IsNullOrEmpty(kElement1.Prefix));
 
          // append an element with prefix with null NameSpaceURI or
          // cip4NameSpaceURI
@@ -1215,12 +1223,15 @@ namespace org.cip4.jdflib.core
          KElement root = jdfDoc.getRoot();
          root.setXPathAttribute("b/c[3]/d/@foo", "bar3");
          root.setXPathAttribute("b/c[5]/d/@foo", "bar5");
-         JDFAttributeMap m = (JDFAttributeMap)root.getXPathAttributeMap("//*/@foo");
+         //KElement doesn't return a JDFAttributeMap. JDFElement does.
+         JDFAttributeMap m = new JDFAttributeMap(root.getXPathAttributeMap("//*/@foo"));
          Assert.AreEqual(2, m.Count);
-         m = (JDFAttributeMap)root.getXPathAttributeMap("//@foo");
+         m = new JDFAttributeMap(root.getXPathAttributeMap("//@foo"));
          Assert.AreEqual(2, m.Count);
          IEnumerator it = m.Keys.GetEnumerator();
+         it.MoveNext();
          Assert.AreEqual("bar3", root.getXPathAttribute((string)it.Current, null));
+         it.MoveNext();
          Assert.AreEqual("bar5", root.getXPathAttribute((string)it.Current, null));
 
       }
@@ -1730,7 +1741,9 @@ namespace org.cip4.jdflib.core
 
          e23 = e2.getTarget("i22", "ID");
          Assert.IsNotNull(e23);
-         KElement e24 = e23.renameElement("fnarf", null);
+         //C# renameElement only returns the renamed element.
+         e23 = e23.renameElement("fnarf", null);
+         KElement e24 = e23;
          Assert.AreEqual(e24, e23);
          Assert.AreEqual("fnarf", e24.Name);
          Assert.AreEqual("fnarf", e24.LocalName);
@@ -2022,7 +2035,7 @@ namespace org.cip4.jdflib.core
             Assert.IsTrue(c.getNamespaceURI().Equals(root.getNamespaceURI()), "ns append ok");
             KElement f = root.insertBefore("fnarf", c, null);
             Assert.IsTrue(f.getNamespaceURI().Equals(root.getNamespaceURI()), "ns insert ok");
-            Assert.IsTrue(f.getNamespaceURI() != null, "ns  ok");
+            Assert.IsTrue(!String.IsNullOrEmpty(f.getNamespaceURI()), "ns  ok");
             Assert.IsTrue(f.getNamespaceURI().Equals(JDFConstants.JDFNAMESPACE), "ns  ok");
             KElement f2 = root.insertBefore("fnarf:fnarf", c, "www.fnarf");
             Assert.IsTrue(f2.getNamespaceURI().Equals("www.fnarf"), "ns  ok");
@@ -2077,7 +2090,7 @@ namespace org.cip4.jdflib.core
          e.appendChild(e2);
          Assert.AreEqual(e2, e.FirstChild);
          KElement e3 = (KElement)d.createElement("foo:e3");
-         Assert.IsNull(e3.getNamespaceURI());
+         Assert.IsTrue(String.IsNullOrEmpty(e3.getNamespaceURI()));
          e.appendChild(e3);
          Assert.AreEqual(e3, e2.NextSibling);
          Assert.AreEqual("www.foo.com", e3.getNamespaceURI());
@@ -2111,15 +2124,15 @@ namespace org.cip4.jdflib.core
          XMLDoc d = p.parseString(s);
          KElement e = d.getRoot();
          KElement e3 = (KElement)d.createElement("foo:e3");
-         Assert.IsNull(e3.getNamespaceURI());
+         Assert.IsTrue(String.IsNullOrEmpty(e3.getNamespaceURI()));
          e.appendChild(e3);
          KElement e2 = (KElement)e.FirstChild;
          Assert.AreEqual(e3, e2.NextSibling);
-         Assert.IsNull(e3.getNamespaceURI());
+         Assert.IsTrue(String.IsNullOrEmpty(e3.getNamespaceURI()));
          KElement e4 = (KElement)d.createElement("foo:e3");
-         Assert.IsNull(e4.getNamespaceURI());
+         Assert.IsTrue(String.IsNullOrEmpty(e4.getNamespaceURI()));
          e.appendChild(e4);
-         Assert.IsNull(e4.getNamespaceURI());
+         Assert.IsTrue(String.IsNullOrEmpty(e4.getNamespaceURI()));
       }
 
 
@@ -2147,11 +2160,11 @@ namespace org.cip4.jdflib.core
       {
          XMLDoc d = new XMLDoc("e", null);
          KElement e = d.getRoot();
-         Assert.IsNull(e.getNamespaceURI());
+         Assert.IsTrue(String.IsNullOrEmpty(e.getNamespaceURI()));
          KElement foo = e.appendElement("pt:foo", "www.pt.com");
          Assert.AreEqual("www.pt.com", foo.getNamespaceURI());
          KElement bar = foo.appendElement("bar");
-         Assert.IsNull(bar.getNamespaceURI());
+         Assert.IsTrue(String.IsNullOrEmpty(bar.getNamespaceURI()));
          bar.setAttribute("xmlns", "www.bar.com");
 
          KElement bar2 = bar.appendElement("bar");
@@ -2162,9 +2175,9 @@ namespace org.cip4.jdflib.core
 
          d.getMemberDocument().setIgnoreNSDefault(true);
          KElement bar3 = bar.appendElement("bar");
-         Assert.IsNull(bar3.getNamespaceURI());
+         Assert.IsTrue(String.IsNullOrEmpty(bar3.getNamespaceURI()));
          KElement bar4 = bar2.appendElement("bar");
-         Assert.IsNull(bar4.getNamespaceURI());
+         Assert.IsTrue(String.IsNullOrEmpty(bar4.getNamespaceURI()));
       }
 
 
@@ -2173,12 +2186,12 @@ namespace org.cip4.jdflib.core
       {
          XMLDoc d = new XMLDoc("e", null);
          KElement e = d.getRoot();
-         Assert.IsNull(e.getNamespaceURI());
+         Assert.IsTrue(String.IsNullOrEmpty(e.getNamespaceURI()));
          e.setAttribute("xmlns:pt", "www.pt.com");
          KElement foo = e.appendElement("foo", null);
-         Assert.IsNull(foo.getNamespaceURI());
+         Assert.IsTrue(String.IsNullOrEmpty(foo.getNamespaceURI()));
          KElement bar = foo.appendElement("bar");
-         Assert.IsNull(bar.getNamespaceURI());
+         Assert.IsTrue(String.IsNullOrEmpty(bar.getNamespaceURI()));
          KElement bar2 = foo.appendElement("pt:bar");
          Assert.AreEqual("www.pt.com", bar2.getNamespaceURI());
       }
@@ -2215,12 +2228,12 @@ namespace org.cip4.jdflib.core
          d.getMemberDocument().setIgnoreNSDefault(true);
          {
             KElement e = d.getRoot();
-            Assert.IsNull(e.getNamespaceURI());
+            Assert.IsTrue(String.IsNullOrEmpty(e.getNamespaceURI()));
             e.setAttribute("xmlns:pt", "www.pt.com");
             KElement foo = e.appendElement("foo", null);
-            Assert.IsNull(foo.getNamespaceURI());
+            Assert.IsTrue(String.IsNullOrEmpty(foo.getNamespaceURI()));
             KElement bar = foo.appendElement("bar");
-            Assert.IsNull(bar.getNamespaceURI());
+            Assert.IsTrue(String.IsNullOrEmpty(bar.getNamespaceURI()));
             KElement bar2 = foo.appendElement("pt:bar");
             Assert.AreEqual("www.pt.com", bar2.getNamespaceURI());
          }

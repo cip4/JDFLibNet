@@ -431,7 +431,7 @@ namespace org.cip4.jdflib.util
             return localFile;
          if (localFile == null)
             return null;
-         return new FileInfo(dir.FullName + Path.DirectorySeparatorChar.ToString() + localFile.Name);
+         return new FileInfo(Path.Combine(dir.ToString(), localFile.ToString()));
       }
 
       ///   
@@ -450,7 +450,7 @@ namespace org.cip4.jdflib.util
       ///	 
       public static bool isAbsoluteFile(FileInfo f)
       {
-         string s = f.FullName;
+         string s = f.ToString();
          return isAbsoluteFile(s);
       }
 

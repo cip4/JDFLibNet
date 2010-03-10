@@ -520,11 +520,11 @@ namespace org.cip4.jdflib.core
             m_mapTarget.Clear();
       }
 
-      public virtual void clear()
-      {
-         clearDirtyIDs();
-         clearTargets();
-         m_userData = null;
-      }
+      //public virtual void clear()
+      //{
+      //   clearDirtyIDs();
+      //   clearTargets();
+      //   m_userData = null;
+      //}
    }
 }

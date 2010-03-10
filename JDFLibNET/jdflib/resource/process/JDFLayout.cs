@@ -195,7 +195,9 @@ namespace org.cip4.jdflib.resource.process
             {
                rSig = ((JDFRefElement)rSig).inlineRef();
             }
-            JDFLayout newLO = (JDFLayout)rSig.renameElement(ElementName.LAYOUT, null);
+            //C# renameElement only returns the renamed element.
+            rSig = (JDFElement)rSig.renameElement(ElementName.LAYOUT, null);
+            JDFLayout newLO = (JDFLayout)rSig;
             newLO.setPartIDKey(EnumPartIDKey.SignatureName, rSig.getAttribute(AttributeName.NAME, null, "Sig" + Convert.ToString(iSig)));
             newLO.cleanLayoutLeaf();
 
@@ -208,7 +210,9 @@ namespace org.cip4.jdflib.resource.process
                {
                   rSheet = ((JDFRefElement)rSheet).inlineRef();
                }
-               newLO = (JDFLayout)rSheet.renameElement(ElementName.LAYOUT, null);
+               //C# renameElement only returns the renamed element.
+               rSheet = (JDFElement)rSheet.renameElement(ElementName.LAYOUT, null);
+               newLO = (JDFLayout)rSheet;
                newLO.setPartIDKey(EnumPartIDKey.SheetName, rSheet.getAttribute(AttributeName.NAME, null, "Sheet" + Convert.ToString(iSheet)));
                newLO.cleanLayoutLeaf();
 
@@ -221,7 +225,9 @@ namespace org.cip4.jdflib.resource.process
                   {
                      rSurf = ((JDFRefElement)rSurf).inlineRef();
                   }
-                  newLO = (JDFLayout)rSurf.renameElement(ElementName.LAYOUT, null);
+                  //C# renameElement only returns the renamed element.
+                  rSurf = (JDFElement)rSurf.renameElement(ElementName.LAYOUT, null);
+                  newLO = (JDFLayout)rSurf;
                   newLO.setPartIDKey(EnumPartIDKey.Side, rSurf.getAttribute(AttributeName.SIDE, null, "Surf" + Convert.ToString(iSurf)));
                   newLO.cleanLayoutLeaf();
                }
@@ -344,7 +350,8 @@ namespace org.cip4.jdflib.resource.process
                   for (int i = 0; i < vLO.Count; i++)
                   {
                      JDFSurface surface = (JDFSurface)vLO[i];
-                     surface.renameElement(ElementName.SURFACE, null);
+                     //C# renameElement only returns the renamed element.
+                     surface = (JDFSurface)surface.renameElement(ElementName.SURFACE, null);
                      EnumSide sid = surface.getSide();
                      surface.cleanResourceAttributes();
                      surface.setSide(sid);

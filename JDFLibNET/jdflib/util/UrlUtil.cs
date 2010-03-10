@@ -555,22 +555,15 @@ namespace org.cip4.jdflib.util
          if (urlStringLocal.ToLower().StartsWith("file:"))
             urlStringLocal = urlStringLocal.Substring(5); // remove "file:"
 
-         // See if we can get a file without further processing
-         try
-         {
-            FileInfo f = new FileInfo(urlStringLocal);
-            if ((f != null) && (f.Exists))
-               return f;
-         }
-         catch (Exception)
-         {
-         }
+         if (File.Exists(urlStringLocal))
+            return new FileInfo(urlStringLocal);
 
-         if (Path.DirectorySeparatorChar.ToString().Equals("\\")) // on windows
+         if (Path.DirectorySeparatorChar.Equals('\\')) // on windows
          {
             if (urlStringLocal.StartsWith("///") && urlStringLocal.Length > 5 && urlStringLocal[4] == '/')
                urlStringLocal = urlStringLocal[3] + ":" + urlStringLocal.Substring(4);
-            else if (urlStringLocal.StartsWith("/") && urlStringLocal.Length > 3 && urlStringLocal[2] == '/' && urlStringLocal[1] != '/')
+            else if (urlStringLocal.StartsWith("/") && urlStringLocal.Length > 3 && urlStringLocal[2] == '/'
+                    && urlStringLocal[1] != '/')
                urlStringLocal = urlStringLocal[1] + ":" + urlStringLocal.Substring(2);
             else if (urlStringLocal.StartsWith("///"))
                urlStringLocal = urlStringLocal.Substring(3);

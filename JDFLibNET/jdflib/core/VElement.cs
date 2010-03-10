@@ -85,11 +85,12 @@ namespace org.cip4.jdflib.core
    using SimpleNodeComparator = org.cip4.jdflib.core.KElement.SimpleNodeComparator;
    using JDFAttributeMap = org.cip4.jdflib.datatypes.JDFAttributeMap;
    using JDFResource = org.cip4.jdflib.resource.JDFResource;
+   using HashUtil = org.cip4.jdflib.util.HashUtil;
 
    ///
    /// <summary> * </summary>
    /// 
-   public class VElement : List<KElement>
+   public class VElement : List<KElement>, IEquatable<VElement>
    {
       private const long serialVersionUID = 1L;
 
@@ -305,6 +306,40 @@ namespace org.cip4.jdflib.core
                return false;
          return true;
 
+      }
+      #region IEquatable<VElement> Members
+      ///   
+      ///	 <summary> * are the two vectors equivalent, i.e. do thay only contain elements that are isEqual() or if this is empty and the
+      ///	 * comparison is against null
+      ///	 *  </summary>
+      ///    * <param name="other"> the vector to compare </param>
+      ///	 * <returns> true, if v is equal to this </returns>
+      ///	 
+      public bool Equals(VElement other)
+      {
+         return !Object.ReferenceEquals(other, null) &&
+            (Object.ReferenceEquals(this, other) ||
+            (GetType() == other.GetType() && isEqual(other)));
+      }
+      #endregion
+      ///   
+      ///	 <summary> * are the two vectors equivalent, i.e. do thay only contain elements that are isEqual() or if this is empty and the
+      ///	 * comparison is against null
+      ///	 *  </summary>
+      ///    * <param name="obj"> the vector to compare </param>
+      ///	 * <returns> true, if v is equal to this </returns>
+      ///	 
+      public override bool Equals(object obj)
+      {
+         return Equals(obj as VElement);
+      }
+      /// <summary>
+      /// If you override Equals you override GetHashCode.
+      /// </summary>
+      /// <returns></returns>
+      public override int GetHashCode()
+      {
+         return HashUtil.GetHashCode(base.GetHashCode(), ToString());
       }
 
       ///   

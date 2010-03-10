@@ -287,10 +287,11 @@ namespace org.cip4.jdflib.core
       public virtual string write2String(int indent)
       {
          string strResult = JDFConstants.EMPTYSTRING;
-         MemoryStream outStream = new MemoryStream();
+         MemoryStream outStream = null;
 
          try
          {
+            outStream = new MemoryStream(4096);
             write2Stream(outStream, indent, indent == 0);
             strResult = Encoding.UTF8.GetString(outStream.ToArray());
          }
@@ -382,24 +383,19 @@ namespace org.cip4.jdflib.core
             if (Directory.Exists(fileLocal.FullName) && getOriginalFileName() != null)
             {
                FileInfo orig = new FileInfo(getOriginalFileName());
-               fileLocal = new FileInfo(fileLocal + Path.DirectorySeparatorChar.ToString() + orig.Name);
+               fileLocal = new FileInfo(Path.Combine(fileLocal.ToString(), orig.Name));
             }
 
             // ensure having an empty file in case it did not exist
-            bool tmpBool;
             if (File.Exists(fileLocal.FullName))
             {
                File.Delete(fileLocal.FullName);
-               tmpBool = true;
             }
             else if (Directory.Exists(fileLocal.FullName))
             {
                Directory.Delete(fileLocal.FullName);
-               tmpBool = true;
             }
-            else
-               tmpBool = false;
-            bool generatedAux2 = tmpBool;
+
             if (SupportClass.FileSupport.CreateNewFile(fileLocal))
             {
                outStream = new FileStream(fileLocal.FullName, FileMode.Create);
@@ -922,7 +918,7 @@ namespace org.cip4.jdflib.core
       ///	 
       public virtual XmlNode replaceChild(XmlNode newChild, XmlNode oldChild)
       {
-         return (m_doc == null) ? null : m_doc.replaceChild(newChild, oldChild);
+         return (m_doc == null) ? null : m_doc.ReplaceChild(newChild, oldChild);
       }
 
       ///   
@@ -934,7 +930,7 @@ namespace org.cip4.jdflib.core
       ///	 
       public virtual XmlNode removeChild(XmlNode oldChild)
       {
-         return (m_doc == null) ? null : m_doc.removeChild(oldChild);
+         return (m_doc == null) ? null : m_doc.RemoveChild(oldChild);
       }
 
       ///   
@@ -1266,12 +1262,12 @@ namespace org.cip4.jdflib.core
       ///	 * <returns> Object </returns>
       ///	 * <exception cref="CloneNotSupportedException"> </exception>
       ///	 
-      public virtual object clone()
+      public virtual object Clone()
       {
          XMLDoc clon = new XMLDoc();
          if (m_doc != null)
          {
-            clon.m_doc = (DocumentJDFImpl)m_doc.clone();
+            clon.m_doc = (DocumentJDFImpl)m_doc.Clone();
          }
          return clon;
       }
@@ -1439,7 +1435,7 @@ namespace org.cip4.jdflib.core
          {
             Uri url = new Uri(strURL);
             string protocol = url.Scheme; // file; ftp; http
-            if (protocol.ToLower().Equals("File".ToLower()))
+            if (protocol.Equals("File", StringComparison.InvariantCultureIgnoreCase))
             {
                write2File(UrlUtil.urlToFile(strURL), 0, true);
                docResponse = new XMLDoc();
@@ -1624,11 +1620,6 @@ namespace org.cip4.jdflib.core
       public virtual void setValidationResult(XMLDoc validationResult)
       {
          m_doc.m_validationResult = validationResult;
-      }
-
-      public object Clone()
-      {
-         throw new NotImplementedException();
       }
    }
 }

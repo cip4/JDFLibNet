@@ -119,7 +119,7 @@ namespace org.cip4.jdflib.core
       public virtual void testClone()
       {
          JDFDoc d = new JDFDoc("JDF");
-         JDFDoc d2 = (JDFDoc)d.clone();
+         JDFDoc d2 = (JDFDoc)d.Clone();
          KElement e1 = d.getRoot();
          KElement e2 = d2.getRoot();
          Assert.AreNotEqual(e1, e2);

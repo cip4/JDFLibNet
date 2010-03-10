@@ -4663,5 +4663,13 @@ namespace org.cip4.jdflib.core
          JDFParser p = new JDFParser();
          return p.parseStream(@is);
       }
+      /// <summary>
+      /// Override to return a proper JDFAttributeMap.
+      /// </summary>
+      /// <returns>A JDFAttributeMap.</returns>
+      protected override IDictionary<string, string> CreateAttributeMap()
+      {
+         return new JDFAttributeMap();
+      }
    }
 }
