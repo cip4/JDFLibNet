@@ -5561,7 +5561,7 @@ namespace org.cip4.jdflib.node
             // should only get here it the link alreay exists
             throw new JDFException("JDFNode.appendMatchingResource already exists");
          }
-         JDFResource r2 = addResource(resName, EnumUsage.Input);
+         JDFResource r2 = addResource(resName, null, true, resourceRoot, false, null);
          if (iInputFound > 0)
          {
             JDFResourceLink rl = linkResource(r2, iInputFound == 1 ? EnumUsage.Input : EnumUsage.Output, null);

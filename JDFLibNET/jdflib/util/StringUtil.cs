@@ -470,7 +470,7 @@ namespace org.cip4.jdflib.util
 
          delimLocal = delimLocal == null ? JDFConstants.BLANK : delimLocal;
          ArrayList v = new ArrayList();
-         if (strWork != null)
+         if (!String.IsNullOrEmpty(strWork))
          {
             if (delimLocal.Length == 1 && strWork.IndexOf(delimLocal) < 0)
             {

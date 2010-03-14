@@ -462,19 +462,20 @@ namespace org.cip4.jdflib.core
             try
             {
                XmlWriterSettings settings = new XmlWriterSettings();
-               settings.Encoding = Encoding.UTF8;
+               settings.Encoding = sm_strENCODING;
                settings.Indent = (indent >= 0);
                settings.IndentChars = indentStr;
                settings.NewLineChars = Environment.NewLine;
                settings.ConformanceLevel = ConformanceLevel.Document;
-               XmlWriter writer = XmlTextWriter.Create(outStream, settings);
-
-               XmlSerializer serial = new XmlSerializer(m_doc.GetType());
-               // serial.setNamespaces(false); // ###DOM_1_nodes
-
-               lock (m_doc)
+               using (XmlWriter writer = XmlTextWriter.Create(outStream, settings))
                {
-                  serial.Serialize(writer, m_doc);
+                  XmlSerializer serial = new XmlSerializer(m_doc.GetType());
+                  // serial.setNamespaces(false); // ###DOM_1_nodes
+
+                  lock (m_doc)
+                  {
+                     serial.Serialize(writer, m_doc);
+                  }
                }
                return; // all is well here
             }
@@ -519,16 +520,17 @@ namespace org.cip4.jdflib.core
                indentStr = new string(' ', indent);
 
             XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Encoding = Encoding.UTF8;
+            settings.Encoding = sm_strENCODING;
             settings.Indent = (indent >= 0);
             settings.IndentChars = indentStr;
             settings.NewLineChars = Environment.NewLine;
             settings.ConformanceLevel = ConformanceLevel.Document;
-            XmlWriter writer = XmlTextWriter.Create(outStream, settings);
-
-            XmlSerializer serial = new XmlSerializer(elem.GetType());
-            // serial.setNamespaces(false); // ###DOM_1_nodes
-            serial.Serialize(writer, elem);
+            using (XmlWriter writer = XmlTextWriter.Create(outStream, settings))
+            {
+               XmlSerializer serial = new XmlSerializer(elem.GetType());
+               // serial.setNamespaces(false); // ###DOM_1_nodes
+               serial.Serialize(writer, elem);
+            }
          }
          catch (Exception)
          {
@@ -1375,7 +1377,7 @@ namespace org.cip4.jdflib.core
       }
 
       /// <summary> Encoding.  </summary>
-      protected internal const string sm_strENCODING = "UTF-8";
+      protected internal static readonly Encoding sm_strENCODING = Encoding.UTF8;
 
       ///   
       ///	 <summary> * toXML
@@ -1387,20 +1389,23 @@ namespace org.cip4.jdflib.core
          string strXML = JDFConstants.EMPTYSTRING;
          try
          {
-            StringWriter osw = new StringWriter();
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Encoding = Encoding.UTF8;
-            settings.Indent = false;
-            settings.NewLineChars = Environment.NewLine;
-            settings.ConformanceLevel = ConformanceLevel.Document;
-            XmlWriter writer = XmlTextWriter.Create(osw, settings);
+            //C# StringWriter will force UTF16. Use MemoryStream and convert to string.
+            using (MemoryStream osw = new MemoryStream())
+            {
+               XmlWriterSettings settings = new XmlWriterSettings();
+               settings.Encoding = sm_strENCODING;
+               settings.Indent = true;
+               settings.IndentChars = "  ";
+               settings.ConformanceLevel = ConformanceLevel.Document;
+               using (XmlWriter writer = XmlTextWriter.Create(osw, settings))
+               {
+                  XmlSerializer serial = new XmlSerializer(this.getDocumentElement().GetType());
 
-            KElement thisRoot = this.getRoot();
-            XmlSerializer serial = new XmlSerializer(this.getDocumentElement().GetType());
+                  serial.Serialize(writer, this.getDocumentElement());
+               }
 
-            serial.Serialize(writer, this.getDocumentElement());
-
-            strXML = osw.ToString();
+               strXML = Encoding.UTF8.GetString(osw.ToArray());
+            }
          }
          catch (IOException)
          {
