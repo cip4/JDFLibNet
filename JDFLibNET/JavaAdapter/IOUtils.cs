@@ -81,7 +81,21 @@ namespace org.apache.commons.io
    {
        public static void copy(Stream inStream, Stream outStream)
        {
-          throw new NotImplementedException();
+          //using an 8K buffer.
+          const int buflen = 1024 * 8;
+          byte[] buffer = new byte[buflen];
+          while(true)
+          {
+             int read = inStream.Read(buffer, 0, buflen);
+             if (read > 0)
+             {
+                outStream.Write(buffer, 0, read);
+             }
+             else
+             {
+                break;
+             }
+          }
        }
    }
 }

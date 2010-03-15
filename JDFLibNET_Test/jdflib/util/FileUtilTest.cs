@@ -107,10 +107,11 @@ namespace org.cip4.jdflib.util
       [TestMethod]
       public virtual void testisCleanURLFile()
       {
-         Assert.AreEqual(new FileInfo("C:"), FileUtil.cleanURL(new FileInfo("C:/")));
-         Assert.AreEqual(new FileInfo("C:"), FileUtil.cleanURL(new FileInfo("C:\\")));
-         Assert.AreEqual(new FileInfo("C:\\a"), FileUtil.cleanURL(new FileInfo("C:\\a")));
-         Assert.AreEqual(new FileInfo("C:\\a"), FileUtil.cleanURL(new FileInfo("C:/a")));
+         //C# FileInfo Equals is a reference equals. Checking FullName.
+         Assert.AreEqual(new FileInfo("C:").FullName, FileUtil.cleanURL(new FileInfo("C:/")).FullName);
+         Assert.AreEqual(new FileInfo("C:").FullName, FileUtil.cleanURL(new FileInfo("C:\\")).FullName);
+         Assert.AreEqual(new FileInfo("C:\\a").FullName, FileUtil.cleanURL(new FileInfo("C:\\a")).FullName);
+         Assert.AreEqual(new FileInfo("C:\\a").FullName, FileUtil.cleanURL(new FileInfo("C:/a")).FullName);
       }
 
 
@@ -121,6 +122,7 @@ namespace org.cip4.jdflib.util
          f.Create(); // make sure we have one
          Assert.IsTrue(FileUtil.DeleteAll(f));
          f.Create();
+         f.Refresh();
          Assert.IsTrue(f.Exists);
          Assert.IsNull(FileUtil.listFilesWithExtension(null, null));
 
@@ -128,8 +130,9 @@ namespace org.cip4.jdflib.util
          {
             for (int i = 0; i < 3; i++)
             {
-               FileInfo f2 = new FileInfo(f.FullName + i + "." + c);
+               FileInfo f2 = new FileInfo(Path.Combine(f.FullName, i + "." + c));
                f2.Create();
+               f2.Refresh();
                Assert.IsTrue(f2.Exists);
             }
          }
@@ -140,10 +143,10 @@ namespace org.cip4.jdflib.util
          Assert.AreEqual(18, FileUtil.listFilesWithExtension(f, null).Length);
          Assert.IsNull(FileUtil.listFilesWithExtension(f, "CC"));
          Assert.IsNull(FileUtil.listFilesWithExtension(f, ".CC,.dd"));
-         new FileInfo(f.FullName + "a").Create();
+         new FileInfo(Path.Combine(f.FullName, "a")).Create();
          Assert.AreEqual(19, FileUtil.listFilesWithExtension(f, null).Length);
          Assert.AreEqual(1, FileUtil.listFilesWithExtension(f, ".").Length);
-         new FileInfo(f.FullName + "b.").Create();
+         new FileInfo(Path.Combine(f.FullName, "b.")).Create();
          Assert.AreEqual(2, FileUtil.listFilesWithExtension(f, ".").Length);
       }
 
@@ -151,21 +154,24 @@ namespace org.cip4.jdflib.util
       [TestMethod]
       public virtual void testListDirectories()
       {
-         DirectoryInfo f = new DirectoryInfo(sm_dirTestDataTemp + "foo");
+         DirectoryInfo f = new DirectoryInfo(Path.Combine(sm_dirTestDataTemp, "foo"));
          f.Create(); // make sure we have one
          Assert.IsTrue(FileUtil.DeleteAll(f));
          f.Create();
+         f.Refresh();
          Assert.IsTrue(f.Exists);
          Assert.IsNull(FileUtil.listDirectories(null));
          Assert.IsNull(FileUtil.listDirectories(f));
-         DirectoryInfo f1 = new DirectoryInfo(sm_dirTestDataTemp + "foo" + "/bar1");
+         DirectoryInfo f1 = new DirectoryInfo(Path.Combine(Path.Combine(sm_dirTestDataTemp, "foo"), "bar1"));
          f1.Create();
+         f1.Refresh();
          Assert.IsTrue(f1.Exists);
-         DirectoryInfo f2 = new DirectoryInfo(sm_dirTestDataTemp + "foo" + "/bar2");
+         FileInfo f2 = new FileInfo(Path.Combine(Path.Combine(sm_dirTestDataTemp, "foo"), "bar2"));
          f2.Create();
+         f2.Refresh();
          Assert.IsTrue(f2.Exists);
          Assert.AreEqual(1, FileUtil.listDirectories(f).Length);
-         Assert.AreEqual(f1, FileUtil.listDirectories(f)[0], "skipping bar2 - not a directory");
+         Assert.AreEqual(f1.FullName, FileUtil.listDirectories(f)[0].FullName, "skipping bar2 - not a directory");
       }
 
 
@@ -178,7 +184,7 @@ namespace org.cip4.jdflib.util
             b[i] = (byte)(i % 256);
          }
          MemoryStream @is = new MemoryStream(b);
-         @is.Close();
+         @is.Flush();
          FileInfo f = new FileInfo(sm_dirTestDataTemp + "streamMove.dat");
          if (f.Exists)
          {
@@ -211,7 +217,7 @@ namespace org.cip4.jdflib.util
             b[i] = (byte)(i % 256);
          }
          MemoryStream @is = new MemoryStream(b);
-         @is.Close();
+         @is.Flush();
          FileInfo f = new FileInfo(sm_dirTestDataTemp + "streamMove.dat");
          if (f.Exists)
          {
@@ -225,8 +231,8 @@ namespace org.cip4.jdflib.util
          fd.Create();
          FileInfo nf = FileUtil.moveFileToDir(f, fd);
          Assert.IsNotNull(nf);
-         Assert.AreEqual(nf.Directory, fd);
-         Assert.AreEqual(f.Name, nf.Name, f.Name);
+         Assert.AreEqual(nf.Directory.FullName, fd.FullName);
+         Assert.AreEqual(nf.Name, f.Name);
       }
 
 
@@ -239,7 +245,7 @@ namespace org.cip4.jdflib.util
             b[i] = (byte)(i % 256);
          }
          MemoryStream @is = new  MemoryStream(b);
-         @is.Close();
+         @is.Flush();
          FileInfo f = new FileInfo(sm_dirTestDataTemp + "stream.dat");
          if (f.Exists)
          {
@@ -247,6 +253,7 @@ namespace org.cip4.jdflib.util
          }
 
          FileUtil.streamToFile(@is, sm_dirTestDataTemp + "stream.dat");
+         f.Refresh();
          Assert.IsTrue(f.Exists);
 
          FileStream fis = new FileStream(f.FullName, FileMode.Open);
@@ -260,34 +267,38 @@ namespace org.cip4.jdflib.util
          }
 
          int j = fis.Read(b, 55555-1, 1);
-         Assert.AreEqual(-1, j, "eof reached");
+         Assert.AreEqual(0, j, "eof reached");
          fis.Close();
 
          FileStream fis2 = new FileStream(f.FullName, FileMode.Open);
          FileInfo f2 = FileUtil.streamToFile(fis2, sm_dirTestDataTemp + "stream2.dat");
          Assert.IsTrue(f2.Exists);
          f.Delete();
+         f.Refresh();
          Assert.IsFalse(f.Exists);
          f2.Delete();
-         Assert.IsTrue(f2.Exists);
+         f2.Refresh();
+         Assert.IsFalse(f2.Exists);
       }
 
 
       [TestMethod]
       public virtual void testGetFileInDirectory()
       {
-         Assert.AreEqual(new FileInfo("a/b"), FileUtil.getFileInDirectory(new DirectoryInfo("a"), new FileInfo("b")));
-         Assert.AreEqual(new FileInfo("a/b"), FileUtil.getFileInDirectory(new DirectoryInfo("a/"), new FileInfo("b")));
-         Assert.AreEqual(new FileInfo("a/b"), FileUtil.getFileInDirectory(new DirectoryInfo("a\\"), new FileInfo("b")));
-         Assert.AreEqual(new FileInfo("a/b"), FileUtil.getFileInDirectory(new DirectoryInfo("a/"), new FileInfo("/b")));
-         Assert.AreEqual(new FileInfo("a/b"), FileUtil.getFileInDirectory(new DirectoryInfo("a\\"), new FileInfo("\\b")));
-         Assert.AreEqual(new FileInfo("a/c/b"), FileUtil.getFileInDirectory(new DirectoryInfo("a"), new FileInfo("c/b")));
-         Assert.AreEqual(new FileInfo("a/aa/c/b"), FileUtil.getFileInDirectory(new DirectoryInfo("a/aa"), new FileInfo("c/b")));
-         Assert.AreEqual(new FileInfo("a/b/c"), FileUtil.getFileInDirectory(new DirectoryInfo("a/b"), new FileInfo("c")));
-         Assert.AreEqual(new FileInfo("a/b/c/d"), FileUtil.getFileInDirectory(new DirectoryInfo("a/b"), new FileInfo("c/d")));
-         Assert.AreEqual(new FileInfo("a/b/c"), FileUtil.getFileInDirectory(new DirectoryInfo("a/b"), new FileInfo("/c")));
-         Assert.AreEqual(new FileInfo("a/b/c/d"), FileUtil.getFileInDirectory(new DirectoryInfo("a/b"), new FileInfo("/c/d")));
-         Assert.AreEqual(new FileInfo("a/b/c/d"), FileUtil.getFileInDirectory(new DirectoryInfo("a/b"), new FileInfo("/c/d/")));
+         //C# FileInfo Equals is a reference equals. Checking FullName.
+         Assert.AreEqual(new FileInfo("a/b").FullName, FileUtil.getFileInDirectory(new DirectoryInfo("a"), new FileInfo("b")).FullName);
+         Assert.AreEqual(new FileInfo("a/b").FullName, FileUtil.getFileInDirectory(new DirectoryInfo("a/"), new FileInfo("b")).FullName);
+         Assert.AreEqual(new FileInfo("a/b").FullName, FileUtil.getFileInDirectory(new DirectoryInfo("a\\"), new FileInfo("b")).FullName);
+         Assert.AreEqual(new FileInfo("a/b").FullName, FileUtil.getFileInDirectory(new DirectoryInfo("a/"), new FileInfo("/b")).FullName);
+         Assert.AreEqual(new FileInfo("a/b").FullName, FileUtil.getFileInDirectory(new DirectoryInfo("a\\"), new FileInfo("\\b")).FullName);
+         Assert.AreEqual(new FileInfo("a/c/b").FullName, FileUtil.getFileInDirectory(new DirectoryInfo("a"), new FileInfo("c/b")).FullName);
+         Assert.AreEqual(new FileInfo("a/aa/c/b").FullName, FileUtil.getFileInDirectory(new DirectoryInfo("a/aa"), new FileInfo("c/b")).FullName);
+         Assert.AreEqual(FileUtil.getFileInDirectory(new DirectoryInfo("a/b"), new FileInfo("c")).FullName, new FileInfo("a/b/c").FullName);
+         Assert.AreEqual(FileUtil.getFileInDirectory(new DirectoryInfo("a/b"), new FileInfo("c/d")).FullName, new FileInfo("a/b/c/d").FullName);
+         Assert.AreEqual(FileUtil.getFileInDirectory(new DirectoryInfo("a/b"), new FileInfo("/c")).FullName, new FileInfo("a/b/c").FullName);
+         Assert.AreEqual(FileUtil.getFileInDirectory(new DirectoryInfo("a/b"), new FileInfo("/c/d")).FullName, new FileInfo("a/b/c/d").FullName);
+         //C# a/b/c/d/ is different from a/b/c/d.
+         Assert.AreNotEqual(FileUtil.getFileInDirectory(new DirectoryInfo("a/b"), new FileInfo("/c/d/")).FullName, new FileInfo("a/b/c/d").FullName);
       }
    }
 }

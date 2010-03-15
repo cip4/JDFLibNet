@@ -150,14 +150,14 @@ namespace org.cip4.jdflib.util
       ///	 *  </param>
       ///	 * <returns> Files[] the matching directories, null if none are found </returns>
       ///	 
-      public static FileInfo[] listDirectories(DirectoryInfo dir)
+      public static DirectoryInfo[] listDirectories(DirectoryInfo dir)
       {
          if (dir == null)
             return null;
-         FileInfo[] checkFiles = dir.GetFiles();
-         List<FileInfo> files = new List<FileInfo>();
+         DirectoryInfo[] checkFiles = dir.GetDirectories();
+         List<DirectoryInfo> files = new List<DirectoryInfo>();
          DirectoryFileFilter dff = new DirectoryFileFilter();
-         foreach (FileInfo checkFile in checkFiles)
+         foreach (DirectoryInfo checkFile in checkFiles)
          {
             if (dff.accept(checkFile))
                files.Add(checkFile);
@@ -235,9 +235,9 @@ namespace org.cip4.jdflib.util
          //		 * 
          //		 * @see java.io.FileFilter#accept(java.io.File)
          //		 
-         public virtual bool accept(FileInfo checkFile)
+         public virtual bool accept(DirectoryInfo checkFile)
          {
-            return checkFile != null && Directory.Exists(checkFile.FullName);
+            return checkFile != null && checkFile.Exists;
          }
       }
 
@@ -276,48 +276,37 @@ namespace org.cip4.jdflib.util
       ///	 *  </summary>
       ///	 * <param name="dirToZapp"> the file directory to utterly anihilate </param>
       ///	 * <returns> true if ciao </returns>
-      ///	 
-      public static bool DeleteAll(FileInfo dirToZapp)
+      ///	
+      public static bool DeleteAll(FileSystemInfo dirToZapp)
       {
          if (dirToZapp == null)
             return false;
 
          bool b = true;
-         if (dirToZapp.Directory.Exists)
+
+         DirectoryInfo dir = dirToZapp as DirectoryInfo;
+         if (dir != null && dir.Exists)
          {
-            FileInfo[] ff = dirToZapp.Directory.GetFiles();
+            FileSystemInfo[] ff = dir.GetFileSystemInfos();
             if (ff != null)
             {
-               int size = ff.Length;
-               for (int i = 0; i < size; i++)
+               int siz = ff.Length;
+               for (int i = 0; i < siz; i++)
                   b = DeleteAll(ff[i]) && b;
             }
          }
-         dirToZapp.Directory.Delete();
-         return b;
-      }
-
-
-      public static bool DeleteAll(DirectoryInfo dirToZapp)
-      {
-         if (dirToZapp == null)
-            return false;
-
-         bool b = true;
-         if (dirToZapp.Exists)
+         try
          {
-            FileInfo[] ff = dirToZapp.GetFiles();
-            if (ff != null)
-            {
-               int size = ff.Length;
-               for (int i = 0; i < size; i++)
-                  b = DeleteAll(ff[i]) && b;
-            }
+            dirToZapp.Delete();
+            dirToZapp.Refresh();
          }
-         dirToZapp.Delete();
+         catch (IOException)
+         {
+            b = false;
+         }
+
          return b;
       }
-
 
       ///   
       ///	 <summary> * dump a stream to a newly created file
@@ -336,7 +325,7 @@ namespace org.cip4.jdflib.util
          }
          try
          {
-            FileStream fos = new FileStream(tmp.FullName, FileMode.Open);
+            FileStream fos = new FileStream(tmp.FullName, FileMode.Create);
             IOUtils.copy(fis, fos);
             fos.Flush();
             fos.Close();
@@ -351,6 +340,7 @@ namespace org.cip4.jdflib.util
             return null;
          }
 
+         tmp.Refresh();
          return tmp;
       }
 
@@ -366,7 +356,7 @@ namespace org.cip4.jdflib.util
       {
          if (fromFile == null || toDir == null)
             return null;
-         FileInfo newFile = getFileInDirectory(toDir, new FileInfo(fromFile.FullName));
+         FileInfo newFile = getFileInDirectory(toDir, new FileInfo(fromFile.Name));
          bool b = moveFile(fromFile, newFile);
          return b ? newFile : null;
       }
@@ -381,9 +371,24 @@ namespace org.cip4.jdflib.util
       ///	 
       public static bool moveFile(FileInfo fromFile, FileInfo toFile)
       {
-         if (fromFile.Equals(toFile))
+         if (fromFile.FullName == toFile.FullName)
             return true;
-         fromFile.MoveTo(toFile.FullName);
+         if (toFile.Exists)
+            toFile.Delete();
+         //C# to prevent fromFile from becoming toFile, not using MoveTo.
+         if (!copyFile(fromFile, toFile))
+         {
+            return false;
+         }
+         try
+         {
+            fromFile.Delete();
+            fromFile.Refresh();
+         }
+         catch (IOException)
+         {
+            return false;
+         }
          return true;
       }
 
@@ -398,23 +403,36 @@ namespace org.cip4.jdflib.util
       ///	 
       public static bool copyFile(FileInfo fromFile, FileInfo toFile)
       {
-         if (toFile.Exists)
-            toFile.Delete();
+         if (fromFile.FullName == toFile.FullName)
+            return true;
+
          try
          {
-            if (toFile.Create() == null)
-               return false;
-            FileStream fos = new FileStream(toFile.FullName, FileMode.Open);
-            FileStream fis = new FileStream(fromFile.FullName, FileMode.Open);
-            IOUtils.copy(fis, fos);
-            fis.Close();
-            fos.Close();
+            fromFile.CopyTo(toFile.FullName, true);
+            toFile.Refresh();
          }
          catch (IOException)
          {
             return false;
          }
          return true;
+         //if (toFile.Exists)
+         //   toFile.Delete();
+         //try
+         //{
+         //   if (toFile.Create() == null)
+         //      return false;
+         //   FileStream fos = new FileStream(toFile.FullName, FileMode.Open);
+         //   FileStream fis = new FileStream(fromFile.FullName, FileMode.Open);
+         //   IOUtils.copy(fis, fos);
+         //   fis.Close();
+         //   fos.Close();
+         //}
+         //catch (IOException)
+         //{
+         //   return false;
+         //}
+         //return true;
       }
 
       ///   
@@ -431,7 +449,8 @@ namespace org.cip4.jdflib.util
             return localFile;
          if (localFile == null)
             return null;
-         return new FileInfo(Path.Combine(dir.ToString(), localFile.ToString()));
+         FileInfo ret = new FileInfo(dir.ToString() + Path.DirectorySeparatorChar.ToString() + localFile.ToString());
+         return ret;
       }
 
       ///   
@@ -465,21 +484,23 @@ namespace org.cip4.jdflib.util
          if (fLocal == null)
             return false;
 
-         if (fLocal.StartsWith(Path.DirectorySeparatorChar.ToString()))
-            return true;
+         return Path.IsPathRooted(fLocal);
 
-         FileInfo[] roots = SupportClass.ListLogicalDrives();
-         if (roots != null)
-         {
-            fLocal = fLocal.ToLower();
-            for (int i = 0; i < roots.Length; i++)
-            {
-               if (fLocal.StartsWith(roots[i].FullName.ToLower()))
-                  return true;
-            }
-         }
+         //if (fLocal.StartsWith(Path.DirectorySeparatorChar.ToString()))
+         //   return true;
 
-         return false;
+         //FileInfo[] roots = SupportClass.ListLogicalDrives();
+         //if (roots != null)
+         //{
+         //   fLocal = fLocal.ToLower();
+         //   for (int i = 0; i < roots.Length; i++)
+         //   {
+         //      if (fLocal.StartsWith(roots[i].FullName.ToLower()))
+         //         return true;
+         //   }
+         //}
+
+         //return false;
       }
    }
 }
