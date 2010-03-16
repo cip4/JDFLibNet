@@ -224,7 +224,7 @@ namespace org.cip4.jdflib.resource.process
       ///	 
       public virtual void setCounterTypes(ArrayList vVar)
       {
-         string s = StringUtil.setvString(new VString(vVar));
+         string s = StringUtil.setvString(vVar);
          setAttribute(AttributeName.COUNTERTYPES, s, null);
       }
 

@@ -106,48 +106,61 @@ namespace org.cip4.jdflib.resource.process
          JDFDoc doc = new JDFDoc("JDF");
          JDFNode root = doc.getJDFRoot();
          root.setType(EnumType.DigitalPrinting);
-         JDFUsageCounter uc = (JDFUsageCounter)root.appendMatchingResource(ElementName.USAGECOUNTER, EnumProcessUsage.AnyInput, null);
+         JDFUsageCounter uc = (JDFUsageCounter)root.appendMatchingResource(
+            ElementName.USAGECOUNTER, EnumProcessUsage.AnyInput, null);
          Assert.IsTrue(uc.isValid(EnumValidationLevel.Incomplete));
          Assert.IsFalse(uc.isValid(EnumValidationLevel.Complete));
          uc.setCounterID("c1");
          uc.setScope(EnumScope.Job);
-         uc.setCounterTypes(new VString("NormalSize Black OneSided TwoSided Impressions", " "));
+         uc.setCounterTypes(new VString(
+            "NormalSize Black OneSided TwoSided Impressions", " "));
          Assert.IsTrue(uc.isValid(EnumValidationLevel.Complete));
-         Assert.AreEqual(StringUtil.setvString(EnumToVString(uc.getEnumCounterTypes())), StringUtil.setvString(uc.getCounterTypes()));
+         Assert.AreEqual(StringUtil.setvString(uc.getEnumCounterTypes()),
+            StringUtil.setvString(uc.getCounterTypes()));
          JDFResourceLink rl = root.getLink(uc, null);
          rl.setActualAmount(10, null);
          JDFAuditPool ap = root.getCreateAuditPool();
-         JDFResourceAudit ra = (JDFResourceAudit)ap.addAudit(EnumAuditType.ResourceAudit, null);
+         JDFResourceAudit ra = (JDFResourceAudit)ap.addAudit(
+            EnumAuditType.ResourceAudit, null);
          ra.updateLink(rl);
 
-         JDFUsageCounter uc2 = (JDFUsageCounter)root.appendMatchingResource(ElementName.USAGECOUNTER, EnumProcessUsage.AnyInput, null);
+         JDFUsageCounter uc2 = (JDFUsageCounter)root.appendMatchingResource(
+            ElementName.USAGECOUNTER, EnumProcessUsage.AnyInput, null);
          uc2.setCounterID("c2");
          uc2.setScope(EnumScope.Job);
-         uc2.setCounterTypes(new VString("NormalSize Color OneSided TwoSided Impressions", " "));
+         uc2.setCounterTypes(new VString(
+            "NormalSize Color OneSided TwoSided Impressions", " "));
          Assert.IsTrue(uc2.isValid(EnumValidationLevel.Complete));
-         Assert.AreEqual(StringUtil.setvString(EnumToVString(uc2.getEnumCounterTypes())), StringUtil.setvString(uc2.getCounterTypes()));
+         Assert.AreEqual(StringUtil.setvString(uc2.getEnumCounterTypes()),
+            StringUtil.setvString(uc2.getCounterTypes()));
          rl = root.getLink(uc2, null);
          rl.setActualAmount(20, null);
          ra = (JDFResourceAudit)ap.addAudit(EnumAuditType.ResourceAudit, null);
          ra.updateLink(rl);
 
-         JDFUsageCounter uc3 = (JDFUsageCounter)root.appendMatchingResource(ElementName.USAGECOUNTER, EnumProcessUsage.AnyInput, null);
+         JDFUsageCounter uc3 = (JDFUsageCounter)root.appendMatchingResource(
+            ElementName.USAGECOUNTER, EnumProcessUsage.AnyInput, null);
          uc3.setCounterID("c3");
          uc3.setScope(EnumScope.Job);
-         uc3.setCounterTypes(new VString("LargeSize Black OneSided TwoSided Impressions", " "));
+         uc3.setCounterTypes(new VString(
+            "LargeSize Black OneSided TwoSided Impressions", " "));
          Assert.IsTrue(uc3.isValid(EnumValidationLevel.Complete));
-         Assert.AreEqual(StringUtil.setvString(EnumToVString(uc3.getEnumCounterTypes())), StringUtil.setvString(uc3.getCounterTypes()));
+         Assert.AreEqual(StringUtil.setvString(uc3.getEnumCounterTypes()),
+            StringUtil.setvString(uc3.getCounterTypes()));
          rl = root.getLink(uc3, null);
          rl.setActualAmount(30, null);
          ra = (JDFResourceAudit)ap.addAudit(EnumAuditType.ResourceAudit, null);
          ra.updateLink(rl);
 
-         JDFUsageCounter uc4 = (JDFUsageCounter)root.appendMatchingResource(ElementName.USAGECOUNTER, EnumProcessUsage.AnyInput, null);
+         JDFUsageCounter uc4 = (JDFUsageCounter)root.appendMatchingResource(
+            ElementName.USAGECOUNTER, EnumProcessUsage.AnyInput, null);
          uc4.setCounterID("c4");
          uc4.setScope(EnumScope.Job);
-         uc4.setCounterTypes(new VString("LargeSize Color OneSided TwoSided Impressions", " "));
+         uc4.setCounterTypes(new VString(
+            "LargeSize Color OneSided TwoSided Impressions", " "));
          Assert.IsTrue(uc4.isValid(EnumValidationLevel.Complete));
-         Assert.AreEqual(StringUtil.setvString(EnumToVString(uc4.getEnumCounterTypes())), StringUtil.setvString(uc4.getCounterTypes()));
+         Assert.AreEqual(StringUtil.setvString(uc4.getEnumCounterTypes()),
+            StringUtil.setvString(uc4.getCounterTypes()));
          rl = root.getLink(uc4, null);
          rl.setActualAmount(40, null);
          ra = (JDFResourceAudit)ap.addAudit(EnumAuditType.ResourceAudit, null);
@@ -161,30 +174,20 @@ namespace org.cip4.jdflib.resource.process
       [TestMethod]
       public void testMatchesString()
       {
-         JDFUsageCounter c = (JDFUsageCounter)new JDFDoc(ElementName.USAGECOUNTER).getRoot();
+         JDFUsageCounter c = (JDFUsageCounter)new JDFDoc(
+            ElementName.USAGECOUNTER).getRoot();
          Assert.IsTrue(c.matchesString(ElementName.USAGECOUNTER));
          Assert.IsFalse(c.matchesString(ElementName.USAGECOUNTER + ":"));
          c.setCounterTypes(new VString("Black SingleSided", null));
          Assert.IsFalse(c.matchesString(ElementName.USAGECOUNTER + ":Black"));
-         Assert.IsTrue(c.matchesString(ElementName.USAGECOUNTER + ":Black_SingleSided"));
+         Assert.IsTrue(c.matchesString(ElementName.USAGECOUNTER
+            + ":Black_SingleSided"));
          Assert.IsTrue(c.matchesString(ElementName.USAGECOUNTER));
          c.setCounterID("CID");
          Assert.IsTrue(c.matchesString(ElementName.USAGECOUNTER + ":CID"));
          Assert.IsFalse(c.matchesString(ElementName.USAGECOUNTER + ":CID2"));
          Assert.IsFalse(c.matchesString(ElementName.USAGECOUNTER + ":CI"));
          Assert.IsFalse(c.matchesString(ElementName.USAGECOUNTER + ":cid"));
-      }
-
-
-      // Java to C# Conversion - Needed this to convert list of enum values to VString
-      private VString EnumToVString(List<ValuedEnum> enumList)
-      {
-         VString vString = new VString();
-         foreach (ValuedEnum vEnum in enumList)
-         {
-            vString.Add(vEnum.getName());
-         }
-         return vString;
       }
    }
 }

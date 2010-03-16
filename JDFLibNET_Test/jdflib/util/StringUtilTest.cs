@@ -249,9 +249,9 @@ namespace org.cip4.jdflib.util
       [TestMethod]
       public virtual void testSetVStringEnum()
       {
-         string[] v = new string[2];
-         v[0] = EnumUsage.Input.ToString();
-         v[1] = EnumUsage.Output.ToString();
+         ArrayList v = new ArrayList();
+         v.Add(EnumUsage.Input);
+         v.Add(EnumUsage.Output);
          Assert.AreEqual("Input Output", StringUtil.setvString(v, " ", null, null));
       }
 
@@ -626,7 +626,7 @@ namespace org.cip4.jdflib.util
          v.Add("3");
          v.Add("4");
          v.Add("5");
-         Assert.AreEqual(v, StringUtil.tokenize(s, " \n", false));
+         CollectionAssert.AreEqual(v, StringUtil.tokenize(s, " \n", false));
       }
 
 
@@ -643,7 +643,7 @@ namespace org.cip4.jdflib.util
          v.Add("b");
          v.Add("?");
          v.Add("c");
-         Assert.AreEqual(v, StringUtil.tokenize(s, "/?", true));
+         CollectionAssert.AreEqual(v, StringUtil.tokenize(s, "/?", true));
       }
 
 

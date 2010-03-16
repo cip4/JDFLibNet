@@ -336,7 +336,7 @@ namespace org.cip4.jdflib.util
       ///	 *  </param>
       ///	 * <returns> String - the vector as String </returns>
       ///	 
-      public static string setvString(VString v)
+      public static string setvString(ArrayList v)
       {
          return setvString(v, m_sep, null, null);
       }
@@ -353,7 +353,43 @@ namespace org.cip4.jdflib.util
       ///	 * 
       ///	 *         default: setvString(v, JDFConstants.BLANK, null, null) </returns>
       ///	 
-      public static string setvString(VString v, string sep, string front, string back)
+      public static string setvString(ArrayList v, string sep, string front, string back)
+      {
+         if (v == null)
+            return null;
+         List<object> vlist = new List<object>(v.ToArray());
+         return setvString(vlist, sep, front, back);
+      }
+
+      ///   
+      ///	 <summary> * create a string from a vector of tokens
+      ///	 * <p>
+      ///	 * default: setvString(v, JDFConstants.BLANK, null, null)
+      ///	 *  </summary>
+      ///	 * <typeparam name="T"> the type of the list </typeparam>
+      ///	 * <param name="v"> the token vector
+      ///	 *  </param>
+      ///	 * <returns> String - the vector as String </returns>
+      ///	 
+      public static string setvString<T>(List<T> v)
+      {
+         return setvString(v, m_sep, null, null);
+      }
+
+      ///   
+      ///	 <summary> * create a string from a vector of tokens
+      ///	 *  </summary>
+      ///	 * <typeparam name="T"> the type of the list </typeparam>
+      ///	 * <param name="v"> the token vector </param>
+      ///	 * <param name="sep"> the separator between the tokens </param>
+      ///	 * <param name="front"> the front end of the string </param>
+      ///	 * <param name="back"> the back end of the string
+      ///	 *  </param>
+      ///	 * <returns> String - the vector as String
+      ///	 * 
+      ///	 *         default: setvString(v, JDFConstants.BLANK, null, null) </returns>
+      ///	 
+      public static string setvString<T>(List<T> v, string sep, string front, string back)
       {
          if (v == null)
             return null;
