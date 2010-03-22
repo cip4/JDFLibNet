@@ -197,7 +197,7 @@ namespace org.cip4.jdflib.resource.process
          VString seps = new VString(StringUtil.tokenize("Cyan Magenta Yellow Black", " ", false));
 
          co.setSeparations(seps);
-         Assert.AreEqual(co.getSeparations(), seps);
+         CollectionAssert.AreEqual(co.getSeparations(), seps);
          VElement vSepSpec = co.getChildElementVector(ElementName.SEPARATIONSPEC, null, null, true, 0, true);
          Assert.AreEqual(seps.Count, vSepSpec.Count);
          for (int i = 0; i < vSepSpec.Count; i++)
@@ -245,10 +245,10 @@ namespace org.cip4.jdflib.resource.process
       public virtual void testGetDeviceColorantOrderSeparations()
       {
          colParams.appendSeparation("Black");
-         Assert.AreEqual(colControl.getSeparations(), colControl.getDeviceColorantOrderSeparations());
+         CollectionAssert.AreEqual(colControl.getSeparations(), colControl.getDeviceColorantOrderSeparations());
          Assert.AreEqual(4, colControl.getDeviceColorantOrderSeparations().Count);
          colParams.appendSeparation("Green");
-         Assert.AreEqual(colControl.getSeparations(), colControl.getDeviceColorantOrderSeparations());
+         CollectionAssert.AreEqual(colControl.getSeparations(), colControl.getDeviceColorantOrderSeparations());
          Assert.AreEqual(5, colControl.getDeviceColorantOrderSeparations().Count);
          colControl.appendColorantOrder().appendSeparation("Green");
          Assert.AreEqual(1, colControl.getDeviceColorantOrderSeparations().Count);
@@ -260,10 +260,10 @@ namespace org.cip4.jdflib.resource.process
       public virtual void testGetColorantOrderSeparations()
       {
          colParams.appendSeparation("Black");
-         Assert.AreEqual(colControl.getSeparations(), colControl.getColorantOrderSeparations());
+         CollectionAssert.AreEqual(colControl.getSeparations(), colControl.getColorantOrderSeparations());
          Assert.AreEqual(4, colControl.getColorantOrderSeparations().Count);
          colParams.appendSeparation("Green");
-         Assert.AreEqual(colControl.getSeparations(), colControl.getColorantOrderSeparations());
+         CollectionAssert.AreEqual(colControl.getSeparations(), colControl.getColorantOrderSeparations());
          Assert.AreEqual(5, colControl.getColorantOrderSeparations().Count);
       }
 

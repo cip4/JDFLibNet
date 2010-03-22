@@ -97,7 +97,7 @@ namespace org.cip4.jdflib
    public abstract class JDFTestCaseBase
    {
 
-      protected internal string sm_dirTestSchema = @"..\..\..\schema\Version_1_3\";
+      protected internal string sm_dirTestSchema = @"..\..\..\..\..\schema\Version_1_3\";
       protected internal string sm_dirTestData = @"..\..\..\data\";
       protected internal string sm_dirTestDataTemp = @"..\..\..\data\temp\";
 

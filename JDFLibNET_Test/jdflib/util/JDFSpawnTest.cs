@@ -1034,13 +1034,13 @@ namespace org.cip4.jdflib.util
                   // main and sub
                   JDFExposedMedia xmSpawn = (JDFExposedMedia)rl.getTarget();
                   Assert.IsNotNull(xmSpawn);
-                  Assert.AreEqual(new VString(spawnID, null), xmSpawn.getSpawnIDs(false));
+                  CollectionAssert.AreEqual(new VString(spawnID, null), xmSpawn.getSpawnIDs(false));
                   JDFAttributeMap mapXMSpawn = xmSpawn.getPartMap();
                   JDFExposedMedia xmMain = (JDFExposedMedia)n.getMatchingResource(ElementName.EXPOSEDMEDIA, EnumProcessUsage.AnyOutput, null, 0);
                   xmMain = (JDFExposedMedia)xmMain.getPartition(mapXMSpawn, null);
                   Assert.IsNotNull(xmMain);
                   if (k == 0) // no main check for spawn informative
-                     Assert.AreEqual(new VString(spawnID, null), xmMain.getSpawnIDs(false));
+                     CollectionAssert.AreEqual(new VString(spawnID, null), xmMain.getSpawnIDs(false));
 
                   JDFExposedMedia xmSpawnFront = (JDFExposedMedia)xmSpawn.getPartition(new JDFAttributeMap("Side", "Front"), null);
                   Assert.IsNotNull(xmSpawnFront);
@@ -2212,23 +2212,29 @@ namespace org.cip4.jdflib.util
             JDFNode node = doc.getJDFRoot();
             node.setType(EnumType.ProcessGroup);
             JDFNode n2 = node.addJDFNode(EnumType.AdhesiveBinding);
-            JDFResource r = n2.addResource(ElementName.ADHESIVEBINDINGPARAMS, null, EnumUsage.Input, null, node, null, null);
+            JDFResource r = n2.addResource(ElementName.ADHESIVEBINDINGPARAMS,
+               null, EnumUsage.Input, null, node, null, null);
             JDFSpawn sp = new JDFSpawn(n2);
             JDFNode spn = sp.spawn();
-            JDFSpawned auditSpawn = (JDFSpawned)node.getAuditPool().getAudit(0, EnumAuditType.Spawned, null, null);
+            JDFSpawned auditSpawn = (JDFSpawned)node.getAuditPool()
+               .getAudit(0, EnumAuditType.Spawned, null, null);
             Assert.IsNotNull(auditSpawn);
             Assert.IsTrue(auditSpawn.getrRefsROCopied().Contains(r.getID()));
             EnumCleanUpMerge cm = (EnumCleanUpMerge)l[i];
-            new JDFMerge(node).mergeJDF(spn, null, cm, JDFResource.EnumAmountMerge.None);
-            JDFSpawned auditSpawn2 = (JDFSpawned)node.getAuditPool().getAudit(0, EnumAuditType.Spawned, null, null);
-            JDFMerged mergeSpawn2 = (JDFMerged)node.getAuditPool().getAudit(0, EnumAuditType.Merged, null, null);
+            new JDFMerge(node).mergeJDF(spn, null, cm,
+               JDFResource.EnumAmountMerge.None);
+            JDFSpawned auditSpawn2 = (JDFSpawned)node.getAuditPool().getAudit(
+               0, EnumAuditType.Spawned, null, null);
+            JDFMerged mergeSpawn2 = (JDFMerged)node.getAuditPool().getAudit(0,
+               EnumAuditType.Merged, null, null);
             if (cm.Equals(EnumCleanUpMerge.None))
             {
                Assert.IsNotNull(auditSpawn2);
                Assert.IsTrue(auditSpawn2.getrRefsROCopied().Contains(r.getID()));
                Assert.AreEqual(auditSpawn, auditSpawn2);
                Assert.IsNotNull(mergeSpawn2);
-               Assert.AreEqual(auditSpawn2.getrRefsRWCopied(), mergeSpawn2.getrRefsOverwritten());
+               CollectionAssert.AreEqual(auditSpawn2.getrRefsRWCopied(), mergeSpawn2
+                  .getrRefsOverwritten());
             }
             else if (cm.Equals(EnumCleanUpMerge.RemoveRRefs))
             {
@@ -2236,7 +2242,8 @@ namespace org.cip4.jdflib.util
                Assert.IsTrue(auditSpawn2.getrRefsROCopied().IsEmpty());
                Assert.AreEqual(auditSpawn, auditSpawn2);
                Assert.IsNotNull(mergeSpawn2);
-               Assert.AreEqual(auditSpawn2.getrRefsRWCopied(), mergeSpawn2.getrRefsOverwritten());
+               CollectionAssert.AreEqual(auditSpawn2.getrRefsRWCopied(), mergeSpawn2
+                  .getrRefsOverwritten());
             }
             else if (cm.Equals(EnumCleanUpMerge.RemoveAll))
             {

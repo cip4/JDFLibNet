@@ -207,7 +207,7 @@ namespace org.cip4.jdflib.core
          DirectoryInfo foo = new DirectoryInfo(sm_dirTestSchema).Parent;
 
          Assert.IsTrue(foo.Exists, "please mount the svn schema parallel to jdflibJ");
-         DirectoryInfo[] dirs = foo.GetDirectories(".*Version_.*");
+         DirectoryInfo[] dirs = foo.GetDirectories("*Version_*");
          Assert.IsTrue(dirs.Length > 3);
          int nCheck = 0;
          for (int i = 0; i < dirs.Length; i++)
@@ -215,7 +215,7 @@ namespace org.cip4.jdflib.core
             DirectoryInfo dir = dirs[i];
             if (!dir.Exists)
                continue;
-            FileInfo jdfxsd = new FileInfo(dir + @"\JDF.xsd");
+            FileInfo jdfxsd = new FileInfo(Path.Combine(dir.FullName, "JDF.xsd"));
             Assert.IsTrue(jdfxsd.Exists);
             JDFParser p = new JDFParser();
             p.setJDFSchemaLocation(jdfxsd);

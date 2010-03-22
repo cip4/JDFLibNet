@@ -143,9 +143,9 @@ namespace org.cip4.jdflib.devicecapability
       {
          VString integerList = new VString("1 2 3", null);
          theState.setCurrentValue(integerList);
-         Assert.AreEqual(integerList, theState.getCurrentValue());
+         CollectionAssert.AreEqual(integerList, theState.getCurrentValue());
          theState.setCurrentValue("1");
-         Assert.AreEqual(new VString("1", null), theState.getCurrentValue());
+         CollectionAssert.AreEqual(new VString("1", null), theState.getCurrentValue());
       }
 
 
@@ -154,9 +154,9 @@ namespace org.cip4.jdflib.devicecapability
       {
          VString integerList = new VString("1 2 3", null);
          theState.setDefaultValue(integerList);
-         Assert.AreEqual(integerList, theState.getDefaultValue());
+         CollectionAssert.AreEqual(integerList, theState.getDefaultValue());
          theState.setDefaultValue("1");
-         Assert.AreEqual(new VString("1", null), theState.getDefaultValue());
+         CollectionAssert.AreEqual(new VString("1", null), theState.getDefaultValue());
       }
 
 
@@ -165,12 +165,12 @@ namespace org.cip4.jdflib.devicecapability
       {
          VString integerList = new VString("1 2 3 4 44", null);
          theState.setAllowedValueList(integerList);
-         Assert.AreEqual(integerList, theState.getPresentValueList());
-         Assert.AreEqual(integerList, theState.getAllowedValueList());
+         CollectionAssert.AreEqual(integerList, theState.getPresentValueList());
+         CollectionAssert.AreEqual(integerList, theState.getAllowedValueList());
          VString integerList2 = new VString("1 2 3 7 77", null);
          theState.setPresentValueList(integerList2);
-         Assert.AreEqual(integerList2, theState.getPresentValueList());
-         Assert.AreEqual(integerList, theState.getAllowedValueList());
+         CollectionAssert.AreEqual(integerList2, theState.getPresentValueList());
+         CollectionAssert.AreEqual(integerList, theState.getAllowedValueList());
       }
 
 

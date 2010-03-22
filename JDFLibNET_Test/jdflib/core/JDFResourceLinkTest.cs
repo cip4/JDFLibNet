@@ -634,15 +634,15 @@ namespace org.cip4.jdflib.core
          JDFResourceLink rl = n.getLink(r, null);
          VString nodeTypes = n.getTypes();
          nodeTypes.unify();
-         Assert.AreEqual(nodeTypes, rl.getCombinedProcessTypes());
+         CollectionAssert.AreEqual(nodeTypes, rl.getCombinedProcessTypes());
          rl.setCombinedProcessType("c");
-         Assert.AreEqual(new VString("c", " "), rl.getCombinedProcessTypes());
+         CollectionAssert.AreEqual(new VString("c", " "), rl.getCombinedProcessTypes());
          rl.removeAttribute(AttributeName.COMBINEDPROCESSTYPE);
-         Assert.AreEqual(nodeTypes, rl.getCombinedProcessTypes());
+         CollectionAssert.AreEqual(nodeTypes, rl.getCombinedProcessTypes());
          rl.setCombinedProcessIndex(new JDFIntegerList("0 2 4 6"));
-         Assert.AreEqual(new VString("a c e", " "), rl.getCombinedProcessTypes());
+         CollectionAssert.AreEqual(new VString("a c e", " "), rl.getCombinedProcessTypes());
          rl.setCombinedProcessIndex(new JDFIntegerList("0 2 4 6 8 99"));
-         Assert.AreEqual(new VString("a c e", " "), rl.getCombinedProcessTypes());
+         CollectionAssert.AreEqual(new VString("a c e", " "), rl.getCombinedProcessTypes());
       }
 
 

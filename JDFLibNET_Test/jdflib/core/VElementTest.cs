@@ -158,9 +158,9 @@ namespace org.cip4.jdflib.core
          e.appendElement("b:a2", "b");
          VElement v = e.getChildElementVector(null, null, null, true, 0, true);
          VString s = v.getElementNameVector(false);
-         Assert.AreEqual(new VString("a1 b:a2", " "), s);
+         CollectionAssert.AreEqual(new VString("a1 b:a2", " "), s);
          s = v.getElementNameVector(true);
-         Assert.AreEqual(new VString("a1 a2", " "), s);
+         CollectionAssert.AreEqual(new VString("a1 a2", " "), s);
       }
 
 

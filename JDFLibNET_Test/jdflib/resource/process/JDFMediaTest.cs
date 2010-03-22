@@ -165,7 +165,8 @@ namespace org.cip4.jdflib.resource.process
          JDFResourcePool resPool = root.getCreateResourcePool();
 
          // check HoleType for JDFMedia
-         KElement kElem = resPool.appendResource(ElementName.MEDIA, EnumResourceClass.Consumable, null);
+         KElement kElem = resPool.appendResource(ElementName.MEDIA,
+            EnumResourceClass.Consumable, null);
          Assert.IsTrue(kElem is JDFMedia);
          JDFMedia media = ((JDFMedia)kElem);
 
@@ -175,9 +176,9 @@ namespace org.cip4.jdflib.resource.process
          Assert.AreEqual("C9.5m-round-0t", EnumHoleType.C9_5m_round_0t.getName());
 
          media.setHoleType(v);
-         Assert.AreEqual(media.getHoleType(), v);
+         CollectionAssert.AreEqual(media.getHoleType(), v);
          Assert.AreEqual(v[1].getName(), ((EnumHoleType)media.getHoleType()[1]).getName());
-         Assert.AreEqual("C9.5m-round-60t", ((EnumHoleType)media.getHoleType()[1]).getName());
+         Assert.AreEqual("C9.5m-round-0t", ((EnumHoleType)media.getHoleType()[1]).getName());
 
          // overwrite HoleType low level to check if conversion of DOT and HYPHEN
          // to UNDERSCORE was successful
@@ -185,12 +186,13 @@ namespace org.cip4.jdflib.resource.process
          Assert.AreEqual(EnumHoleType.C9_5m_round_0t, (media.getHoleType()[0]));
 
          // now check the same with JDFHoleMakingParams
-         kElem = resPool.appendResource(ElementName.HOLEMAKINGPARAMS, EnumResourceClass.Consumable, null);
+         kElem = resPool.appendResource(ElementName.HOLEMAKINGPARAMS,
+            EnumResourceClass.Consumable, null);
          Assert.IsTrue(kElem is JDFHoleMakingParams);
          JDFHoleMakingParams holeMakingParams = ((JDFHoleMakingParams)kElem);
 
          holeMakingParams.setHoleType(v);
-         Assert.AreEqual(holeMakingParams.getHoleType(), v);
+         CollectionAssert.AreEqual(holeMakingParams.getHoleType(), v);
          Assert.AreEqual(v[1].getName(), ((EnumHoleType)holeMakingParams.getHoleType()[1]).getName());
          Assert.AreEqual("C9.5m-round-0t", ((EnumHoleType)holeMakingParams.getHoleType()[1]).getName());
       }

@@ -90,9 +90,11 @@ namespace org.cip4.jdflib.util
       [TestMethod]
       public virtual void testSize()
       {
-         ByteArrayIOStream ios = new ByteArrayIOStream(new byte[20000]);
+         //If you pass in a buffer, Length == Capacity.
+         //If you pass in an int, Length == Bytes used.
+         ByteArrayIOStream ios = new ByteArrayIOStream(20000);
          byte[] ba = new byte[1];
-         for (int i = 0; i < 12345; i++)
+         for (long i = 0; i < 12345; i++)
          {
             ios.WriteByte((byte)i);
             Assert.AreEqual(1 + i, ios.Length);

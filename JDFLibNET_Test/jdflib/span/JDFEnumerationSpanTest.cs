@@ -113,7 +113,7 @@ namespace org.cip4.jdflib.span
          v.Add(EnumSpanBindingLength.Short);
          bl.setRange(v);
          List<ValuedEnum> v2 = bl.getRange();
-         Assert.AreEqual(v, v2, "Range");
+         CollectionAssert.AreEqual(v, v2, "Range");
       }
    }
 }

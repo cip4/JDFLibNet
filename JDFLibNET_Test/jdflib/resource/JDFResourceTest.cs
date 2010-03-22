@@ -533,7 +533,7 @@ namespace org.cip4.jdflib.resource
          for (int i = 0; i < 100; i++)
          {
             JDFColorantControl cc2 = (JDFColorantControl)cc.getPartition(new JDFAttributeMap(EnumPartIDKey.SheetName, "Sheet" + i), null);
-            Assert.AreEqual(vs, cc2.getColorantOrder().getSeparations());
+            CollectionAssert.AreEqual(vs, cc2.getColorantOrder().getSeparations());
          }
       }
 

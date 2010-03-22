@@ -373,9 +373,9 @@ namespace org.cip4.jdflib.devicecapability
       {
          JDFDoc d = new JDFDoc(ElementName.DEVICECAP);
          JDFDeviceCap dc = (JDFDeviceCap)d.getRoot();
-         List<EnumCombinedMethod> v = new List<EnumCombinedMethod>();
+         List<ValuedEnum> v = new List<ValuedEnum>();
          v.Add(EnumCombinedMethod.None);
-         Assert.AreEqual(v, dc.getCombinedMethod(), "default is none");
+         CollectionAssert.AreEqual(v, dc.getCombinedMethod(), "default is none");
 
       }
 

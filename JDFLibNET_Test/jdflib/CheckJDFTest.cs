@@ -77,6 +77,7 @@ namespace org.cip4.jdflib
 {
    using System;
    using System.Collections;
+   using System.Collections.Generic;
    using Microsoft.VisualStudio.TestTools.UnitTesting;
    using System.IO;
 
@@ -190,12 +191,12 @@ namespace org.cip4.jdflib
 
          CheckJDF checker = new CheckJDF();
 
-         ArrayList args = new ArrayList();
+         List<string> args = new List<string>();
          args.Add(checkSavePath);
          args.Add("-x" + checkSaveLocator);
          args.Add("-L" + schemaLocator);
          args.Add("-qcv");
-         string[] commandLineArgs = (string[])args.ToArray();
+         string[] commandLineArgs = args.ToArray();
 
          string logStr = "";
          for (int i = 0; i < commandLineArgs.Length; i++)

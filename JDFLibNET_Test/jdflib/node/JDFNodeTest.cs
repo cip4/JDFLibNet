@@ -258,7 +258,7 @@ namespace org.cip4.jdflib.node
          Assert.IsNull(n.getXSIType());
          VString types = new VString("Interpreting Rendering", " ");
          n.setCombined(types);
-         Assert.AreEqual(types, n.getTypes());
+         CollectionAssert.AreEqual(types, n.getTypes());
          n.setType(EnumType.ContactCopying);
          Assert.IsNull(n.getAttribute("Types", null, null));
       }
@@ -1894,10 +1894,10 @@ namespace org.cip4.jdflib.node
          types.Add("bar");
          root.setTypes(types);
 
-         Assert.AreEqual(types, root.getAllTypes());
+         CollectionAssert.AreEqual(types, root.getAllTypes());
          root.appendElement("JDF").setAttribute("Type", "fooBar2");
          VString types2 = new VString(types);
-         types2[0] = "fooBar2";
+         types2.Insert(0, "fooBar2");
          // Assert.AreEqual(root.getAllTypes(),types2);
 
          root.removeAttribute("Types");
@@ -1905,14 +1905,14 @@ namespace org.cip4.jdflib.node
          JDFNode n2 = root.addCombined(types);
          n2.setTypes(types);
 
-         Assert.AreEqual(types2, root.getAllTypes());
-         Assert.AreEqual(types, n2.getAllTypes());
+         CollectionAssert.AreEqual(types2, root.getAllTypes());
+         CollectionAssert.AreEqual(types, n2.getAllTypes());
 
          root.addJDFNode("foobar");
 
-         Assert.AreEqual(types, n2.getAllTypes());
+         CollectionAssert.AreEqual(types, n2.getAllTypes());
          types2.Add("foobar");
-         Assert.AreEqual(types2, root.getAllTypes());
+         CollectionAssert.AreEqual(types2, root.getAllTypes());
       }
 
 
@@ -2111,13 +2111,13 @@ namespace org.cip4.jdflib.node
          VString vs = new VString("Cutting Folding Cutting", " ");
          root.setTypes(vs);
          root.toGrayBox(false);
-         Assert.AreEqual(vs, root.getTypes());
+         CollectionAssert.AreEqual(vs, root.getTypes());
          Assert.AreEqual("ProcessGroup", root.getType());
 
          root.removeAttribute(AttributeName.TYPES);
          root.setType(EnumType.ConventionalPrinting);
          root.toGrayBox(false);
-         Assert.AreEqual(new VString("ConventionalPrinting", null), root.getTypes());
+         CollectionAssert.AreEqual(new VString("ConventionalPrinting", null), root.getTypes());
          Assert.AreEqual("ProcessGroup", root.getType());
 
          root.removeAttribute(AttributeName.TYPES);

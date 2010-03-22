@@ -89,12 +89,12 @@ namespace org.cip4.jdflib.util
       public virtual void testRead()
       {
          PrefixInputStream pis = new PrefixInputStream("abc", new MemoryStream(Encoding.Default.GetBytes("123")));
-         Assert.AreEqual('a', pis.read());
-         Assert.AreEqual('b', pis.read());
-         Assert.AreEqual('c', pis.read());
-         Assert.AreEqual('1', pis.read());
-         Assert.AreEqual('2', pis.read());
-         Assert.AreEqual('3', pis.read());
+         Assert.AreEqual((int)'a', pis.read());
+         Assert.AreEqual((int)'b', pis.read());
+         Assert.AreEqual((int)'c', pis.read());
+         Assert.AreEqual((int)'1', pis.read());
+         Assert.AreEqual((int)'2', pis.read());
+         Assert.AreEqual((int)'3', pis.read());
          Assert.AreEqual(-1, pis.read());
       }
 

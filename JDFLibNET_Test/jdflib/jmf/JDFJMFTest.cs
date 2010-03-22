@@ -195,12 +195,12 @@ namespace org.cip4.jdflib.jmf
          JDFQuery q = jmf.appendQuery();
          q.setType("KnownMessages");
          r.setQuery(q);
-         Assert.AreEqual("refID", q.getID(), r.getrefID());
+         Assert.AreEqual(q.getID(), r.getrefID(), "refID");
 
          JDFMessageService ms = r.appendMessageService();
          ms.setType("KnownMessages");
          s.convertResponse(r, q);
-         Assert.AreEqual("type", r.getType(), s.getType());
+         Assert.AreEqual(r.getType(), s.getType(), "type");
          Assert.IsTrue(ms.isEqual(s.getMessageService(0)), "ms equal");
          s = jmf.appendSignal();
          s.convertResponse(r, null);
@@ -221,7 +221,7 @@ namespace org.cip4.jdflib.jmf
          JDFQuery q = jmf.appendQuery();
          q.setType("KnownMessages");
          r.setQuery(q);
-         Assert.AreEqual("refID", q.getID(), r.getrefID());
+         Assert.AreEqual(q.getID(), r.getrefID(), "refID");
 
          jmf2.convertResponses(q);
          Assert.IsNull(jmf2.getResponse(0));

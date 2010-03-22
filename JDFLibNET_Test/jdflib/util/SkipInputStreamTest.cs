@@ -89,12 +89,12 @@ namespace org.cip4.jdflib.util
       public virtual void testRead()
       {
          SkipInputStream pis = new SkipInputStream("abc", new MemoryStream(Encoding.Default.GetBytes("123ab456abc123")), false);
-         Assert.AreEqual('a', pis.Read());
-         Assert.AreEqual('b', pis.Read());
-         Assert.AreEqual('c', pis.Read());
-         Assert.AreEqual('1', pis.Read());
-         Assert.AreEqual('2', pis.Read());
-         Assert.AreEqual('3', pis.Read());
+         Assert.AreEqual((int)'a', pis.Read());
+         Assert.AreEqual((int)'b', pis.Read());
+         Assert.AreEqual((int)'c', pis.Read());
+         Assert.AreEqual((int)'1', pis.Read());
+         Assert.AreEqual((int)'2', pis.Read());
+         Assert.AreEqual((int)'3', pis.Read());
          Assert.AreEqual(-1, pis.Read());
       }
 
@@ -103,12 +103,12 @@ namespace org.cip4.jdflib.util
       public virtual void testIgnoreCase()
       {
          SkipInputStream pis = new SkipInputStream("ABC", new MemoryStream(Encoding.Default.GetBytes("123ab456abc123")), true);
-         Assert.AreEqual('a', pis.Read());
-         Assert.AreEqual('b', pis.Read());
-         Assert.AreEqual('c', pis.Read());
-         Assert.AreEqual('1', pis.Read());
-         Assert.AreEqual('2', pis.Read());
-         Assert.AreEqual('3', pis.Read());
+         Assert.AreEqual((int)'a', pis.Read());
+         Assert.AreEqual((int)'b', pis.Read());
+         Assert.AreEqual((int)'c', pis.Read());
+         Assert.AreEqual((int)'1', pis.Read());
+         Assert.AreEqual((int)'2', pis.Read());
+         Assert.AreEqual((int)'3', pis.Read());
          Assert.AreEqual(-1, pis.Read());
       }
    }
