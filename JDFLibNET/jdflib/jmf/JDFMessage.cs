@@ -82,9 +82,9 @@ namespace org.cip4.jdflib.jmf
    using System;
    using System.Collections;
    using System.Collections.Generic;
+   using System.Collections.Specialized;
 
 
-   using ArrayUtils = org.apache.commons.lang.ArrayUtils;
    using ValuedEnum = org.apache.commons.lang.enums.ValuedEnum;
 
    using JDFAutoMessage = org.cip4.jdflib.auto.JDFAutoMessage;
@@ -490,7 +490,11 @@ namespace org.cip4.jdflib.jmf
 
          // it aint even valid for any family
          string[] familyTypeObj_ = familyTypeObj();
-         bool isFamilyTypeString = (familyTypeObj_ == null) ? false : ArrayUtils.Contains(familyTypeObj_, elementName);
+
+         StringCollection familyTypeObjCollection = new StringCollection();
+         familyTypeObjCollection.AddRange(familyTypeObj_);
+
+         bool isFamilyTypeString = (familyTypeObj_ == null) ? false : familyTypeObjCollection.Contains(elementName);
          if (!isFamilyTypeString)
          {
             return false;
@@ -944,11 +948,11 @@ namespace org.cip4.jdflib.jmf
          return EnumType.getEnum(getAttribute(AttributeName.TYPE, null, null));
       }
 
-      ///   
-      ///	 <summary> * get a vector of valid object names for this family type
-      ///	 *  </summary>
-      ///	 * <returns> String comma separated valid object types for this family type </returns>
-      ///	 
+      /// <summary>
+      /// get a vector of valid object names for this family type
+      /// </summary>
+      /// <returns>string array of valid object types for this family type</returns>
+      /// 
       private string[] familyTypeObj()
       {
          EnumFamily family = getFamily();

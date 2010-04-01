@@ -80,13 +80,14 @@ namespace org.cip4.jdflib.validate
 {
    using System;
    using System.IO;
+   using System.IO.Compression;
    using System.Collections;
+   using System.Collections.Specialized;
    using System.Net.Mail;
    using System.Web;
 
 
 
-   using ArrayUtils = org.apache.commons.lang.ArrayUtils;
    using AttributeName = org.cip4.jdflib.core.AttributeName;
    using ElementName = org.cip4.jdflib.core.ElementName;
    using JDFAudit = org.cip4.jdflib.core.JDFAudit;
@@ -1174,12 +1175,15 @@ namespace org.cip4.jdflib.validate
                   }
                   else
                   {
+                     StringCollection aGBListCollection = new StringCollection();
+                     aGBListCollection.AddRange(aGBList);
+
                      for (int i = 0; i < vs.Count; i++)
                      {
                         string t = vs.stringAt(i);
                         if (EnumType.getEnum(t) == null)
                         {
-                           if (ArrayUtils.Contains(aGBList, t))
+                           if (aGBListCollection.Contains(t))
                            {
                               continue;
                            }
@@ -1930,46 +1934,54 @@ namespace org.cip4.jdflib.validate
       ///	 
       public virtual XMLDoc processZipFile(FileInfo argFile)
       {
-         bool bTryKeep = bTryFormats;
-         try
-         {
-            ZipFile zip = new ZipFile(argFile);
-            System.Collections.IEnumerator zipEnum = zip.entries();
-            while (zipEnum.MoveNext())
-            {
-               ZipEntry ze = (ZipEntry)zipEnum.Current;
-               string nam = ze.getName();
-               // TODO handle non-ascii
-               if (!ze.isDirectory())
-               {
-                  Stream inStream = zip.getInputStream(ze);
-                  processSingleStream(inStream, nam, null);
-                  bTryKeep = bTryKeep && bTryFormats;
-               }
-            }
-         }
-         catch (ZipException)
-         {
-            if (!bTryFormats)
-            {
-               KElement testFileRoot = pOut.getRoot().appendElement("TestFile");
-               testFileRoot = testFileRoot.appendElement("Error");
-               testFileRoot.setAttribute("Message", "Invalid zip file, Bailing out!");
-               sysOut.println("Invalid zip file, Bailing out!");
-            }
-         }
-         catch (IOException)
-         {
-            if (!bTryFormats)
-            {
-               KElement testFileRoot = pOut.getRoot().appendElement("TestFile");
-               testFileRoot = testFileRoot.appendElement("Error");
-               testFileRoot.setAttribute("Message", "I/O Exception on zip file, Bailing out!");
-               sysOut.println("I/O Exception on zip file, Bailing out!");
-            }
-         }
-         bTryFormats = bTryKeep;
-         return pOut;
+         throw new NotImplementedException();
+
+         // TODO: Java to C# Conversion.  
+         //    Although .NET Framework include GZipSteam class for compressing and decompressing files,
+         //    is does not include handler for ZIP file collections.  
+         //    There are publicly available .NET based DLLs (i.e. http://dotnetzip.codeplex.com/) that will handle this
+         //    if the JDFLib architects decide to include the DLL and and associated license in the JDFLib distribution.
+
+         //bool bTryKeep = bTryFormats;
+         //try
+         //{
+         //   ZipFile zip = new ZipFile(argFile);
+         //   System.Collections.IEnumerator zipEnum = zip.entries();
+         //   while (zipEnum.MoveNext())
+         //   {
+         //      ZipEntry ze = (ZipEntry)zipEnum.Current;
+         //      string nam = ze.getName();
+         //      // TODO handle non-ascii
+         //      if (!ze.isDirectory())
+         //      {
+         //         Stream inStream = zip.getInputStream(ze);
+         //         processSingleStream(inStream, nam, null);
+         //         bTryKeep = bTryKeep && bTryFormats;
+         //      }
+         //   }
+         //}
+         //catch (ZipException)
+         //{
+         //   if (!bTryFormats)
+         //   {
+         //      KElement testFileRoot = pOut.getRoot().appendElement("TestFile");
+         //      testFileRoot = testFileRoot.appendElement("Error");
+         //      testFileRoot.setAttribute("Message", "Invalid zip file, Bailing out!");
+         //      sysOut.println("Invalid zip file, Bailing out!");
+         //   }
+         //}
+         //catch (IOException)
+         //{
+         //   if (!bTryFormats)
+         //   {
+         //      KElement testFileRoot = pOut.getRoot().appendElement("TestFile");
+         //      testFileRoot = testFileRoot.appendElement("Error");
+         //      testFileRoot.setAttribute("Message", "I/O Exception on zip file, Bailing out!");
+         //      sysOut.println("I/O Exception on zip file, Bailing out!");
+         //   }
+         //}
+         //bTryFormats = bTryKeep;
+         //return pOut;
       }
 
          

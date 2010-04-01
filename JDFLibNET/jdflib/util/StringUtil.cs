@@ -85,7 +85,6 @@ namespace org.cip4.jdflib.util
    using System.Xml;
 
 
-   using StringUtils = org.apache.commons.lang.StringUtils;
    using EnumUtils = org.apache.commons.lang.enums.EnumUtils;
    using ValuedEnum = org.apache.commons.lang.enums.ValuedEnum;
    using PrintfFormat = org.cip4.jdflib.cformat.PrintfFormat;
@@ -924,7 +923,7 @@ namespace org.cip4.jdflib.util
       {
          if (strWork == null || strWork.Length == 0)
             return false;
-         if (StringUtils.isNumeric(strWork.Substring(0, 1)))
+         if (IsNumeric(strWork.Substring(0, 1)))
             return false;
          return isNMTOKEN(strWork);
       }
@@ -2301,5 +2300,77 @@ namespace org.cip4.jdflib.util
          }
          return b.Length > 0 ? b.ToString() : null;
       }
+
+
+      /// <summary>
+      /// Checks if the String contains only unicode letters.
+      /// </summary>
+      /// <param name="str">the String to check, may be null</param>
+      /// <returns>True if string only contains letters, and is non-null </returns>
+      public static bool IsAlpha(string str)
+      {
+         if (str == null)
+         {
+            return false;
+         }
+         int sz = str.Length;
+         for (int i = 0; i < sz; i++)
+         {
+            if (char.IsLetter(str[i]) == false)
+            {
+               return false;
+            }
+         }
+         return true;
+      }
+
+
+      /// <summary>
+      /// Checks if the String contains only unicode digits.
+      /// A decimal point is not a unicode digit and returns false.
+      /// </summary>
+      /// <param name="str">the String to check, may be null</param>
+      /// <returns>True if only contains digits, and is non-null </returns>
+
+      public static bool IsNumeric(string str)
+      {
+         if (str == null)
+         {
+            return false;
+         }
+         int sz = str.Length;
+         for (int i = 0; i < sz; i++)
+         {
+            if (char.IsDigit(str[i]) == false)
+            {
+               return false;
+            }
+         }
+         return true;
+      }
+
+
+      /// <summary>
+      /// Counts how many times the substring appears in the larger String.
+      /// </summary>
+      /// <param name="str">the String to check, may be null </param>
+      /// <param name="sub">the substring to count, may be null </param>
+      /// <returns>the number of occurrences, 0 if either String is null </returns>
+      public static int CountMatches(string str, string sub)
+      {
+         if (String.IsNullOrEmpty(str) || String.IsNullOrEmpty(sub))
+         {
+            return 0;
+         }
+         int count = 0;
+         int idx = 0;
+         while ((idx = str.IndexOf(sub, idx)) != -1)
+         {
+            count++;
+            idx += sub.Length;
+         }
+         return count;
+      }
+
    }
 }

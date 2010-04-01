@@ -68,100 +68,36 @@
  * <http://www.cip4.org/>.
  */
 
+using System;
+using System.IO;
 
-/*
- * Duplicate the Java StringUtils functionality needed by the rest of the solution
- */
-
-namespace org.apache.commons.lang
+namespace org.cip4.jdflib.util
 {
-   using System;
-   using System.Collections;
-   using System.Text;
-
-   public class StringUtils
+   public class IOUtils
    {
-
       /// <summary>
-      /// Checks if a String is empty ("") or null.
+      /// Copy input stream to output stream.
       /// </summary>
-      /// <param name="str">the String to check, may be null</param>
-      /// <returns>True if the String is empty or null</returns>
-       public static bool IsEmpty(string str)
-       {
-           return str == null || str.Length == 0;
-       }
-
-
-
-       /// <summary>
-       /// Checks if the String contains only unicode letters.
-       /// </summary>
-       /// <param name="str">the String to check, may be null</param>
-       /// <returns>True if string only contains letters, and is non-null </returns>
-       public static bool isAlpha(string str)
-       {
-           if (str == null)
-           {
-               return false;
-           }
-           int sz = str.Length;
-           for (int i = 0; i < sz; i++)
-           {
-               if (char.IsLetter(str[i]) == false)
-               {
-                   return false;
-               }
-           }
-           return true;
-       }
-
-    
-       /// <summary>
-       /// Checks if the String contains only unicode digits.
-       /// A decimal point is not a unicode digit and returns false.
-       /// </summary>
-       /// <param name="str">the String to check, may be null</param>
-       /// <returns>True if only contains digits, and is non-null </returns>
- 
-       public static bool isNumeric(string str)
-       {
-           if (str == null)
-           {
-               return false;
-           }
-           int sz = str.Length;
-           for (int i = 0; i < sz; i++)
-           {
-               if (char.IsDigit(str[i]) == false)
-               {
-                   return false;
-               }
-           }
-           return true;
-       }
-
-       
-       /// <summary>
-       /// Counts how many times the substring appears in the larger String.
-       /// </summary>
-       /// <param name="str">the String to check, may be null </param>
-       /// <param name="sub">the substring to count, may be null </param>
-       /// <returns>the number of occurrences, 0 if either String is null </returns>
-       public static int countMatches(string str, string sub)
-       {
-          if (IsEmpty(str) || IsEmpty(sub))
-          {
-             return 0;
-          }
-          int count = 0;
-          int idx = 0;
-          while ((idx = str.IndexOf(sub, idx)) != -1)
-          {
-             count++;
-             idx += sub.Length;
-          }
-          return count;
-       }
+      /// <param name="inStream"></param>
+      /// <param name="outStream"></param>
+      /// <remarks>May be eventually replaced with .NET 4 CopyTo() method, if lib is used in exclusively .NET 4 environment</remarks>
+      public static void CopyStream(Stream inStream, Stream outStream)
+      {
+         //using an 8K buffer.
+         const int buflen = 1024 * 8;
+         byte[] buffer = new byte[buflen];
+         while (true)
+         {
+            int read = inStream.Read(buffer, 0, buflen);
+            if (read > 0)
+            {
+               outStream.Write(buffer, 0, read);
+            }
+            else
+            {
+               break;
+            }
+         }
+      }
    }
 }

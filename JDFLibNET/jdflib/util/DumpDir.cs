@@ -77,7 +77,6 @@ namespace org.cip4.jdflib.util
    using System.Collections.Generic;
    using System.IO;
 
-   using IOUtils = org.apache.commons.io.IOUtils;
 
    ///
    /// <summary> * 
@@ -216,7 +215,7 @@ namespace org.cip4.jdflib.util
          {
             try
             {
-               IOUtils.copy(isLocal, fs);
+               IOUtils.CopyStream(isLocal, fs);
                fs.Flush();
                fs.Close();
                // Java to C# Conversion - No equivalent .NET

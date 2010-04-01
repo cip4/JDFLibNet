@@ -89,7 +89,6 @@ namespace org.cip4.jdflib.util
    using System.IO;
 
 
-   using IOUtils = org.apache.commons.io.IOUtils;
    using AttributeName = org.cip4.jdflib.core.AttributeName;
    using ElementName = org.cip4.jdflib.core.ElementName;
    using JDFConstants = org.cip4.jdflib.core.JDFConstants;
@@ -506,10 +505,13 @@ namespace org.cip4.jdflib.util
       /// 
       public static Attachment GetPartByCID(AttachmentCollection attachments, string cid)
       {
-         foreach (Attachment attachment in attachments)
+         if ((attachments != null) && (attachments.Count > 0))
          {
-            if (MatchesCID(attachment, cid))
-               return attachment;
+            foreach (Attachment attachment in attachments)
+            {
+               if (MatchesCID(attachment, cid))
+                  return attachment;
+            }
          }
          return null;
       }
@@ -678,8 +680,11 @@ namespace org.cip4.jdflib.util
             return TEXT_UNKNOWN;
          ext = ext.ToLower();
          fillExtensionMap();
-         ext = extensionMap[ext];
-         return ext == null ? TEXT_UNKNOWN : ext;
+
+         if (extensionMap.ContainsKey(ext))
+            return extensionMap[ext];
+         else
+            return TEXT_UNKNOWN;
       }
 
 
@@ -1368,7 +1373,7 @@ namespace org.cip4.jdflib.util
          FileInfo outFile = new FileInfo(Path.Combine(directory.ToString(), fileName));
          BufferedStream fos = new BufferedStream(new FileStream(outFile.FullName, FileMode.Open));
          Stream ins = attachment.ContentStream;
-         IOUtils.copy(ins, fos);
+         IOUtils.CopyStream(ins, fos);
          fos.Flush();
          fos.Close();
       }

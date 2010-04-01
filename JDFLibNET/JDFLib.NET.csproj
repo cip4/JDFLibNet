@@ -41,17 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="JavaAdapter\ArrayUtils.cs" />
-    <Compile Include="JavaAdapter\CharUtils.cs" />
     <Compile Include="JavaAdapter\CIP4SoftwareLicense.cs" />
     <Compile Include="JavaAdapter\CoreDocumentImpl.cs" />
     <Compile Include="JavaAdapter\Enum.cs" />
     <Compile Include="JavaAdapter\EnumUtils.cs" />
-    <Compile Include="JavaAdapter\IOUtils.cs" />
-    <Compile Include="JavaAdapter\StringUtils.cs" />
     <Compile Include="JavaAdapter\SupportClass.cs" />
     <Compile Include="JavaAdapter\ValuedEnum.cs" />
-    <Compile Include="JavaAdapter\ZipFile.cs" />
     <Compile Include="jdflib\auto\JDFAutoAcknowledge.cs" />
     <Compile Include="jdflib\auto\JDFAutoAction.cs" />
     <Compile Include="jdflib\auto\JDFAutoActionPool.cs" />
@@ -1286,6 +1281,7 @@
     <Compile Include="jdflib\util\HashUtil.cs" />
     <Compile Include="jdflib\util\HotFolder.cs" />
     <Compile Include="jdflib\util\HotFolderListener.cs" />
+    <Compile Include="jdflib\util\IOUtils.cs" />
     <Compile Include="jdflib\util\JDFDate.cs" />
     <Compile Include="jdflib\util\JDFDuration.cs" />
     <Compile Include="jdflib\util\JDFMerge.cs" />

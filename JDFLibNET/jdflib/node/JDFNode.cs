@@ -120,10 +120,10 @@ namespace org.cip4.jdflib.node
    using System;
    using System.Collections;
    using System.Collections.Generic;
+   using System.Collections.Specialized;
    using System.Text;
    using System.Xml;
 
-   using ArrayUtils = org.apache.commons.lang.ArrayUtils;
    using ValuedEnum = org.apache.commons.lang.enums.ValuedEnum;
 
    using EnumDeviceStatus = org.cip4.jdflib.auto.JDFAutoDeviceInfo.EnumDeviceStatus;
@@ -1408,11 +1408,15 @@ namespace org.cip4.jdflib.node
                bool bAddCPI = false;
                EnumType t = EnumType.getEnum(types.stringAt(i));
                string[] typeLinkNames_ = typeLinkNames(t);
-               if (typeLinkNames_ != null && ArrayUtils.Contains(typeLinkNames_, resName))
+
+               StringCollection typeLinkNamesCollection = new StringCollection();
+               typeLinkNamesCollection.AddRange(typeLinkNames_);
+
+               if (typeLinkNames_ != null && typeLinkNamesCollection.Contains(resName))
                {
                   // if we already added a cpi, but this is an exchange
                   // resource, only set cpi for the last one
-                  int iPos = ArrayUtils.IndexOf(typeLinkNames_, resName);
+                  int iPos = typeLinkNamesCollection.IndexOf(resName);
                   VString typeInfo = new VString(StringUtil.tokenize(typeLinkInfo(t)[iPos], " ", false));
                   bool bMatchUsage = false;
                   string inOut = null;
@@ -1469,7 +1473,10 @@ namespace org.cip4.jdflib.node
          {
             bool bAddCPILocal = bAddCPI;
 
-            int iPosLast = ArrayUtils.IndexOf(typeLinkNamesLast, resName);
+            StringCollection typeLinkNamesLastCollection = new StringCollection();
+            typeLinkNamesLastCollection.AddRange(typeLinkNamesLast);
+
+            int iPosLast = typeLinkNamesLastCollection.IndexOf(resName);
             // the i* i?pu ... list of this
             // the o* i?pu ... list of the previous type
             VString typeInfoLast = new VString(StringUtil.tokenize(typeLinkInfo(EnumType.getEnum(types.stringAt(lastGot)))[iPosLast], " ", false));

@@ -97,7 +97,6 @@ namespace org.cip4.jdflib.core
    using System.Net.Mail;
    using System.Xml;
 
-   using StringUtils = org.apache.commons.lang.StringUtils;
    using ValuedEnum = org.apache.commons.lang.enums.ValuedEnum;
    using EnumQueueEntryStatus = org.cip4.jdflib.auto.JDFAutoQueueEntry.EnumQueueEntryStatus;
    using EnumAttributeType = org.cip4.jdflib.core.AttributeInfo.EnumAttributeType;
@@ -1154,7 +1153,7 @@ namespace org.cip4.jdflib.core
                   bRet = false;
                }
             }
-            if (bFixVersionIDFix && @value.Length > 0 && StringUtils.isNumeric(@value.Substring(0, 1)))
+            if (bFixVersionIDFix && @value.Length > 0 && StringUtil.IsNumeric(@value.Substring(0, 1)))
             {
                EnumAttributeType atType = ai.getAttributeType(key);
                if (atType != null)
@@ -1170,7 +1169,7 @@ namespace org.cip4.jdflib.core
                      for (int i = 0; i < vvalues.Count; i++)
                      {
                         string s = vvalues.stringAt(i);
-                        if (s.Length > 0 && StringUtils.isNumeric(s.Substring(0, 1)))
+                        if (s.Length > 0 && StringUtil.IsNumeric(s.Substring(0, 1)))
                         {
                            s = "_" + s;
                            vvalues[i] = s;

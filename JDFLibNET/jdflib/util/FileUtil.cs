@@ -80,7 +80,6 @@ namespace org.cip4.jdflib.util
    using System.Collections.Generic;
 
 
-   using IOUtils = org.apache.commons.io.IOUtils;
    using VString = org.cip4.jdflib.core.VString;
    //using FileFilter = java.io.FileFilter;
 
@@ -326,7 +325,7 @@ namespace org.cip4.jdflib.util
          try
          {
             FileStream fos = new FileStream(tmp.FullName, FileMode.Create);
-            IOUtils.copy(fis, fos);
+            IOUtils.CopyStream(fis, fos);
             fos.Flush();
             fos.Close();
             fis.Close();

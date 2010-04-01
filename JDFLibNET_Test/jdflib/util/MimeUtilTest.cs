@@ -87,7 +87,6 @@ namespace org.cip4.jdflib.util
 
 
    using VElement = org.cip4.jdflib.core.VElement;
-   using IOUtils = org.apache.commons.io.IOUtils;
    using JDFTestCaseBase = org.cip4.jdflib.JDFTestCaseBase;
    using AttributeName = org.cip4.jdflib.core.AttributeName;
    using ElementName = org.cip4.jdflib.core.ElementName;
@@ -465,7 +464,7 @@ namespace org.cip4.jdflib.util
          Assert.IsNotNull(mp2);
          Assert.AreEqual(mp.Count, mp2.Count);
          MemoryStream sw = new MemoryStream();
-         IOUtils.copy(new FileStream(f2.FullName, FileMode.Open), sw);
+         IOUtils.CopyStream(new FileStream(f2.FullName, FileMode.Open), sw);
          Assert.AreEqual(-1, sw.ToString().IndexOf("related;"));
       }
 
@@ -543,7 +542,7 @@ namespace org.cip4.jdflib.util
             Assert.AreEqual("bigger.pdf", bp.Name);
             HttpWebRequest uc = MimeUtil.writeToURL(mp, "http://localhost:8080/JDFUtility/dump");
             Stream @is = uc.GetRequestStream();
-            IOUtils.copy(@is, System.Console.OpenStandardOutput());
+            IOUtils.CopyStream(@is, System.Console.OpenStandardOutput());
             @is.Close();
             Console.WriteLine();
             // System.out.println("extracted "+l+" bytes in time: "+(extract-

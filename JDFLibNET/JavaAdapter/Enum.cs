@@ -93,8 +93,6 @@ namespace org.apache.commons.lang.enums
    using System.Reflection;
 
 
-   //using ClassUtils = org.apache.commons.lang.ClassUtils;
-   using StringUtils = org.apache.commons.lang.StringUtils;
 
 ///
 /// <summary> * <p>Abstract superclass for type-safe enums.</p>
@@ -447,7 +445,7 @@ namespace org.apache.commons.lang.enums
 ///     
        private void init(string name)
        {
-           if (StringUtils.IsEmpty(name))
+           if (String.IsNullOrEmpty(name))
            {
                throw new ArgumentException("The Enum name must not be empty or null");
            }

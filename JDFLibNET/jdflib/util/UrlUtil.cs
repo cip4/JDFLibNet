@@ -86,8 +86,6 @@ namespace org.cip4.jdflib.util
    using System.Text;
 
 
-   using IOUtils = org.apache.commons.io.IOUtils;
-   using StringUtils = org.apache.commons.lang.StringUtils;
    using JDFConstants = org.cip4.jdflib.core.JDFConstants;
    using VString = org.cip4.jdflib.core.VString;
 
@@ -673,8 +671,8 @@ namespace org.cip4.jdflib.util
          if (pathName == null || pathName.Length <= 1 || isUNC(pathName))
             return false;
          //.Net Substring different than java substring.
-         return StringUtils.isAlpha(pathName.Substring(0, 1)) && pathName.Substring(1, 1).Equals(":")
-                 || StringUtils.countMatches(pathName, "\\") > StringUtils.countMatches(pathName, "/");
+         return StringUtil.IsAlpha(pathName.Substring(0, 1)) && pathName.Substring(1, 1).Equals(":")
+                 || StringUtil.CountMatches(pathName, "\\") > StringUtil.CountMatches(pathName, "/");
 
       }
 
@@ -924,7 +922,7 @@ namespace org.cip4.jdflib.util
             Stream @out = httpURLconnection.GetRequestStream();
 
             if (stream != null)
-               IOUtils.copy(stream, @out);
+               IOUtils.CopyStream(stream, @out);
 
             @out.Flush();
             @out.Close();
