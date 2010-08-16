@@ -1410,7 +1410,10 @@ namespace org.cip4.jdflib.node
                string[] typeLinkNames_ = typeLinkNames(t);
 
                StringCollection typeLinkNamesCollection = new StringCollection();
-               typeLinkNamesCollection.AddRange(typeLinkNames_);
+               if (typeLinkNames_ != null)
+               {
+                  typeLinkNamesCollection.AddRange(typeLinkNames_);
+               }
 
                if (typeLinkNames_ != null && typeLinkNamesCollection.Contains(resName))
                {
