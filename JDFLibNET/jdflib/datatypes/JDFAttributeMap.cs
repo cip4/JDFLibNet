@@ -223,10 +223,7 @@ namespace org.cip4.jdflib.datatypes
       ///	 
       public virtual string @get(string key)
       {
-         if (m_hashTable.ContainsKey(key))
-            return m_hashTable[key];
-         else
-            return null;
+         return this[key];
       }
 
       ///   
@@ -255,12 +252,10 @@ namespace org.cip4.jdflib.datatypes
 
          if (valueLocal == null)
             valueLocal = "";
+
          // put key value to hashmap. The map returns null if the key was new
          // or an object (the old value) if the value was replaced
-         if (m_hashTable.ContainsKey(key))
-            m_hashTable.Remove(key);
-
-         m_hashTable.Add(key, valueLocal);
+         m_hashTable[key] = valueLocal;
 
          return true;
       }
@@ -474,7 +469,7 @@ namespace org.cip4.jdflib.datatypes
             string key = it.Current;
             if (m_hashTable.ContainsKey(key))
             {
-               ht.Add(key, m_hashTable[key]);
+               ht[key] = m_hashTable[key];
             }
          }
          m_hashTable = ht;
@@ -579,7 +574,11 @@ namespace org.cip4.jdflib.datatypes
          if (keyLocal is ValuedEnum)
             keyLocal = ((ValuedEnum)keyLocal).getName();
 
-         return m_hashTable.Remove((string)keyLocal);
+         string keyStr = (string)keyLocal;
+         string value;
+         m_hashTable.TryGetValue(keyStr, out value);
+         m_hashTable.Remove(keyStr);
+         return value;
       }
 
 
@@ -598,7 +597,7 @@ namespace org.cip4.jdflib.datatypes
             {
                string key = it.Current;
                string value = t[key];
-               m_hashTable.Add(key, value);
+               m_hashTable[key] = value;
             }
          }
       }
@@ -615,7 +614,7 @@ namespace org.cip4.jdflib.datatypes
          if (keyLocal is ValuedEnum)
             keyLocal = ((ValuedEnum)keyLocal).getName();
 
-         return m_hashTable[(string)keyLocal];
+         return this[(string)keyLocal];
       }
 
       //   
@@ -623,10 +622,10 @@ namespace org.cip4.jdflib.datatypes
       //	 * 
       //	 * @see java.util.Map#put(K, V)
       //	 
-      public virtual void put(object key, object @value)
+      public virtual void put(object key, object value)
       {
          object keyLocal = key;
-         object valueLocal = @value;
+         object valueLocal = value;
 
          if (keyLocal is ValuedEnum)
             keyLocal = ((ValuedEnum)keyLocal).getName();
@@ -634,10 +633,7 @@ namespace org.cip4.jdflib.datatypes
          if (valueLocal is ValuedEnum)
             valueLocal = ((ValuedEnum)valueLocal).getName();
 
-         if (m_hashTable.ContainsKey((string)keyLocal))
-            m_hashTable.Remove((string)keyLocal);
-
-         m_hashTable.Add((string)keyLocal, (string)valueLocal);
+         m_hashTable[(string)keyLocal] = (string)valueLocal;
       }
 
 
@@ -655,11 +651,7 @@ namespace org.cip4.jdflib.datatypes
 
       public virtual bool TryGetValue(string key, out string value)
       {
-         value = m_hashTable[key];
-         if (value != null)
-            return true;
-         else
-            return false;
+         return m_hashTable.TryGetValue(key, out value);
       }
 
 
@@ -667,10 +659,9 @@ namespace org.cip4.jdflib.datatypes
       {
          get 
          {
-            if (m_hashTable.ContainsKey(key))
-               return m_hashTable[key];
-            else
-               return null;
+            string value;
+            m_hashTable.TryGetValue(key, out value);
+            return value;
          }
          set { m_hashTable[key] = value; }
       }
