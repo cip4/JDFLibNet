@@ -105,7 +105,7 @@ namespace org.cip4.jdflib.core
       {
       }
 
-      protected override AttributeInfo getTheAttributeInfo()
+      protected internal override AttributeInfo getTheAttributeInfo()
       {
          return base.getTheAttributeInfo().updateReplace(atrInfoTable);
       }

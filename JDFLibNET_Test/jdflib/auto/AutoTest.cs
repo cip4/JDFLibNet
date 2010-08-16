@@ -94,24 +94,23 @@ namespace org.cip4.jdflib.auto
    [TestClass]
    public class AutoTest
    {
-   // Beware!
-   // These tests are for checking versioning and JDFValidator internal details
+      // Beware!
+      // These tests are for checking versioning and JDFValidator internal details
       [TestMethod]
       public virtual void testElementVersion()
       {
          VString vPrerelease = null;
-         ArrayList vOptional = null;
+         VString vOptional = null;
          VString vDeprecated = null;
 
          JDFDoc jdfDoc = new JDFDoc("JDF");
          JDFNode root = jdfDoc.getJDFRoot();
 
-      // check AdhesiveBindingParams/GlueApplication
-      //
+         // check AdhesiveBindingParams/GlueApplication
+         //
          root.setVersion(JDFElement.EnumVersion.Version_1_3);
          JDFAdhesiveBindingParams adhesiveBindingParam = (JDFAdhesiveBindingParams) root.addResource(ElementName.ADHESIVEBINDINGPARAMS, null, EnumUsage.Input, null, null, null, null);
-         // Java to C# Conversion - getTheElementInfo() method is "protected internal" not accessable
-         //vDeprecated = adhesiveBindingParam.getTheElementInfo().deprecatedElements();
+         vDeprecated = adhesiveBindingParam.getTheElementInfo().deprecatedElements();
          adhesiveBindingParam.appendGlueApplication();
          vDeprecated = adhesiveBindingParam.getDeprecatedElements(99999999);
          Assert.IsTrue(vDeprecated.Contains(ElementName.GLUEAPPLICATION));
@@ -120,8 +119,8 @@ namespace org.cip4.jdflib.auto
          vDeprecated = adhesiveBindingParam.getDeprecatedElements(99999999);
          Assert.AreEqual(0, vDeprecated.Count);
 
-      // check MarkObject/DeviceMark
-      //
+         // check MarkObject/DeviceMark
+         //
          root.setVersion(JDFElement.EnumVersion.Version_1_0);
          JDFLayout layout = (JDFLayout) root.addResource(ElementName.LAYOUT, null, EnumUsage.Input, null, null, null, null);
          JDFMarkObject markObject = layout.appendMarkObject();
@@ -130,18 +129,15 @@ namespace org.cip4.jdflib.auto
          Assert.IsTrue(vPrerelease.Contains(ElementName.DEVICEMARK));
 
          root.setVersion(JDFElement.EnumVersion.Version_1_1);
-         // Java to C# Conversion - getTheElementInfo() method is "protected internal" not accessable
-         //vOptional = markObject.getTheElementInfo().optionalElements();
+         vOptional = markObject.getTheElementInfo().optionalElements();
          Assert.IsTrue(vOptional.Contains(ElementName.DEVICEMARK));
 
          root.setVersion(JDFElement.EnumVersion.Version_1_2);
-         // Java to C# Conversion - getTheElementInfo() method is "protected internal" not accessable
-         //vOptional = markObject.getTheElementInfo().optionalElements();
+         vOptional = markObject.getTheElementInfo().optionalElements();
          Assert.IsTrue(vOptional.Contains(ElementName.DEVICEMARK));
 
          root.setVersion(JDFElement.EnumVersion.Version_1_3);
-         // Java to C# Conversion - getTheElementInfo() method is "protected internal" not accessable
-         //vDeprecated = markObject.getTheElementInfo().deprecatedElements();
+         vDeprecated = markObject.getTheElementInfo().deprecatedElements();
          Assert.IsTrue(vDeprecated.Contains(ElementName.DEVICEMARK));
       }
    }
