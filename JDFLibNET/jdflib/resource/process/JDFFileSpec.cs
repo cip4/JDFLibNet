@@ -81,6 +81,7 @@
 
 namespace org.cip4.jdflib.resource.process
 {
+   using System;
    using System.IO;
    using System.Collections.Generic;
 
@@ -223,7 +224,12 @@ namespace org.cip4.jdflib.resource.process
             mimeMap.Add("tiff", JDFConstants.MIME_TIFF);
          }
          string extension = UrlUtil.extension(url);
-         return extension == null ? null : mimeMap[extension.ToLower()];
+         string value = null;
+         if (!String.IsNullOrEmpty(extension))
+         {
+            mimeMap.TryGetValue(extension.ToLower(), out value);
+         }
+         return value;
       }
    }
 }
