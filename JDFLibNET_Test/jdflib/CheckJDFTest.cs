@@ -213,8 +213,8 @@ namespace org.cip4.jdflib
       [TestMethod]
       public virtual void testProcessSingleFile()
       {
-         processSingleFile("test/data/matsch.jdf", false, EnumValidationLevel.Complete);
-         processSingleFile("test/data/matsch.jdf", false, EnumValidationLevel.RecursiveComplete);
+         processSingleFile(sm_dirTestData + "matsch.jdf", false, EnumValidationLevel.Complete);
+         processSingleFile(sm_dirTestData + "matsch.jdf", false, EnumValidationLevel.RecursiveComplete);
       }
 
 
@@ -238,11 +238,11 @@ namespace org.cip4.jdflib
 
          if (bShouldValidate)
          {
-            Assert.AreEqual(fileName + " should validate", root.getXPathAttribute("TestFile/CheckJDFOutput/@IsValid", ""), "true");
+            Assert.AreEqual(root.getXPathAttribute("TestFile/CheckJDFOutput/@IsValid", ""), "true", fileName + " should validate");
          }
          else
          {
-            Assert.AreEqual(fileName + " should not validate", root.getXPathAttribute("TestFile/CheckJDFOutput/@IsValid", ""), "false");
+            Assert.AreEqual(root.getXPathAttribute("TestFile/CheckJDFOutput/@IsValid", ""), "false", fileName + " should not validate");
          }
 
          // now repeat including schema
@@ -269,7 +269,7 @@ namespace org.cip4.jdflib
          checkJDF.bQuiet = true;
          checkJDF.level = EnumValidationLevel.Complete;
          VString files = new VString();
-         files.Add("test/data/job.jdf");
+         files.Add(sm_dirTestData + "job.jdf");
          checkJDF.allFiles = files;
          XMLDoc schemaValidationResult = checkJDF.processAllFiles();
          Assert.IsNotNull(schemaValidationResult.getRoot().getXPathElement("TestFile/SchemaValidationOutput"));
@@ -402,8 +402,8 @@ namespace org.cip4.jdflib
          checkJDF.setPrint(false);
          checkJDF.bQuiet = true;
          checkJDF.level = EnumValidationLevel.Incomplete;
-         FileInfo foo = new FileInfo(sm_dirTestSchema);
-         //Assert.IsTrue(foo.isDirectory(), "please mount the svn schema parallel to jdflibJ");
+         DirectoryInfo foo = new DirectoryInfo(sm_dirTestSchema);
+         Assert.IsTrue(foo.Exists, "please mount the svn schema parallel to JDFLibNet");
          FileInfo jdfxsd = new FileInfo(sm_dirTestSchema + "JDF.xsd");
          checkJDF.setJDFSchemaLocation(jdfxsd);
          JDFNode n = doc.getJDFRoot();
@@ -569,7 +569,7 @@ namespace org.cip4.jdflib
       public virtual void testSamples()
       {
          DirectoryInfo testData = new DirectoryInfo(sm_dirTestData + "SampleFiles");
-         //Assert.IsTrue(testData.isDirectory(), "testData dir");
+         Assert.IsTrue(testData.Exists, "testData dir");
          FileInfo[] fList = testData.GetFiles();
 
          for (int i = 0; i < fList.Length; i++)
