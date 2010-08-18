@@ -128,11 +128,11 @@ namespace org.cip4.jdflib.jmf
          q.setAutomated(true);
          int l = q.numEntries(null);
          qe.setPriority(99);
-         Assert.AreEqual(1, q.numEntries(null));
+         Assert.AreEqual(l, q.numEntries(null));
          Assert.AreEqual(1, q.getQueueEntryPos("qe2"));
 
          qe.setPriority(0);
-         Assert.AreEqual(1, q.numEntries(null));
+         Assert.AreEqual(l, q.numEntries(null));
          Assert.AreEqual(2, q.getQueueEntryPos("qe2"));
          q.removeChildren(ElementName.QUEUEENTRY, null, null);
          for (int i = 0; i < 1000; i++)
