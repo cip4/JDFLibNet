@@ -201,12 +201,27 @@ namespace org.cip4.jdflib.util
 
       public int Read()
       {
-         return Read(new byte[1], 0, 1);
+         return ReadByte();
+      }
+
+      public override int ReadByte()
+      {
+         return m_BufferedStream.ReadByte();
       }
 
       public override int Read(byte[] buffer, int offset, int count)
       {
          return m_BufferedStream.Read(buffer, offset, count);
+      }
+
+      public void Write(byte value)
+      {
+         WriteByte(value);
+      }
+
+      public override void WriteByte(byte value)
+      {
+         m_BufferedStream.WriteByte(value);
       }
 
       public override void Write(byte[] buffer, int offset, int count)
