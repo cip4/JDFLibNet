@@ -93,12 +93,12 @@ namespace org.cip4.jdflib.util
    /// * @author prosirai
    /// *  </summary>
    /// 
-   public class HotFolder : IThreadRunnable
+   public class HotFolder
    {
       public int stabilizeTime = 1000; // time between reads in milliseconds -
       // also minimum lenght of
       // non-modification
-      private bool interrupt = false; // if set to true, the watcher interupted
+      private volatile bool interrupt = false; // if set to true, the watcher interupted
       // and the thread ends
       private static int nThread = 0;
 
@@ -107,7 +107,7 @@ namespace org.cip4.jdflib.util
       private readonly List<FileTime> lastFileTime;
       private readonly HotFolderListener hfl;
       private readonly string extension;
-      private SupportClass.ThreadClass runThread;
+      private Thread runThread;
 
       ///   
       ///	 <summary> * constructor for a simple hotfolder watcher that is automagically started in its own thread
@@ -132,7 +132,8 @@ namespace org.cip4.jdflib.util
       {
          if (runThread != null)
             Stop();
-         runThread = new SupportClass.ThreadClass(new ThreadStart(this.Run), "HotFolder_" + nThread++);
+         runThread = new Thread(new ThreadStart(this.Run));
+         runThread.Name = "HotFolder_" + nThread++;
          interrupt = false;
          runThread.Start();
 
@@ -177,6 +178,7 @@ namespace org.cip4.jdflib.util
       {
          while (!interrupt)
          {
+            dir.Refresh();
             DateTime lastMod = dir.LastWriteTime;
             if (lastMod > lastModified || lastFileTime.Count > 0) // has the
             // directory
@@ -196,7 +198,7 @@ namespace org.cip4.jdflib.util
                      if (files != null)
                      {
                         FileTime lftAt = lastFileTime[i];
-                        if (files[j] != null && files[j].Equals(lftAt.f))
+                        if (files[j] != null && files[j].FullName.Equals(lftAt.f.FullName))
                         {
                            found = true;
                            if (files[j].LastWriteTime == lftAt.modified)

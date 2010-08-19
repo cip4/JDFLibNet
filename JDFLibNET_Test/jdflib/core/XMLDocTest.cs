@@ -96,7 +96,7 @@ namespace org.cip4.jdflib.core
    public class XMLDocTest : JDFTestCaseBase
    {
 
-      protected internal abstract class MyThread : IThreadRunnable
+      protected internal abstract class MyThread
       {
          public XMLDoc d;
          public int iLoop;
@@ -641,7 +641,7 @@ namespace org.cip4.jdflib.core
             mr.d = d;
             mr.iLoop = i;
             mrs[i] = mr;
-            new SupportClass.ThreadClass(new System.Threading.ThreadStart(mr.Run)).Start();
+            new Thread(new ThreadStart(mr.Run)).Start();
 
          }
          Console.WriteLine("Writing start");
@@ -675,7 +675,7 @@ namespace org.cip4.jdflib.core
             mr.d = d;
             mr.iLoop = i;
             mrs[i] = mr;
-            new SupportClass.ThreadClass(new System.Threading.ThreadStart(mr.Run)).Start();
+            new Thread(new ThreadStart(mr.Run)).Start();
          }
          Console.WriteLine("Writing start");
          Assert.IsTrue(d.write2File(@out, 2, true));
@@ -707,7 +707,7 @@ namespace org.cip4.jdflib.core
             mr.iLoop = i;
             mr.outerLoop = 1; //10000000; // make high number for over night tests
             threads[i] = mr;
-            new SupportClass.ThreadClass(new System.Threading.ThreadStart(mr.Run)).Start();
+            new Thread(new ThreadStart(mr.Run)).Start();
          }
          for (int i = 0; i < 10; i++)
          {

@@ -104,7 +104,7 @@ namespace org.cip4.jdflib.jmf
       internal static JDFQueue q;
       protected internal static int iThread = 0;
 
-      protected internal class QueueTestThread : IThreadRunnable
+      protected internal class QueueTestThread
       {
          public virtual void Run()
          {
@@ -314,7 +314,8 @@ namespace org.cip4.jdflib.jmf
          for (int i = 0; i < 10; i++)
          {
             QueueTestThread queueTestThread = new QueueTestThread();
-            SupportClass.ThreadClass runThread = new SupportClass.ThreadClass(new ThreadStart(queueTestThread.Run), "Test Thread_" + i);
+            Thread runThread = new Thread(new ThreadStart(queueTestThread.Run));
+            runThread.Name = "Test Thread_" + i;
             runThread.Start();
          }
          // now also zapp some...

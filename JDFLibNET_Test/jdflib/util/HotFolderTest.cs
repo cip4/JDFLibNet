@@ -113,9 +113,19 @@ namespace org.cip4.jdflib.util
          //		 
          public virtual void hotFile(FileInfo hotFile)
          {
+            bool zapp = false;
             if (bZapp)
-               hotFile.Delete();
-            Console.WriteLine(JDFDate.ToMillisecs(DateTime.Now) + " " + hotFile.FullName + "," + bZapp);
+            {
+               try
+               {
+                  hotFile.Delete();
+                  zapp = true;
+               }
+               catch (Exception)
+               {
+               }
+            }
+            Console.WriteLine(JDFDate.ToMillisecs(DateTime.Now) + " " + hotFile.FullName + "," + zapp);
          }
       }
 
@@ -133,10 +143,12 @@ namespace org.cip4.jdflib.util
       public virtual void testStartNull()
       {
          hf = new HotFolder(theHF, null, new MyListener(false));
-         FileInfo file = new FileInfo(theHF + "f1.txt");
-         file.Create();
+         FileInfo file = new FileInfo(theHF + Path.DirectorySeparatorChar.ToString() + "f1.txt");
+         SupportClass.FileSupport.CreateNewFile(file);
+         file.Refresh();
          Assert.IsTrue(file.Exists);
          StatusCounter.sleep(3000);
+         file.Refresh();
          Assert.IsTrue(file.Exists);
       }
 
@@ -165,22 +177,27 @@ namespace org.cip4.jdflib.util
       public virtual void testStopStart()
       {
          hf = new HotFolder(theHF, null, new MyListener(true));
-         FileInfo file = new FileInfo(theHF + "f1.txt");
-         file.Create();
+         FileInfo file = new FileInfo(theHF + Path.DirectorySeparatorChar.ToString() + "f1.txt");
+         SupportClass.FileSupport.CreateNewFile(file);
+         file.Refresh();
          Assert.IsTrue(file.Exists);
          StatusCounter.sleep(3000);
-         Assert.IsFalse(file.Exists);
+         file.Refresh();
+         Assert.IsFalse(file.Exists, "First delete attempt.");
          hf.Stop();
          hf.Stop();
-         file.Create();
+         SupportClass.FileSupport.CreateNewFile(file);
+         file.Refresh();
          Assert.IsTrue(file.Exists);
          StatusCounter.sleep(3000);
+         file.Refresh();
          Assert.IsTrue(file.Exists);
          hf.restart();
          hf.restart();
          hf.restart();
-         StatusCounter.sleep(3000);
-         Assert.IsFalse(file.Exists);
+         StatusCounter.sleep(5000);
+         file.Refresh();
+         Assert.IsFalse(file.Exists, "Second delete attempt.");
       }
 
 
@@ -189,16 +206,22 @@ namespace org.cip4.jdflib.util
       {
          hf = new HotFolder(theHF, ".txt,.xml", new MyListener(true));
          StatusCounter.sleep(1000); // time to start up
-         FileInfo file = new FileInfo(theHF + "f1.txt");
-         FileInfo file1 = new FileInfo(theHF + "f1.xml");
-         FileInfo file2 = new FileInfo(theHF + "f1.foo");
-         file.Create();
+         FileInfo file = new FileInfo(theHF + Path.DirectorySeparatorChar.ToString() + "f1.txt");
+         FileInfo file1 = new FileInfo(theHF + Path.DirectorySeparatorChar.ToString() + "f1.xml");
+         FileInfo file2 = new FileInfo(theHF + Path.DirectorySeparatorChar.ToString() + "f1.foo");
+         SupportClass.FileSupport.CreateNewFile(file);
+         file.Refresh();
          Assert.IsTrue(file.Exists);
-         file1.Create();
+         SupportClass.FileSupport.CreateNewFile(file1);
+         file1.Refresh();
          Assert.IsTrue(file1.Exists);
-         file2.Create();
+         SupportClass.FileSupport.CreateNewFile(file2);
+         file2.Refresh();
          Assert.IsTrue(file2.Exists);
          StatusCounter.sleep(4000);
+         file.Refresh();
+         file1.Refresh();
+         file2.Refresh();
          Assert.IsFalse(file.Exists);
          Assert.IsFalse(file1.Exists);
          Assert.IsTrue(file2.Exists);
@@ -209,14 +232,21 @@ namespace org.cip4.jdflib.util
       public virtual void testDir()
       {
          hf = new HotFolder(theHF, ".txt,.xml", new MyListener(true));
-         FileInfo file = new FileInfo(theHF + "f1.txt");
-         FileInfo file1 = new FileInfo(theHF + "f2.xml" + "/f1.xml");
-         DirectoryInfo file2 = new DirectoryInfo(theHF + "f2.xml");
-         file.Create();
+         FileInfo file = new FileInfo(theHF + Path.DirectorySeparatorChar.ToString() + "f1.txt");
+         FileInfo file1 = new FileInfo(theHF + Path.DirectorySeparatorChar.ToString() + "f2.xml"
+            + Path.DirectorySeparatorChar.ToString() + "f1.xml");
+         DirectoryInfo file2 = new DirectoryInfo(theHF + Path.DirectorySeparatorChar.ToString() + "f2.xml");
+         SupportClass.FileSupport.CreateNewFile(file);
+         file.Refresh();
          file2.Create();
-         file1.Create();
+         file2.Refresh();
+         SupportClass.FileSupport.CreateNewFile(file1);
+         file1.Refresh();
          Assert.IsTrue(file.Exists);
-         StatusCounter.sleep(3000);
+         StatusCounter.sleep(5000);
+         file.Refresh();
+         file1.Refresh();
+         file2.Refresh();
          Assert.IsFalse(file.Exists);
          Assert.IsTrue(file1.Exists, "in subdir");
          Assert.IsTrue(file2.Exists);
@@ -227,10 +257,12 @@ namespace org.cip4.jdflib.util
       public virtual void testStartNullDelete()
       {
          hf = new HotFolder(theHF, null, new MyListener(true));
-         FileInfo file = new FileInfo(theHF + "f1.txt");
-         file.Create();
+         FileInfo file = new FileInfo(theHF + Path.DirectorySeparatorChar.ToString() + "f1.txt");
+         SupportClass.FileSupport.CreateNewFile(file);
+         file.Refresh();
          Assert.IsTrue(file.Exists);
          StatusCounter.sleep(3000);
+         file.Refresh();
          Assert.IsFalse(file.Exists);
       }
 
@@ -239,8 +271,9 @@ namespace org.cip4.jdflib.util
       public virtual void testBig()
       {
          hf = new HotFolder(theHF, null, new MyListener(true));
-         FileInfo file = new FileInfo(theHF + "f1.txt");
-         file.Create();
+         FileInfo file = new FileInfo(theHF + Path.DirectorySeparatorChar.ToString() + "f1.txt");
+         SupportClass.FileSupport.CreateNewFile(file);
+         file.Refresh();
          Assert.IsTrue(file.Exists);
 
          FileStream fos = new FileStream(file.FullName, FileMode.Open);
@@ -254,10 +287,12 @@ namespace org.cip4.jdflib.util
             StatusCounter.sleep(10);
 
          }
+         file.Refresh();
          Assert.IsTrue(file.Exists);
          fos.Close();
 
          StatusCounter.sleep(3000);
+         file.Refresh();
          Assert.IsFalse(file.Exists);
       }
 
