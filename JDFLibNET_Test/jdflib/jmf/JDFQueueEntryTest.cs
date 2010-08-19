@@ -163,30 +163,30 @@ namespace org.cip4.jdflib.jmf
          q.setMaxCompletedEntries(9999);
          int l = q.numEntries(null);
          qe.setQueueEntryStatus(EnumQueueEntryStatus.Completed);
-         Assert.AreEqual(1, q.numEntries(null));
+         Assert.AreEqual(l, q.numEntries(null));
          Assert.IsTrue(qe.hasAttribute(AttributeName.ENDTIME));
          Assert.AreEqual(3, q.getQueueEntryPos("qe2"));
          Assert.AreEqual(EnumQueueStatus.Waiting, q.getQueueStatus(), "3 is max");
          qe.setQueueEntryStatus(EnumQueueEntryStatus.Running);
          Assert.AreEqual(EnumQueueStatus.Waiting, q.getQueueStatus(), "3 is max");
-         Assert.AreEqual(1, q.numEntries(null));
+         Assert.AreEqual(l, q.numEntries(null));
          Assert.AreEqual(0, q.getQueueEntryPos("qe2"));
          qe = q.getQueueEntry("qe1");
          qe.setQueueEntryStatus(EnumQueueEntryStatus.Running);
          Assert.AreEqual(EnumQueueStatus.Running, q.getQueueStatus(), "3 is max");
-         Assert.AreEqual(1, q.numEntries(null));
+         Assert.AreEqual(l, q.numEntries(null));
          Assert.AreEqual(1, q.getQueueEntryPos("qe1"));
 
          qe = q.getQueueEntry("qe5");
          qe.setQueueEntryStatus(EnumQueueEntryStatus.Aborted);
          Assert.AreEqual(EnumQueueStatus.Waiting, q.getQueueStatus(), "3 is max");
-         Assert.AreEqual(1, q.numEntries(null));
+         Assert.AreEqual(l, q.numEntries(null));
          Assert.AreEqual(4, q.getQueueEntryPos("qe5"));
 
          qe = q.getQueueEntry("qe1");
          qe.setQueueEntryStatus(EnumQueueEntryStatus.Aborted);
          Assert.AreEqual(EnumQueueStatus.Waiting, q.getQueueStatus(), "3 is max");
-         Assert.AreEqual(1, q.numEntries(null));
+         Assert.AreEqual(l, q.numEntries(null));
          Assert.AreEqual(3, q.getQueueEntryPos("qe1"));
 
          qe.setQueueEntryStatus(EnumQueueEntryStatus.Removed);
