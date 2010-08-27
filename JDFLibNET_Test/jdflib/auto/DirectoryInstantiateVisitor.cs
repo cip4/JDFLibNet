@@ -102,7 +102,7 @@ namespace org.cip4.jdflib.auto
          string prefix = elementName.StartsWith("JDFAuto") ? "JDFAuto" : "JDF";
 
          //.Net Substring different than java substring.
-         elementName = elementName.Substring(prefix.Length, elementName.Length - ".java".Length - prefix.Length);
+         elementName = elementName.Substring(prefix.Length, elementName.Length - ".cs".Length - prefix.Length);
 
       // adjust the element name
          if (elementName.StartsWith("Span"))
@@ -122,7 +122,7 @@ namespace org.cip4.jdflib.auto
          string createdClass = kElem.GetType().ToString();
          createdClass = createdClass.Substring(createdClass.LastIndexOf(".") + 1);
 
-         result = fileName.Equals(createdClass + ".java") || (fileName.StartsWith("JDFAuto") && createdClass.Equals(JDFConstants.JDFELEMENT)) || fileName.Equals(JDFConstants.JDFNODE) || !createdClass.Equals(JDFConstants.JDFELEMENT);
+         result = fileName.Equals(createdClass + ".cs") || (fileName.StartsWith("JDFAuto") && createdClass.Equals(JDFConstants.JDFELEMENT)) || fileName.Equals(JDFConstants.JDFNODE) || !createdClass.Equals(JDFConstants.JDFELEMENT);
 
          if (!result)
          {

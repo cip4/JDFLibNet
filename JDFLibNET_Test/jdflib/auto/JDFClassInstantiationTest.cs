@@ -127,7 +127,7 @@ namespace org.cip4.jdflib.auto
          //      else 
          //      { 
          //         VString ignoreList = new VString("JDFConstants.java JDFDoc.java JDFDocumentBuilder.java " + "JDFException.java JDFParser.java JDFVersions.java JDFAbstractState.java " + "JDFEvaluation.java JDFNodeTerm.java JDFTerm.java JDFEnumerationSpan.java " + "JDFSpan.java JDFSpanBase.java " + "JDFDurationSpan.java JDFIntegerSpan.java JDFNameSpan.java JDFNumberSpan.java " + "JDFOptionSpan.java JDFShapeSpan.java JDFSpanNamedColor.java " + "JDFStringSpan.java JDFTimeSpan.java JDFXYPairSpan.java " + "JDFResourceLink.java " + "JDFPool.java", null); 
-         //         acceptFile = !ignoreList.Contains(name) && name.StartsWith("JDF") && name.ToLower().EndsWith(".java"); 
+         //         acceptFile = !ignoreList.Contains(name) && name.StartsWith("JDF") && name.ToLower().EndsWith(".cs"); 
          //      } 
          //      return acceptFile;      
          //    }
@@ -159,10 +159,10 @@ namespace org.cip4.jdflib.auto
 ///	 * elementName instantiate the corresponding class (using
 ///	 * jdfRoot.appendElement(elementName) and factory DocumentJDFImpl.java)
 ///	 * 
-///	 * Then createdClass+".java" should be equal to fileName, i.e. the factory
+///	 * Then createdClass+".cs" should be equal to fileName, i.e. the factory
 ///	 * DocumentJDFImpl creates a class at the correct point in the hierarchy
 ///	 * 
-///	 * result = fileName.equals(createdClass + ".java") ||
+///	 * result = fileName.equals(createdClass + ".cs") ||
 ///	 * (fileName.startsWith("JDFAuto") &&
 ///	 * createdClass.equals(JDFConstants.JDFELEMENT)) ||
 ///	 * fileName.equals(JDFConstants.JDFNODE) ||
@@ -172,7 +172,7 @@ namespace org.cip4.jdflib.auto
       [TestMethod]
       public virtual void testDirectoryInstantiateVisitor()
       {
-         string[] args = { "./src/org/cip4/jdflib" };
+         string[] args = { "../../../../JDFLibNET/jdflib" };
 
          try
          {
@@ -204,7 +204,7 @@ namespace org.cip4.jdflib.auto
          //      } 
          //      else 
          //      { 
-         //         acceptFile = name.StartsWith("JDFAuto") && name.ToLower().EndsWith(".java"); 
+         //         acceptFile = name.StartsWith("JDFAuto") && name.ToLower().EndsWith(".cs"); 
          //      } 
          //      return acceptFile; 
          //   } 
@@ -238,7 +238,7 @@ namespace org.cip4.jdflib.auto
       [TestMethod]
       public virtual void testAutoClasses()
       {
-         string[] args = { "./src/org/cip4/jdflib/auto" };
+         string[] args = { "../../../../JDFLibNET/jdflib/auto" };
 
       // check that every auto class has a corresponding class
          try
