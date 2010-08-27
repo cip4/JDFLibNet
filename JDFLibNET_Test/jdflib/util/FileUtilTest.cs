@@ -131,7 +131,7 @@ namespace org.cip4.jdflib.util
             for (int i = 0; i < 3; i++)
             {
                FileInfo f2 = new FileInfo(Path.Combine(f.FullName, i + "." + c));
-               f2.Create();
+               SupportClass.FileSupport.CreateNewFile(f2);
                f2.Refresh();
                Assert.IsTrue(f2.Exists);
             }
@@ -143,10 +143,10 @@ namespace org.cip4.jdflib.util
          Assert.AreEqual(18, FileUtil.listFilesWithExtension(f, null).Length);
          Assert.IsNull(FileUtil.listFilesWithExtension(f, "CC"));
          Assert.IsNull(FileUtil.listFilesWithExtension(f, ".CC,.dd"));
-         new FileInfo(Path.Combine(f.FullName, "a")).Create();
+         SupportClass.FileSupport.CreateNewFile(new FileInfo(Path.Combine(f.FullName, "a")));
          Assert.AreEqual(19, FileUtil.listFilesWithExtension(f, null).Length);
          Assert.AreEqual(1, FileUtil.listFilesWithExtension(f, ".").Length);
-         new FileInfo(Path.Combine(f.FullName, "b.")).Create();
+         SupportClass.FileSupport.CreateNewFile(new FileInfo(Path.Combine(f.FullName, "b.")));
          Assert.AreEqual(2, FileUtil.listFilesWithExtension(f, ".").Length);
       }
 
@@ -167,7 +167,7 @@ namespace org.cip4.jdflib.util
          f1.Refresh();
          Assert.IsTrue(f1.Exists);
          FileInfo f2 = new FileInfo(Path.Combine(Path.Combine(sm_dirTestDataTemp, "foo"), "bar2"));
-         f2.Create();
+         SupportClass.FileSupport.CreateNewFile(f2);
          f2.Refresh();
          Assert.IsTrue(f2.Exists);
          Assert.AreEqual(1, FileUtil.listDirectories(f).Length);

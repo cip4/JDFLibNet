@@ -569,7 +569,7 @@ namespace org.cip4.jdflib.util
          JDFCommand com = (JDFCommand)jmf.appendMessageElement(JDFMessage.EnumFamily.Command, JDFMessage.EnumType.SubmitQueueEntry);
          com.appendQueueSubmissionParams().setURL("TheJDF");
          FileInfo fBigger = new FileInfo(bigger);
-         fBigger.Create();
+         SupportClass.FileSupport.CreateNewFile(fBigger);
          FileStream fis = new FileStream(big, FileMode.Open);
          FileStream fos = new FileStream(bigger, FileMode.Create);
          byte[] b = new byte[10000];

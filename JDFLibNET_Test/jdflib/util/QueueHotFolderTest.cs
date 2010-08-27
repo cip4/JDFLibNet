@@ -134,7 +134,8 @@ namespace org.cip4.jdflib.util
          MyListener myListener = new MyListener();
          FileInfo file = new FileInfo(theHF + "f1.txt");
          FileInfo stFile = new FileInfo(theStorage +  "f1.txt");
-         file.Create();
+         SupportClass.FileSupport.CreateNewFile(file);
+         file.Refresh();
          Assert.IsTrue(file.Exists);
          Assert.IsFalse(stFile.Exists);
          hf = new QueueHotFolder(theHF, theStorage, null, myListener, null);
@@ -154,7 +155,8 @@ namespace org.cip4.jdflib.util
          MyListener myListener = new MyListener();
          FileInfo file = new FileInfo(theHF + "f1.txt");
          FileInfo stFile = new FileInfo(theStorage + "f1.txt");
-         file.Create();
+         SupportClass.FileSupport.CreateNewFile(file);
+         file.Refresh();
          Assert.IsTrue(file.Exists);
          Assert.IsFalse(stFile.Exists);
          hf = new QueueHotFolder(theHF, theStorage, null, myListener, null);

@@ -217,7 +217,8 @@ namespace org.cip4.jdflib.util
             FileInfo f = new FileInfo("4А5%дц.txt");
             FileInfo f2 = FileUtil.getFileInDirectory(new DirectoryInfo(sm_dirTestDataTemp), f);
             f2.Delete();
-            f2.Create();
+            SupportClass.FileSupport.CreateNewFile(f2);
+            f2.Refresh();
             Assert.IsTrue(f2.Exists);
             string url = UrlUtil.fileToUrl(f2, i == 0);
             XMLDoc doc = new XMLDoc("URL", null);
