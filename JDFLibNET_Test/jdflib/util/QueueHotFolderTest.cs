@@ -132,15 +132,17 @@ namespace org.cip4.jdflib.util
       public virtual void testSubmitSingleFile()
       {
          MyListener myListener = new MyListener();
-         FileInfo file = new FileInfo(theHF + "f1.txt");
-         FileInfo stFile = new FileInfo(theStorage +  "f1.txt");
+         FileInfo file = new FileInfo(theHF + Path.DirectorySeparatorChar.ToString() + "f1.txt");
+         FileInfo stFile = new FileInfo(theStorage + Path.DirectorySeparatorChar.ToString() + "f1.txt");
          SupportClass.FileSupport.CreateNewFile(file);
          file.Refresh();
          Assert.IsTrue(file.Exists);
          Assert.IsFalse(stFile.Exists);
          hf = new QueueHotFolder(theHF, theStorage, null, myListener, null);
          StatusCounter.sleep(3000);
+         file.Refresh();
          Assert.IsFalse(file.Exists);
+         stFile.Refresh();
          Assert.IsTrue(stFile.Exists);
          Assert.AreEqual(1, myListener.vJMF.Count);
          JDFJMF elementAt = (JDFJMF)myListener.vJMF[0];
@@ -153,8 +155,8 @@ namespace org.cip4.jdflib.util
       public virtual void teststopStart()
       {
          MyListener myListener = new MyListener();
-         FileInfo file = new FileInfo(theHF + "f1.txt");
-         FileInfo stFile = new FileInfo(theStorage + "f1.txt");
+         FileInfo file = new FileInfo(theHF + Path.DirectorySeparatorChar.ToString() + "f1.txt");
+         FileInfo stFile = new FileInfo(theStorage + Path.DirectorySeparatorChar.ToString() + "f1.txt");
          SupportClass.FileSupport.CreateNewFile(file);
          file.Refresh();
          Assert.IsTrue(file.Exists);
@@ -162,12 +164,16 @@ namespace org.cip4.jdflib.util
          hf = new QueueHotFolder(theHF, theStorage, null, myListener, null);
          hf.stop();
          StatusCounter.sleep(3000);
+         file.Refresh();
          Assert.IsTrue(file.Exists);
+         stFile.Refresh();
          Assert.IsFalse(stFile.Exists, "FileInfo is still there after stop");
          Assert.AreEqual(0, myListener.vJMF.Count);
          hf.restart();
          StatusCounter.sleep(3000);
+         file.Refresh();
          Assert.IsFalse(file.Exists, "FileInfo is gone after stop");
+         stFile.Refresh();
          Assert.IsTrue(stFile.Exists);
          Assert.AreEqual(1, myListener.vJMF.Count);
          JDFJMF elementAt = (JDFJMF)myListener.vJMF[0];
