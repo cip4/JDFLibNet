@@ -370,14 +370,17 @@ namespace org.cip4.jdflib
       {
          // Write temp JMF
          string jmf = "<?xml version='1.0' encoding='UTF-8'?><JMF xmlns='http://www.CIP4.org/JDFSchema_1_1' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'  SenderID='Alces' TimeStamp='2004-08-30T17:23:00+01:00' Version='1.2'><Query ID='M001' Type='KnownDevices' xsi:type='QueryKnownDevices'><DeviceFilter DeviceDetails='None'/></Query></JMF>";
-         FileInfo jmfFile = new FileInfo("Query-KnownDevices.jmf");
+         FileInfo jmfFile = new FileInfo(Path.Combine(Path.GetTempPath(), "Query-KnownDevices.jmf"));
+         SupportClass.FileSupport.CreateNewFile(jmfFile);
          // jmfFile.deleteOnExit();
          StreamWriter @out = new StreamWriter(new FileStream(jmfFile.FullName, FileMode.Open));
          @out.Write(jmf);
          @out.Close();
+         jmfFile.Refresh();
          Assert.IsTrue(jmfFile.Exists);
 
-         FileInfo reportFile = new FileInfo("Queue-KnownDevices-report.xml");
+         FileInfo reportFile = new FileInfo(Path.Combine(Path.GetTempPath(), "Queue-KnownDevices-report.xml"));
+         SupportClass.FileSupport.CreateNewFile(reportFile);
          // reportFile.deleteOnExit();
 
          // Run JDFValidator
@@ -388,6 +391,7 @@ namespace org.cip4.jdflib
          Assert.AreEqual("true", dRoot.getXPathAttribute("/CheckOutput/TestFile/CheckJDFOutput/@IsValid", null));
 
          // Check that report exists
+         reportFile.Refresh();
          Assert.IsTrue(reportFile.Exists);
          jmfFile.Delete();
          reportFile.Delete();
