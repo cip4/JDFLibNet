@@ -94,7 +94,7 @@ namespace org.cip4.jdflib.elementwalker
          : base(_theFactory)
       {
          string name = this.GetType().Name;
-         constructWalkers(name + "$Walk");
+         constructWalkers(name + "+Walk");
       }
 
       ///   
@@ -113,7 +113,7 @@ namespace org.cip4.jdflib.elementwalker
             {
                try
                {
-                  ConstructorInfo con = cs[i].GetConstructor(BindingFlags.DeclaredOnly, null, new System.Type[] { this.GetType() }, null);
+                  ConstructorInfo con = cs[i].GetConstructor(new System.Type[] {this.GetType()});
                   con.Invoke(new System.Object[] { this });
                }
                catch (Exception x)
