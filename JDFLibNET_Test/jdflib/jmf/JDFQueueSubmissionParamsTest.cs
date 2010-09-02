@@ -174,8 +174,9 @@ namespace org.cip4.jdflib.jmf
       {
          qsp.setReturnURL((Uri)null);
          Assert.IsFalse(qsp.hasAttribute(AttributeName.RETURNURL));
-         qsp.setReturnURL(new Uri("http://localhost"));
-         Assert.AreEqual("http://localhost", qsp.getReturnURL());
+         //C# Uri forces a '/' at the end of the host.
+         qsp.setReturnURL(new Uri("http://localhost/"));
+         Assert.AreEqual("http://localhost/", qsp.getReturnURL());
       }
 
 
@@ -184,8 +185,9 @@ namespace org.cip4.jdflib.jmf
       {
          qsp.setReturnJMF((Uri)null);
          Assert.IsFalse(qsp.hasAttribute(AttributeName.RETURNJMF));
-         qsp.setReturnJMF(new Uri("http://localhost"));
-         Assert.AreEqual("http://localhost", qsp.getReturnJMF());
+         //C# Uri forces a '/' at the end of the host.
+         qsp.setReturnJMF(new Uri("http://localhost/"));
+         Assert.AreEqual("http://localhost/", qsp.getReturnJMF());
       }
    }
 }

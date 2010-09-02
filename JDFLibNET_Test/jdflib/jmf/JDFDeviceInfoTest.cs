@@ -94,6 +94,7 @@ namespace org.cip4.jdflib.jmf
    {
       private JDFDeviceInfo di;
 
+      [TestInitialize]
       public override void setUp()
       {
          JDFElement.setLongID(false);
