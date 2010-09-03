@@ -325,10 +325,10 @@ namespace org.cip4.jdflib.util
          {
             string strIDs = "JDFNode.spawn: multiply spawned rw resources: ";
             VString vBad = new VString();
-            IEnumerator<JDFResource> iterCheck = (IEnumerator<JDFResource>)vCheck.GetEnumerator();
+            IEnumerator iterCheck = vCheck.GetEnumerator();
             while (iterCheck.MoveNext())
             {
-               vBad.appendUnique((iterCheck.Current).getAttribute(AttributeName.ID));
+               vBad.appendUnique(((JDFResource)iterCheck.Current).getAttribute(AttributeName.ID));
             }
             strIDs += StringUtil.setvString(vBad, JDFConstants.BLANK, null, null);
             throw new JDFException(strIDs, exMultiSpawnRW);
@@ -597,7 +597,7 @@ namespace org.cip4.jdflib.util
                SupportClass.HashSetSupport vvRO = new SupportClass.LinkedHashSet();
                SupportClass.HashSetSupport vvRW = new SupportClass.LinkedHashSet();
                if (rRoot == null)
-                  rRoot = (JDFResource)node.getTarget(refID, AttributeName.ID);
+                  rRoot = node.getTarget(refID, AttributeName.ID) as JDFResource;
 
                // check for null and throw an exception in picky mode
                if (rRoot == null)
