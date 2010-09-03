@@ -157,7 +157,7 @@ namespace org.cip4.jdflib.util
       public virtual void testParameterString()
       {
          string d = _myArgs.parameter("d");
-         Assert.AreEqual("/Users/clabu/Documents/workarea/Elk/testarea/jakarta-tomcat-5.0.30/temp/tENgU4Gh3huO2iVH9380.xml", d);
+         Assert.AreEqual(" /Users/clabu/Documents/workarea/Elk/testarea/jakarta-tomcat-5.0.30/temp/tENgU4Gh3huO2iVH9380.xml", d);
       }
 
       //   
