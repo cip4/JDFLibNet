@@ -238,7 +238,7 @@ namespace org.cip4.jdflib.examples
          VString v = new VString("orig fullList end", null);
          for (int i = 0; i < v.Count; i++)
          {
-            setUp();
+            reSetUp();
             string testType = v.stringAt(i);
             JDFAuditPool ap = n.getCreateAuditPool();
             ap.appendXMLComment("JDF 1.3 incompatible auditing of module phases the REQUIRED time attributes are not set in the ModulePhase elements\n" + "- note that phases may now arbitrarily overlap\n" + "The modulePhase elements now only specify which modules are involved, times are all defined by the phasetime proper", null);
@@ -654,6 +654,16 @@ namespace org.cip4.jdflib.examples
       public override void setUp()
       {
          base.setUp();
+
+         reSetUp();
+      }
+
+      /// <summary>
+      /// All the setUp calls except for base.setUp.
+      /// Use when you want to redo a setup without doign a teardown.
+      /// </summary>
+      public void reSetUp()
+      {
          JDFElement.setLongID(false);
          JDFAudit.setStaticAgentName(null);
          JDFAudit.setStaticAgentVersion(null);
@@ -671,7 +681,6 @@ namespace org.cip4.jdflib.examples
          med.setResStatus(EnumResStatus.Available, false);
          rlMedia = n.getLink(med, null);
          ruli = (JDFRunList)n.appendMatchingResource(ElementName.RUNLIST, EnumProcessUsage.AnyInput, null);
-
       }
    }
 }

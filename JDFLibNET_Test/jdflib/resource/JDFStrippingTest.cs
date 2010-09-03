@@ -107,6 +107,16 @@ namespace org.cip4.jdflib.resource
       public override void setUp()
       {
          base.setUp();
+
+         reSetUp();
+      }
+
+      /// <summary>
+      /// All the setUp calls except for base.setUp.
+      /// Use when you want to redo a setup without doign a teardown.
+      /// </summary>
+      public void reSetUp()
+      {
          JDFElement.setLongID(false);
          doc = new JDFDoc("JDF");
          n = doc.getJDFRoot();
@@ -116,7 +126,6 @@ namespace org.cip4.jdflib.resource
          bs = (JDFBinderySignature)n.addResource(ElementName.BINDERYSIGNATURE, null, null, null, null, null, null);
          sp.refBinderySignature(bs);
       }
-
 
       ///   
       ///	 <summary> * test how foldouts are generated
@@ -131,7 +140,7 @@ namespace org.cip4.jdflib.resource
          {
             if (i == 1)
                continue; // rejected by wg
-            setUp();
+            reSetUp();
             n.setXMLComment("Stripping Foldout example corresponding to spec example n.6.5 - verion: " + ((i == 0) ? "multi-Cell" : ((i == 1) ? "new attribute FoldOutTrimSize" : "new attribute FaceCells (Accepted for 1.4)")));
             rl.setNPage(6);
             sp.setResStatus(EnumResStatus.Available, true);

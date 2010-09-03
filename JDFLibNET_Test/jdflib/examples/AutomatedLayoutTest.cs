@@ -140,6 +140,16 @@ namespace org.cip4.jdflib.examples
       public override void setUp()
       {
          base.setUp();
+
+         reSetUp();
+      }
+
+      /// <summary>
+      /// All the setUp calls except for base.setUp.
+      /// Use when you want to redo a setup without doign a teardown.
+      /// </summary>
+      public void reSetUp()
+      {
          JDFElement.setLongID(false);
          JDFAudit.setStaticAgentName(null);
          JDFAudit.setStaticAgentVersion(null);
@@ -149,9 +159,7 @@ namespace org.cip4.jdflib.examples
          n = doc.getJDFRoot();
          n.setJobID("JobID");
          rl = (JDFRunList)n.addResource(ElementName.RUNLIST, null, EnumUsage.Input, null, null, null, null);
-
       }
-
 
       [TestMethod]
       public virtual void testAutomateLayout_PlateSet()
@@ -663,7 +671,7 @@ namespace org.cip4.jdflib.examples
             {
                if (i == 2 && j == 1)
                   continue; // no cut&stack centerfold
-               setUp();
+               reSetUp();
                n.setXMLComment("This is a simple Automated Booklet using negative ords and special handling oft the cover\n" + "New Attribute @OrdsConsumed limits the number of ords consumed by an automated Layout\n" + "Negative Ord values are assumed to flow backwards\n" + "MaxOrd is not specified and must be calculated by counting the number of different ord values\n" + "If we want to keep maxord, it would have to be replaced by an xypair that specifies hom many are consumed from back and from front\n" + "If the number of pages is not mod 4, blank pages are retained at the back of the layout");
 
                setUpAutomatedInputRunList();
