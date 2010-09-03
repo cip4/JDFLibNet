@@ -145,7 +145,7 @@ namespace org.cip4.jdflib.util
       //	 
       public override double scanDouble(ScanfFormat fmt)
       {
-         if ("dxoi".IndexOf(Convert.ToChar(fmt.type)) >= 0) // also gracefully handle int as
+         if ("dxoi".IndexOf((char)fmt.type) >= 0) // also gracefully handle int as
             // double
             return scanLong(fmt);
          return base.scanDouble(fmt);
@@ -158,15 +158,15 @@ namespace org.cip4.jdflib.util
       //	 
       public override string scanString(ScanfFormat fmt)
       {
-         if ("di".IndexOf(Convert.ToChar(fmt.type)) >= 0) // also gracefully handle int as double
+         if ("di".IndexOf((char)fmt.type) >= 0) // also gracefully handle int as double
             return Convert.ToString(scanLong(fmt), 10);
-         if ("o".IndexOf(Convert.ToChar(fmt.type)) >= 0) // also gracefully handle int as double
+         if ("o".IndexOf((char)fmt.type) >= 0) // also gracefully handle int as double
             return Convert.ToString(scanLong(fmt), 8);
-         if ("x".IndexOf(Convert.ToChar(fmt.type)) >= 0) // also gracefully handle int as double
+         if ("x".IndexOf((char)fmt.type) >= 0) // also gracefully handle int as double
             return Convert.ToString(scanLong(fmt), 16);
-         if ("f".IndexOf(Convert.ToChar(fmt.type)) >= 0) // also gracefully handle int as double
+         if ("f".IndexOf((char)fmt.type) >= 0) // also gracefully handle int as double
             return Convert.ToString(scanDouble(fmt));
-         if ("c".IndexOf(Convert.ToChar(fmt.type)) >= 0) // also gracefully handle int as double
+         if ("c".IndexOf((char)fmt.type) >= 0) // also gracefully handle int as double
             return new string(scanChars(fmt));
          return base.scanString(fmt);
       }
@@ -193,9 +193,9 @@ namespace org.cip4.jdflib.util
          ScanfFormat fmt = new ScanfFormat(fmtString);
          try
          {
-            if ("dxoi".IndexOf(Convert.ToChar(fmt.type)) >= 0)
+            if ("dxoi".IndexOf((char)fmt.type) >= 0)
                return scanInt(fmt); //new int(scanInt(fmt));
-            if ("f".IndexOf(Convert.ToChar(fmt.type)) >= 0)
+            if ("f".IndexOf((char)fmt.type) >= 0)
                return scanDouble(fmt); // new double(scanDouble(fmt));
             return scanString(fmt);
          }

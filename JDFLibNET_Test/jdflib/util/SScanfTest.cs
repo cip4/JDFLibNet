@@ -110,7 +110,7 @@ namespace org.cip4.jdflib.util
          Assert.AreEqual(12, i2);
          o = SScanf.sscanf("abc55", "abc%o");
          i2 = (int)o[0];
-         Assert.AreEqual(55, i2);
+         Assert.AreEqual(45, i2); //055 = 45d. No octal in c#.
       }
 
 

@@ -1300,7 +1300,7 @@ namespace org.cip4.jdflib.cformat
             throw new ArgumentException("No conversion character");
          }
 
-         if (type.IndexOf(Convert.ToChar(fmt.type)) == -1)
+         if (type.IndexOf((char)fmt.type) == -1)
          {
             throw new ArgumentException("Illegal conversion character '" + (char)fmt.type + "'");
          }
@@ -1529,7 +1529,7 @@ namespace org.cip4.jdflib.cformat
             throw new EndOfStreamException("EOF");
          }
 
-         if (hexChars.IndexOf(Convert.ToChar(curChar)) == -1)
+         if (hexChars.IndexOf((char)curChar) == -1)
          {
             throw new ScanfMatchException("Malformed hex integer");
          }
@@ -1537,7 +1537,7 @@ namespace org.cip4.jdflib.cformat
          val = 0;
          i = 0;
 
-         while (((k = hexChars.IndexOf(Convert.ToChar(curChar))) != -1) && (i < widthLocal))
+         while (((k = hexChars.IndexOf((char)curChar)) != -1) && (i < widthLocal))
          {
             if (k > 15)
             {
@@ -1589,7 +1589,7 @@ namespace org.cip4.jdflib.cformat
             throw new EndOfStreamException("EOF");
          }
 
-         if (octChars.IndexOf(Convert.ToChar(curChar)) == -1)
+         if (octChars.IndexOf((char)curChar) == -1)
          {
             throw new ScanfMatchException("Malformed octal integer");
          }
@@ -1597,7 +1597,7 @@ namespace org.cip4.jdflib.cformat
          val = 0;
          i = 0;
 
-         while (((k = octChars.IndexOf(Convert.ToChar(curChar))) != -1) && (i < widthLocal))
+         while (((k = octChars.IndexOf((char)curChar)) != -1) && (i < widthLocal))
          {
             val = (val * 8) + k;
             consumeAndReplaceChar();
