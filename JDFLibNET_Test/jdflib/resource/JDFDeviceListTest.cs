@@ -102,6 +102,7 @@ namespace org.cip4.jdflib.resource
       [TestInitialize]
       public override void setUp()
       {
+         base.setUp();
          d = (JDFDeviceList)new JDFDoc("DeviceList").getRoot();
          d.appendDeviceInfo().appendDevice().setDeviceID("d1");
          d.appendDeviceInfo().setDeviceID("d2");

@@ -99,6 +99,7 @@ namespace org.cip4.jdflib.jmf
       [TestInitialize]
       public override void setUp()
       {
+         base.setUp();
          JDFElement.setLongID(false);
          doc = new JDFDoc(ElementName.JMF);
          jmf = doc.getJMFRoot();

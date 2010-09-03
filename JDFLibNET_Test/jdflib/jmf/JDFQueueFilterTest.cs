@@ -88,6 +88,7 @@ namespace org.cip4.jdflib.jmf
       [TestInitialize]
       public override void setUp()
       {
+         base.setUp();
          JDFDoc d = new JDFDoc(ElementName.QUEUE);
          theQueue = (JDFQueue)d.getRoot();
          d = new JDFDoc(ElementName.JMF);

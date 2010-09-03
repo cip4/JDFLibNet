@@ -97,6 +97,7 @@ namespace org.cip4.jdflib.jmf
       [TestInitialize]
       public override void setUp()
       {
+         base.setUp();
          JDFElement.setLongID(false);
          JDFDoc doc = new JDFDoc(ElementName.DEVICEINFO);
          di = (JDFDeviceInfo)doc.getRoot();

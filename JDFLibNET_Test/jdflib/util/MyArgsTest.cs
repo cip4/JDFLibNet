@@ -88,6 +88,7 @@ namespace org.cip4.jdflib.util
 
       internal MyArgs _myArgs;
 
+      [TestInitialize]
       public override void setUp()
       {
          base.setUp();

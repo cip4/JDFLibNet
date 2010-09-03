@@ -139,6 +139,7 @@ namespace org.cip4.jdflib.examples
       [TestInitialize]
       public override void setUp()
       {
+         base.setUp();
          JDFElement.setLongID(false);
          JDFAudit.setStaticAgentName(null);
          JDFAudit.setStaticAgentVersion(null);
