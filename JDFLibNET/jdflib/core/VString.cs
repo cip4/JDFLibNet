@@ -168,10 +168,13 @@ namespace org.cip4.jdflib.core
 
       // Java to C# Conversion - 
       public VString(ArrayList a)
-         : base(a.Count)
+         : base()
       {
-         for (int i = 0; i < a.Count; i++)
-            Add((string)a[i]);
+         if (a != null)
+         {
+            for (int i = 0; i < a.Count; i++)
+               Add(a[i].ToString());
+         }
       }
 
 
