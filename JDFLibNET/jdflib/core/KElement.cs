@@ -723,10 +723,7 @@ namespace org.cip4.jdflib.core
                else if (!@value.Equals(getInheritedAttribute(key, null, null)))
                {
                   bDirty = true;
-                  SetAttribute(key, @value);
-                  // Java to C# Conversion - Question - What is the point of this constant Namspace value, 
-                  //    when setting this namespace attribute value?
-                  // super.setAttributeNS(AttributeName.XMLNSURI, key, value);
+                  SetAttribute(key, AttributeName.XMLNSURI, value);
                   ((DocumentJDFImpl)OwnerDocument).setIgnoreNSDefault(false);
                }
             }
@@ -884,10 +881,10 @@ namespace org.cip4.jdflib.core
          }
          else
          {
-            XmlAttribute attr = SetAttributeNode(xmlnsLocalName(key), namespaceURI);
+            XmlAttribute attr = OwnerDocument.CreateAttribute(prefix, xmlnsLocalName(key), namespaceURI);
             if (attr != null)
             {
-               attr.Prefix = prefix;
+               this.Attributes.Append(attr);
                attr.Value = value;
                return attr.Value;
             }
