@@ -1546,6 +1546,12 @@ public class SupportClass
       /// <returns>True or false, depending if there are more tokens</returns>
       public bool HasMoreTokens()
       {
+         //at the end. Short circuit.
+         if (this.currentPos == this.chars.Length)
+         {
+            return false;
+         }
+
          //keeping the current pos
          long pos = this.currentPos;
 
