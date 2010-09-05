@@ -553,7 +553,7 @@ namespace org.cip4.jdflib.util
          if (urlStringLocal.ToLower().StartsWith("file:"))
             urlStringLocal = urlStringLocal.Substring(5); // remove "file:"
 
-         if (File.Exists(urlStringLocal))
+         if (File.Exists(urlStringLocal) || Directory.Exists(urlStringLocal))
             return new FileInfo(urlStringLocal);
 
          if (Path.DirectorySeparatorChar.Equals('\\')) // on windows
@@ -563,6 +563,9 @@ namespace org.cip4.jdflib.util
             else if (urlStringLocal.StartsWith("/") && urlStringLocal.Length > 3 && urlStringLocal[2] == '/'
                     && urlStringLocal[1] != '/')
                urlStringLocal = urlStringLocal[1] + ":" + urlStringLocal.Substring(2);
+            else if (urlStringLocal.StartsWith("/") && urlStringLocal.Length > 3 && urlStringLocal[1] != '/'
+                    && urlStringLocal[2] == ':')
+               urlStringLocal = urlStringLocal.Substring(1);
             else if (urlStringLocal.StartsWith("///"))
                urlStringLocal = urlStringLocal.Substring(3);
 

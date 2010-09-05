@@ -962,7 +962,7 @@ namespace org.cip4.jdflib.util
          if (urlStringLocal.EndsWith(">"))
             urlStringLocal = urlStringLocal.Substring(0, urlStringLocal.Length - 1);
 
-         return "cid:" + new FileInfo(urlStringLocal).Name;
+         return "cid:" + UrlUtil.urlToFile(urlStringLocal).Name;
       }
 
 
