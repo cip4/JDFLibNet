@@ -196,12 +196,9 @@ namespace org.cip4.jdflib.util
          // map.put(EnumPartIDKey.SheetName, "Sht1");
          VJDFAttributeMap v = new VJDFAttributeMap();
          v.Add(map);
-         ArrayList vRW = new ArrayList();
-         vRW.Add("Output");
-         vRW.Add(null);
-
+         VString vRW = new VString("Output", null);
          JDFSpawn spawn = new JDFSpawn(fold);
-         JDFNode spawned = spawn.spawn(null, null, vRW, v, true, true, true, true);
+         JDFNode spawned = spawn.spawn(null, null, new ArrayList(vRW), v, true, true, true, true);
 
          JDFComponent spCompOut = (JDFComponent)spawned.getMatchingLink("Component", EnumProcessUsage.AnyOutput, 0).getLinkRoot();
          Assert.IsTrue(spCompOut.isValid(EnumValidationLevel.Incomplete), "partition structure is zapped");
@@ -230,9 +227,7 @@ namespace org.cip4.jdflib.util
                cMap.put(EnumPartIDKey.Side, "Front");
                VJDFAttributeMap v = new VJDFAttributeMap();
                v.Add(cMap);
-               ArrayList vRW = new ArrayList();
-               vRW.Add("Output");
-               vRW.Add(null);
+               VString vRW = new VString("Output", null);
 
                JDFNodeInfo ni = cp.appendNodeInfo();
                JDFNodeInfo ni2 = (JDFNodeInfo)ni.getCreatePartition(cMap, new VString("SignatureName SheetName Side", " "));
@@ -250,7 +245,7 @@ namespace org.cip4.jdflib.util
                {
                   spawn.bFixResources = false;
                }
-               JDFNode spawned = spawn.spawn(null, null, vRW, v, true, true, true, true);
+               JDFNode spawned = spawn.spawn(null, null, new ArrayList(vRW), v, true, true, true, true);
 
                JDFComponent spCompOut = (JDFComponent)spawned.getMatchingLink("Component", EnumProcessUsage.AnyOutput, 0).getLinkRoot();
                if (i == 0)
@@ -1152,11 +1147,8 @@ namespace org.cip4.jdflib.util
             string pid = n2.getJobPartID(false);
             Assert.AreNotEqual("", pid);
 
-            ArrayList vRW = new ArrayList();
-            vRW.Add("Component");
-            vRW.Add(null);
-
-            JDFNode spawnedNode = spawn.spawn("thisUrl", "newURL", vRW, null, false, true, true, true);
+            JDFNode spawnedNode = spawn.spawn("thisUrl", "newURL", new ArrayList(new VString(
+               "Component", null)), null, false, true, true, true);
             spawnedNode.getCreateAuditPool().addNotification(null, null, null).appendComment().setText("notification 3 sub");
             Assert.IsTrue(spawnedNode.ToString().IndexOf(AttributeName.SPAWNSTATUS) < 0, "no spawnStatus");
             JDFResourceLink cLink = spawnedNode.getMatchingLink(ElementName.COMPONENT, null, 0);
@@ -1506,7 +1498,7 @@ namespace org.cip4.jdflib.util
       {
          JDFDoc d = new JDFDoc("JDF");
          JDFNode n = d.getJDFRoot();
-         Assert.AreEqual("null cid", n.getInheritedCustomerInfo("@CustomerOrderID"), null);
+         Assert.AreEqual(n.getInheritedCustomerInfo("@CustomerOrderID"), null, "null cid");
          n.setType("ProcessGroup", false);
          VString v = new VString();
          v.Add("Interpreting");
