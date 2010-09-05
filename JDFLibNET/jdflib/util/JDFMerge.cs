@@ -695,7 +695,8 @@ namespace org.cip4.jdflib.util
                // (m_ParentNode.getChildByTagName(ElementName.SPAWNED, null, 0,
                // new JDFAttributeMap(AttributeName.NEWSPAWNID,resSpawnID),
                // false, true));
-               JDFSpawned spawnedAudit = newSpawnMap[resSpawnID];
+               JDFSpawned spawnedAudit;
+               newSpawnMap.TryGetValue(resSpawnID, out spawnedAudit);
                if (spawnedAudit != null)
                {
                   VString rw = spawnedAudit.getrRefsRWCopied();
