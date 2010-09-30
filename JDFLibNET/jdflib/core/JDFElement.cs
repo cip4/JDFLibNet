@@ -155,7 +155,8 @@ namespace org.cip4.jdflib.core
          atrInfoTable[5] = new AtrInfoTable(AttributeName.OPERATORINTERVENTIONEXCEPTIONS, 0x33333331, AttributeInfo.EnumAttributeType.NMTOKENS, null, null);
          elemInfoTable[0] = new ElemInfoTable(ElementName.COMMENT, 0x33333333);
       }
-      private static readonly string dateFormatter = "yyMMdd_kkmmssSS";
+      // Java to C# Conversion - Note: No .Net equivalent for kk.
+      private const string dateFormatter = "yyMMdd_HHmmssSS"; //note that C# HH is 0..23, while java kk is 1..24
 
       protected internal override AttributeInfo getTheAttributeInfo()
       {
