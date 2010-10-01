@@ -499,7 +499,7 @@ namespace org.cip4.jdflib.auto
       ///          <summary> * (36) set attribute Manufacturer </summary>
       ///          * <param name="value">: the value to set the attribute to </param>
       ///          
-      public virtual void setManufacturer(string @value)
+      public override void setManufacturer(string @value)
       {
          setAttribute(AttributeName.MANUFACTURER, @value, null);
       }
@@ -508,7 +508,7 @@ namespace org.cip4.jdflib.auto
       ///          <summary> * (23) get String attribute Manufacturer </summary>
       ///          * <returns> the value of the attribute </returns>
       ///          
-      public virtual string getManufacturer()
+      public override string getManufacturer()
       {
          return getAttribute(AttributeName.MANUFACTURER, null, JDFConstants.EMPTYSTRING);
       }

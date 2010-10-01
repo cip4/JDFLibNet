@@ -5529,6 +5529,23 @@ namespace org.cip4.jdflib.resource
          return getBoolAttribute(AttributeName.LOCKED, null, false);
       }
 
+      /// <summary>
+      /// Sets attribute Manufacturer.
+      /// </summary>
+      /// <param name="value">The value to set the attribute to.</param>
+      public virtual void setManufacturer(string value)
+      {
+         setAttribute(AttributeName.MANUFACTURER, value);
+      }
+      /// <summary>
+      /// Gets string attribute Manufacturer.
+      /// </summary>
+      /// <returns>String - the attribute value.</returns>
+      public virtual string getManufacturer()
+      {
+         return getAttribute(AttributeName.MANUFACTURER, null, JDFConstants.EMPTYSTRING);
+      }
+
       ///   
       ///	 <summary> * Sets attribute NoOp
       ///	 *  </summary>
