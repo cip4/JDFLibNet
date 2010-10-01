@@ -6047,9 +6047,9 @@ namespace org.cip4.jdflib.resource
       ///	 *  </summary>
       ///	 * <param name="value"> value to set the attribute to </param>
       ///	 
-      public virtual void setGrossWeight(double @value)
+      public virtual void setGrossWeight(double value)
       {
-         setAttribute(AttributeName.GROSSWEIGHT, Convert.ToString(@value)); //double.ToString(@value));
+         setAttribute(AttributeName.GROSSWEIGHT, value, null); //double.ToString(@value));
       }
 
       ///   
@@ -6067,9 +6067,9 @@ namespace org.cip4.jdflib.resource
       ///	 *  </summary>
       ///	 * <param name="value"> value to set the attribute to </param>
       ///	 
-      public virtual void setResourceWeight(double @value)
+      public virtual void setResourceWeight(double value)
       {
-         setAttribute(AttributeName.GROSSWEIGHT, Convert.ToString(@value)); //double.ToString(@value));
+         setAttribute(AttributeName.GROSSWEIGHT, value, null); //double.ToString(@value));
       }
 
       ///   

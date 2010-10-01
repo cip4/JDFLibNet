@@ -331,7 +331,7 @@ namespace org.cip4.jdflib.datatypes
          { // Parse Points in s
             for (int i = 0; i < paramNum; i++)
             {
-               x[i] = Single.Parse(s[i].ToString());
+               x[i] = Single.Parse(Convert.ToString(s[i], CultureInfo.InvariantCulture), CultureInfo.InvariantCulture);
             }
          }
          catch (FormatException e)
@@ -345,8 +345,8 @@ namespace org.cip4.jdflib.datatypes
             PointF currentPoint = m_GPI.GetLastPoint();
             if (currentPoint != null)
             {
-               a[0] = Single.Parse(JDFConstants.EMPTYSTRING + currentPoint.X);
-               a[1] = Single.Parse(JDFConstants.EMPTYSTRING + currentPoint.Y);
+               a[0] = Single.Parse(JDFConstants.EMPTYSTRING + Convert.ToString(currentPoint.X, CultureInfo.InvariantCulture), CultureInfo.InvariantCulture);
+               a[1] = Single.Parse(JDFConstants.EMPTYSTRING + Convert.ToString(currentPoint.Y, CultureInfo.InvariantCulture), CultureInfo.InvariantCulture);
             }
          }
          catch (FormatException)
