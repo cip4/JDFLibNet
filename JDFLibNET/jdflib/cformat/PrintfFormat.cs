@@ -85,6 +85,7 @@
 namespace org.cip4.jdflib.cformat
 {
    using System;
+   using System.Globalization;
    using System.Text;
 
    using StringUtil = org.cip4.jdflib.util.StringUtil;
@@ -661,7 +662,7 @@ namespace org.cip4.jdflib.cformat
 
             if ((prec != 0) || (xLocal != 0))
             {
-               output.append(Convert.ToString(xLocal));
+               output.append(Convert.ToString(xLocal, CultureInfo.InvariantCulture));
             }
          }
          else if (type == 'u')
@@ -839,7 +840,7 @@ namespace org.cip4.jdflib.cformat
          output.append(((type == 'G') || (type == 'E')) ? 'E' : 'e');
          output.append((pdd.exp >= 0) ? '+' : '-');
 
-         string expStr = Convert.ToString(Math.Abs(pdd.exp));
+         string expStr = Convert.ToString(Math.Abs(pdd.exp), CultureInfo.InvariantCulture);
 
          if (expStr.Length < 2)
          {
@@ -929,7 +930,7 @@ namespace org.cip4.jdflib.cformat
          output.append((type == 'A') ? 'P' : 'p');
          output.append((e >= 0) ? '+' : '-');
 
-         string expStr = Convert.ToString(Math.Abs(e));
+         string expStr = Convert.ToString(Math.Abs(e), CultureInfo.InvariantCulture);
          output.append(expStr);
       }
 
@@ -1183,7 +1184,7 @@ namespace org.cip4.jdflib.cformat
                   dLocal = -dLocal;
                }
 
-               string s = Convert.ToString(dLocal);
+               string s = Convert.ToString(dLocal, CultureInfo.InvariantCulture);
 
                int k;
                int len;
@@ -1228,7 +1229,7 @@ namespace org.cip4.jdflib.cformat
 
                if (k < len) // then there is an exponent
                {
-                  exp = Convert.ToInt32(s.Substring(k + 1));
+                  exp = Int32.Parse(s.Substring(k + 1), CultureInfo.InvariantCulture);
                }
                else
                {

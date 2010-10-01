@@ -77,6 +77,7 @@
 namespace org.cip4.jdflib.util
 {
    using System;
+   using System.Globalization;
    using System.Text;
    using System.Text.RegularExpressions;
 
@@ -462,7 +463,7 @@ namespace org.cip4.jdflib.util
                      {
                         //.Net Substring different than java substring.
                         string sMilli = "0." + strTime.Substring(iDotPos, (iSPos - iDotPos));
-                        fracSecs = Convert.ToDouble(sMilli);
+                        fracSecs = Double.Parse(sMilli, CultureInfo.InvariantCulture);
                      }
                      iduration += iSeconds;
 

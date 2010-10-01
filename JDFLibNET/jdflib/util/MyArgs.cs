@@ -80,6 +80,7 @@ namespace org.cip4.jdflib.util
 {
    using System;
    using System.Collections;
+   using System.Globalization;
 
 
    using JDFConstants = org.cip4.jdflib.core.JDFConstants;
@@ -306,7 +307,7 @@ namespace org.cip4.jdflib.util
          string paramString = parameter(s);
          try
          {
-            return Convert.ToDouble(paramString);
+            return Double.Parse(paramString, CultureInfo.InvariantCulture);
          }
          catch (FormatException)
          {

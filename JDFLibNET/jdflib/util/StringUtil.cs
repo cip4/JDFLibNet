@@ -79,9 +79,10 @@ namespace org.cip4.jdflib.util
    using System;
    using System.Collections;
    using System.Collections.Generic;
+   using System.Globalization;
+   using System.IO;
    using System.Text;
    using System.Text.RegularExpressions;
-   using System.IO;
    using System.Xml;
 
 
@@ -1429,7 +1430,7 @@ namespace org.cip4.jdflib.util
          }
          else
          {
-            s = Convert.ToString(d);
+            s = Convert.ToString(d, CultureInfo.InvariantCulture);
             if (s.EndsWith(".0"))
                s = s.Substring(0, s.Length - 2);
             if (s.IndexOf("E") >= 0)
@@ -1492,7 +1493,7 @@ namespace org.cip4.jdflib.util
          }
          else
          {
-            s = Convert.ToString(i);
+            s = Convert.ToString(i, CultureInfo.InvariantCulture);
          }
          return s;
       }
@@ -1523,7 +1524,7 @@ namespace org.cip4.jdflib.util
 
          try
          {
-            Convert.ToInt32(intStr);
+            Int32.Parse(intStr, CultureInfo.InvariantCulture);
             return true;
          }
          catch (FormatException)
@@ -1758,7 +1759,7 @@ namespace org.cip4.jdflib.util
 
          try
          {
-            d = Convert.ToDouble(sLocal);
+            d = Double.Parse(sLocal, CultureInfo.InvariantCulture);
          }
          catch (FormatException)
          {
@@ -1818,7 +1819,7 @@ namespace org.cip4.jdflib.util
 
          try
          {
-            i = Convert.ToInt32(sLocal);
+            i = Int32.Parse(sLocal, CultureInfo.InvariantCulture);
          }
          catch (FormatException)
          {
@@ -1908,7 +1909,7 @@ namespace org.cip4.jdflib.util
             try
             {
                JDFNumberRange r = new JDFNumberRange(bigAtt);
-               if (r.inRange(Convert.ToDouble(smallAtt)))
+               if (r.inRange(Double.Parse(smallAtt, CultureInfo.InvariantCulture)))
                {
                   return true;
                }
@@ -1932,7 +1933,7 @@ namespace org.cip4.jdflib.util
             try
             {
                JDFNumberRangeList r = new JDFNumberRangeList(bigAtt);
-               if (r.inRange(Convert.ToDouble(smallAtt)))
+               if (r.inRange(Double.Parse(smallAtt, CultureInfo.InvariantCulture)))
                {
                   return true;
                }
@@ -1956,7 +1957,7 @@ namespace org.cip4.jdflib.util
             try
             {
                JDFIntegerList rBig = new JDFIntegerList(bigAtt);
-               int i = Convert.ToInt32(smallAtt);
+               int i = Int32.Parse(smallAtt, CultureInfo.InvariantCulture);
                if (rBig.Contains(i))
                {
                   return true;

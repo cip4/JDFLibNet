@@ -82,9 +82,10 @@ namespace org.cip4.jdflib.datatypes
 {
    using System;
    using System.Collections;
-   using System.Text;
    using System.Drawing;
    using System.Drawing.Drawing2D;
+   using System.Globalization;
+   using System.Text;
 
 
    using JDFConstants = org.cip4.jdflib.core.JDFConstants;
@@ -198,7 +199,7 @@ namespace org.cip4.jdflib.datatypes
 
                try
                {
-                  d = Double.Parse(nt);
+                  d = Double.Parse(nt, CultureInfo.InvariantCulture);
                   s.Add(nt);
                }
                catch (FormatException)
@@ -330,7 +331,7 @@ namespace org.cip4.jdflib.datatypes
          { // Parse Points in s
             for (int i = 0; i < paramNum; i++)
             {
-               x[i] = Convert.ToSingle(s[i].ToString());
+               x[i] = Single.Parse(s[i].ToString());
             }
          }
          catch (FormatException e)
@@ -344,8 +345,8 @@ namespace org.cip4.jdflib.datatypes
             PointF currentPoint = m_GPI.GetLastPoint();
             if (currentPoint != null)
             {
-               a[0] = Convert.ToSingle(JDFConstants.EMPTYSTRING + currentPoint.X);
-               a[1] = Convert.ToSingle(JDFConstants.EMPTYSTRING + currentPoint.Y);
+               a[0] = Single.Parse(JDFConstants.EMPTYSTRING + currentPoint.X);
+               a[1] = Single.Parse(JDFConstants.EMPTYSTRING + currentPoint.Y);
             }
          }
          catch (FormatException)
