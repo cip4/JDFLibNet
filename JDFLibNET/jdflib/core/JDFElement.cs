@@ -155,8 +155,12 @@ namespace org.cip4.jdflib.core
          atrInfoTable[5] = new AtrInfoTable(AttributeName.OPERATORINTERVENTIONEXCEPTIONS, 0x33333331, AttributeInfo.EnumAttributeType.NMTOKENS, null, null);
          elemInfoTable[0] = new ElemInfoTable(ElementName.COMMENT, 0x33333333);
       }
-      // Java to C# Conversion - Note: No .Net equivalent for kk.
-      private const string dateFormatter = "yyMMdd_HHmmssSS"; //note that C# HH is 0..23, while java kk is 1..24
+      // Java to C# Conversion
+      // java format string was "yyMMdd_kkmmssSS".
+      // yy, MM, dd, mm, ss map exactly.
+      // C# HH is 0..23, while java kk is 1..24
+      // C# fff maps to java SSS. No mapping to java SS. fff is closer to SS than ff is.
+      private const string dateFormatter = "yyMMdd_HHmmssfff";
 
       protected internal override AttributeInfo getTheAttributeInfo()
       {
